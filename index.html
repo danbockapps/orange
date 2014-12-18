@@ -34,13 +34,17 @@
 
     <div class="container">
 
-      <nav class="navbar navbar-default" role="navigation">
+      <nav
+        class="navbar navbar-default"
+        role="navigation"
+        ng-controller="OrangeController as orangeCtrl"
+      >
         <div class="container-fluid">
           <div class="navbar-header">
-            <span class="navbar-brand">Project name</span>
+            <span class="navbar-brand">{{orangeCtrl.projectname}}</span>
           </div>
           <div>
-            <div class="nav navbar-nav navbar-right">
+            <div class="nav navbar-nav navbar-right" ng-hide="orangeCtrl.loggedin">
               <form class="navbar-form navbar-right" role="search">
                 <div class="form-group">
                   <input type="text" class="form-control" name="username" placeholder="Username">

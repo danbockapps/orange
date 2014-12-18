@@ -16,5 +16,4 @@ else {
 }
 
 $ini_array = parse_ini_file("auth.ini");
-print_r($ini_array);
 ?>

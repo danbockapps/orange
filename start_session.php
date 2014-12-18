@@ -1,5 +1,6 @@
 <?php
 session_start();
 $_SESSION['test'] = "session is on.";
-echo $_SESSION['test'];
+$_SESSION['userid'] = 5;
+echo $_SESSION['userid'];
 ?>
