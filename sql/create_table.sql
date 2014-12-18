@@ -5,14 +5,14 @@ create table if not exists users (
   fname varchar(50),
   lname varchar(50),
   email varchar(100),
-  date_user_added datetime,
+  dateuseradded datetime,
   constraint unique (email)
 ) engine=innodb;
 
 create table if not exists challenges (
   challengeid int unsigned auto_increment primary key,
-  start_dttm datetime,
-  end_dttm datetime
+  startdttm datetime,
+  enddttm datetime
 ) engine=innodb;
 
 create table if not exists teams (
@@ -20,7 +20,7 @@ create table if not exists teams (
   challengeid int unsigned,
   captainid int unsigned,
   teamname varchar(30),
-  date_team_added datetime,
+  dateteamadded datetime,
   constraint foreign key (challengeid) references challenges (challengeid),
   constraint foreign key (captainid) references users (userid)
 ) engine=innodb;
@@ -28,7 +28,7 @@ create table if not exists teams (
 create table if not exists team_members (
   teamid int unsigned,
   userid int unsigned,
-  date_user_team_added datetime,
+  dateuserteamadded datetime,
   constraint primary key (teamid, userid),
   constraint foreign key (teamid) references teams (teamid),
   constraint foreign key (userid) references users (userid)
