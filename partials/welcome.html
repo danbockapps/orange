@@ -9,18 +9,36 @@
   <div class="col-md-5">
 
     <h2>Create an account</h2>
-    <form role="form">
+    <form role="form" ng-submit="welcome.submitRegisterForm()" ng-controller="WelcomeController as welcome">
       <div class="form-group">
-        <input type="email" class="form-control" id="email" name="email"
-            placeholder="Enter email address" />
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          placeholder="Enter email address"
+          ng-model="welcome.email"
+        />
       </div>
       <div class="form-group">
-        <input type="password" class="form-control" id="password1"
-            name="password1" placeholder="Enter password" />
+        <input
+          type="password"
+          class="form-control"
+          id="password1"
+          name="password1"
+          placeholder="Enter password"
+          ng-model="welcome.password1"
+        />
       </div>
       <div class="form-group">
-        <input type="password" class="form-control" id="password2"
-            name="password2" placeholder="Re-enter password" />
+        <input
+          type="password"
+          class="form-control"
+          id="password2"
+          name="password2"
+          placeholder="Re-enter password"
+          ng-model="welcome.password2"
+        />
       </div>
 
       <button type="submit" class="btn btn-default">Submit</button>

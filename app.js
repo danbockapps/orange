@@ -20,6 +20,13 @@
     });
   }]);
 
-  app.controller("WelcomeController", function() {
-  });
+  app.controller("WelcomeController", ["$http", function($http) {
+    var o = this;
+    this.submitRegisterForm = function () {
+      console.log(o);
+//      console.log("submitRegisterForm called.");
+//      console.log("email is: " + o.email);
+    };
+  }]);
+  
 })();
