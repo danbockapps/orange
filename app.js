@@ -22,10 +22,16 @@
 
   app.controller("WelcomeController", ["$http", function($http) {
     var o = this;
-    this.submitRegisterForm = function () {
-      console.log(o);
-//      console.log("submitRegisterForm called.");
-//      console.log("email is: " + o.email);
+    this.submitRegisterForm = function () {      
+      phpObj = {
+        email:o.email,
+        password:o.password1
+      };
+      
+      $http.post("register.php", phpObj).success(function(data) {
+        console.log("app.js says register.php had success:");
+        console.log(data);
+      });
     };
   }]);
   

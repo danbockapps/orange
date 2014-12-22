@@ -1,11 +1,12 @@
 create table if not exists users (
   userid int unsigned auto_increment primary key,
+  email varchar(100),
   password varchar(9999),
-  activation varchar(40),
+  akey varchar(32),
+  activated boolean default false,
   fname varchar(50),
   lname varchar(50),
-  email varchar(100),
-  dateuseradded datetime,
+  dateuseradded timestamp default current_timestamp,
   constraint unique (email)
 ) engine=innodb;
 
