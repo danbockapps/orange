@@ -88,9 +88,15 @@ function reset_akey($email) {
   }
 }
 
-function exit_error($explan) {
+function exit_error($responsecode) {
   $returnable['responsestring'] = "ERROR";
-  $returnable['explanation'] = $explan;
+  $returnable['responsecode'] = $responsecode;
+  
+  if($responsecode == 1)
+    $returnable['explanation'] = "Password is too short";
+  if($responsecode == 2)
+    $returnable['explanation'] = "Email is already registered";
+  
   exit(json_encode($returnable));
 }
 ?>
