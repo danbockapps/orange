@@ -32,11 +32,65 @@ function pdo_connect() {
   return $dbh;
 }
 
-function pdo_insert($sql, $qs) {
+function pdo_upsert($sql, $qs) {
   $dbh = pdo_connect();
   $sth = $dbh->prepare($sql);
   return $sth->execute($qs);
 }
 
+function pdo_select($query, $qs) {
+   $dbh = pdo_connect();
+   $sth = $dbh->prepare($query);
+   $sth->setFetchMode(PDO::FETCH_ASSOC);
+   $sth->execute($qs);
+   return $sth->fetchAll();
+}
 
+function logtxt($string) {
+  file_put_contents(
+    "log.txt",
+    date("Y-m-d G:i:s") . " " . $string,
+    FILE_APPEND
+  );
+}
+
+function email_already_in_db($email) {
+  $email_search = pdo_select("
+    select count(*) as count
+    from users
+    where email = ?
+  ", array($email));
+  return $email_search[0]['count'];
+}
+
+function reset_akey($email) {
+  $done = false;
+  
+  while(!$done) {
+    $key_candidate = md5(uniqid(rand(), true));
+    
+    //Make sure the key is unique
+    $key_search = pdo_select("
+      select count(*) as count
+      from users
+      where akey = ?
+    ", array($key_candidate));
+    
+    if($key_search[0]['count'] == 0) {
+      logtxt("Key for " . $email . " is " . $key_candidate);
+      $done = true;
+      pdo_upsert("
+        update users
+        set akey = ?
+        where email = ?
+      ", array($key_candidate, $email));
+    }
+  }
+}
+
+function exit_error($explan) {
+  $returnable['responsestring'] = "ERROR";
+  $returnable['explanation'] = $explan;
+  exit(json_encode($returnable));
+}
 ?>

@@ -4,23 +4,19 @@ require_once("config.php");
 $contents = file_get_contents("php://input");
 $post = json_decode($contents, true);
 
-file_put_contents(
-  "log.txt", 
-  $contents . "\n", 
-  FILE_APPEND
-);
+if(strlen($post['password']) < 8) exit_error("Password too short");
+if(email_already_in_db($post['email'])) exit_error("Email already registered");
 
-if(strlen($post['password']) < 8) exit("Password too short");
-
-pdo_insert(
-  "insert into users (email, password, akey) values (?, ?, ?)",
+pdo_upsert(
+  "insert into users (email, password) values (?, ?)",
   array(
     $post['email'], 
-    pwhash($post['password']), 
-    md5(uniqid(rand(), true))
+    pwhash($post['password'])
   )
 );
 
-echo("register.php done");
+reset_akey($post['email']);
+
+exit(json_encode(array(responsestring=>"OK")));
 
 ?>
