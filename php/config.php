@@ -102,6 +102,8 @@ function exit_error($responsecode) {
     $returnable['explanation'] = "Key not found";
   if($responsecode == 4)
     $returnable['explanation'] = "Database error";
+  if($responsecode == 5)
+    $returnable['explanation'] = "Recaptcha error";
   
   exit(json_encode($returnable));
 }

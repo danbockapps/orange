@@ -45,7 +45,8 @@
         
         phpObj = {
           email:o.email,
-          password:o.password1
+          password:o.password1,
+          recaptcha_response:grecaptcha.getResponse()
         };
 
         $http.post("api.php?q=register", phpObj).success(function(data) {
@@ -62,6 +63,10 @@
               o.regErrorMsg = "There is already an account with that email " +
                 "address. Please log in or click here if you have forgotten " +
                 "your password."
+              
+            if(data.responsecode === 5)
+              o.regErrorMsg = "Recaptcha thinks you are a robot. Please " +
+                "try again.";
 
             else
               o.regErrorMsg = "There was an error with creating your account.";
@@ -90,13 +95,10 @@
     });
 
     this.submitActivateForm = function() {
-      console.log("submitted name " + o.fname + o.lname);
       if(o.fname == undefined || o.lname == undefined) {
-        console.log("modal");
         $("#ActivateError").modal();
       }
       else {
-        console.log("submitted name2 " + o.fname + o.lname);
         o.disableForm = true;
         $http.post("api.php?q=activate", {
           fname:o.fname, 

@@ -30,7 +30,9 @@
 
   <div class="col-md-5">
     <div class="panel panel-default">
-      <div class="panel-heading">Create an account</div>
+      <div class="panel-heading">
+        <h3 class="panel-title text-center">Create an account</h3>
+      </div>
       <form 
         class="panel-body"
         role="form" 
@@ -67,7 +69,14 @@
               ng-model="welcome.password2"
             />
           </div>
-          <button type="submit" class="btn btn-default pull-right">Submit</button>
+          <div
+            id="drecaptcha" 
+            class="text-center" 
+            style="margin-bottom: 1em"
+          ></div>
+          <button type="submit" class="btn btn-default center-block">
+            Submit
+          </button>
           <img
             src="img/spinner.gif"
             class="pull-right"
@@ -79,3 +88,22 @@
     </div>
   </div>
 </div>
+<script
+  src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+  async 
+  defer
+></script>
+<script>
+  var onloadCallback = function() {
+    grecaptcha.render('drecaptcha', {
+      'sitekey' : '6Lcmbf8SAAAAAHuWfDgbj0jYTpVI-kqPt-9oPkh4'
+    });
+    
+    // (I have no idea why I have to use setTimeout here)
+    setTimeout(function() {
+      $("#drecaptcha > div > div").css("width", "");
+    }, 100);
+  };
+
+
+</script>
