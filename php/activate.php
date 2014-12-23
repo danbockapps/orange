@@ -1,22 +1,23 @@
 <?php
-$key_search = pdo_select("
-  select email
-  from users
-  where akey = ?
-", array($post['key']));
+sleep(15);
 
-if(empty($key_search)) {
+if($post['email'] != email_for_key($post['key'])) {
   exit_error(3);
 }
+
 else {
-  pdo_upsert("
+  $success = pdo_upsert("
     update users
-    set activated = 1
-    where email = ?
-  ", array($key_search[0]['email']));
+    set activated = 1, fname = ?, lname = ?
+    where email = ? and akey = ?
+  ", array($post['fname'], $post['lname'], $post['email'], $post['key']));
   
-  reset_akey($key_search[0]['email']);
-  
-  exit(json_encode(array(responsestring=>"OK")));
+  if($success) {
+    reset_akey($post['email']);
+    exit(json_encode(array(responsestring=>"OK")));
+  }
+  else {
+    exit_error(4);
+  }
 }
 ?>

@@ -77,15 +77,39 @@
   app.controller("ActivateController", 
                  ["$http", "$routeParams", function($http, $routeParams) {
     var o = this;
-    $http.post("api.php?q=activate", {key:$routeParams.key}).success(function(data) {
+    $http.get("api.php?q=check_key", {params:{key:$routeParams.key}})
+        .success(function(data) {
       console.log(data);
       if(data.responsestring == "ERROR") {
         o.regError = true;
       }
       else if(data.responsestring == "OK") {
         o.survey = true;
+        o.email = data.email;
       }
     });
+
+    this.submitActivateForm = function() {
+      console.log("submitted name " + o.fname + o.lname);
+      if(o.fname == undefined || o.lname == undefined) {
+        console.log("modal");
+        $("#ActivateError").modal();
+      }
+      else {
+        console.log("submitted name2 " + o.fname + o.lname);
+        o.disableForm = true;
+        $http.post("api.php?q=activate", {
+          fname:o.fname, 
+          lname:o.lname, 
+          email:o.email, 
+          key:$routeParams.key
+        }).success(function(data) {
+          console.log(data);
+          o.survey = false;
+          o.complete = true;
+        });
+      }
+    };
   }]);
   
 })();

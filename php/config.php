@@ -100,6 +100,8 @@ function exit_error($responsecode) {
     $returnable['explanation'] = "Email is already registered";
   if($responsecode == 3)
     $returnable['explanation'] = "Key not found";
+  if($responsecode == 4)
+    $returnable['explanation'] = "Database error";
   
   exit(json_encode($returnable));
 }
@@ -128,6 +130,22 @@ function sendmail($to, $subject, $body) {
 
   /* Ok send mail */
   $mail_object->send($recipients, $headers, $mailmsg);
+}
+
+function email_for_key($key) {
+  $key_search = pdo_select("
+    select email
+    from users
+    where akey = ?
+  ", array($key));
+  
+  
+  if(count($key_search) != 1) {
+    return null;
+  }
+  else {
+    return $key_search[0]['email'];
+  }
 }
 
 
