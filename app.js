@@ -6,6 +6,9 @@
       when('/welcome', {
         templateUrl: 'partials/welcome.html'
       }).
+      when('/emailsent', {
+        templateUrl: 'partials/emailsent.html'
+      }).
       when('/activate/:key', {
         templateUrl: 'partials/activate.html'
       }).
@@ -22,7 +25,8 @@
     });
   }]);
 
-  app.controller("WelcomeController", ["$http", function($http) {
+  app.controller("WelcomeController",
+                 ["$http", "$location", function($http, $location) {
     var o = this;
     this.submitRegisterForm = function () {
       if(o.password1.length < 8) {
@@ -35,7 +39,10 @@
       }
       
       else {
-      
+        // Send a register API request
+        
+        o.disableForm = true;
+        
         phpObj = {
           email:o.email,
           password:o.password1
@@ -46,6 +53,7 @@
 
           if(data.responsestring === "OK") {
             // redirect to another page
+            $location.path('emailsent');
           }
           else {
             // there was an error
@@ -59,6 +67,7 @@
               o.regErrorMsg = "There was an error with creating your account.";
 
             $("#RegError").modal();
+            o.disableForm = false;
           }
         });
       }
