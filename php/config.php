@@ -3,6 +3,7 @@ CRYPT_BLOWFISH or die ('No Blowfish found.');
 define("BLOWFISH_PRE", "$2y$05$");
 define("BLOWFISH_SUF", "$");
 $ini = parse_ini_file("auth.ini");
+date_default_timezone_set("America/New_York");
 
 function pwhash($password) {
   $allowed_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789./';
@@ -77,7 +78,6 @@ function reset_akey($email) {
     ", array($key_candidate));
     
     if($key_search[0]['count'] == 0) {
-      logtxt("Key for " . $email . " is " . $key_candidate);
       $done = true;
       pdo_upsert("
         update users

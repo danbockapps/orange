@@ -1,3 +1,10 @@
 <div class="row" ng-controller="ActivateController as a">
-    {{a.msg}}
+  <div class="col-md-12" ng-show="a.survey">
+    Please provide the following information and then you'll be able to log
+    in to your account.
+  </div>
+  <div class="col-md-12" ng-show="a.regError">
+    The link you clicked on is out of date. Please click here to reset
+    your password.
+  </div>
 </div>

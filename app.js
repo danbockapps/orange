@@ -16,7 +16,7 @@
 
   app.controller("OrangeController", ["$http", function($http) {
     var o = this;
-    $http.get("init.php").success(function(data) {
+    $http.get("api.php?q=init").success(function(data) {
       o.projectname = data.projectname;
       o.userid = data.userid;
     });
@@ -41,7 +41,7 @@
           password:o.password1
         };
 
-        $http.post("register.php", phpObj).success(function(data) {
+        $http.post("api.php?q=register", phpObj).success(function(data) {
           console.log(data);
 
           if(data.responsestring === "OK") {
@@ -68,14 +68,13 @@
   app.controller("ActivateController", 
                  ["$http", "$routeParams", function($http, $routeParams) {
     var o = this;
-    $http.post("activate.php", {key:$routeParams.key}).success(function(data) {
+    $http.post("api.php?q=activate", {key:$routeParams.key}).success(function(data) {
       console.log(data);
       if(data.responsestring == "ERROR") {
-        o.msg = "The link you clicked on is out of date. " +
-          "Please click here to reset your password.";
+        o.regError = true;
       }
       else if(data.responsestring == "OK") {
-        o.msg = "Your account is now activated. Please fill out our survey.";
+        o.survey = true;
       }
     });
   }]);

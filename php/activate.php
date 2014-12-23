@@ -1,10 +1,4 @@
 <?php
-require_once("config.php");
-
-$contents = file_get_contents("php://input");
-logtxt($contents);
-$post = json_decode($contents, true);
-
 $key_search = pdo_select("
   select email
   from users
