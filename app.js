@@ -4,8 +4,10 @@
   app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
       when('/welcome', {
-        templateUrl: 'partials/welcome.html',
-        controller: 'WelcomeController'
+        templateUrl: 'partials/welcome.html'
+      }).
+      when('/activate/:key', {
+        templateUrl: 'partials/activate.html'
       }).
       otherwise({
         redirectTo: '/welcome'
@@ -40,7 +42,6 @@
         };
 
         $http.post("register.php", phpObj).success(function(data) {
-          console.log("response: " + data.responsestring);
           console.log(data);
 
           if(data.responsestring === "OK") {
@@ -61,10 +62,22 @@
           }
         });
       }
-      
-      
-      
     };
+  }]);
+  
+  app.controller("ActivateController", 
+                 ["$http", "$routeParams", function($http, $routeParams) {
+    var o = this;
+    $http.post("activate.php", {key:$routeParams.key}).success(function(data) {
+      console.log(data);
+      if(data.responsestring == "ERROR") {
+        o.msg = "The link you clicked on is out of date. " +
+          "Please click here to reset your password.";
+      }
+      else if(data.responsestring == "OK") {
+        o.msg = "Your account is now activated. Please fill out our survey.";
+      }
+    });
   }]);
   
 })();

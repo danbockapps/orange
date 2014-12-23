@@ -15,7 +15,14 @@ pdo_upsert(
   )
 );
 
-reset_akey($post['email']);
+$new_key = reset_akey($post['email']);
+
+sendmail(
+  $post['email'],
+  "Your new account with " . $ini['projectname'],
+  "Please click here to activate your new account: " .
+    $ini['homeurl'] . "/#/activate/" . $new_key
+);
 
 exit(json_encode(array(responsestring=>"OK")));
 

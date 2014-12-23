@@ -49,7 +49,7 @@ function pdo_select($query, $qs) {
 function logtxt($string) {
   file_put_contents(
     "log.txt",
-    date("Y-m-d G:i:s") . " " . $string,
+    date("Y-m-d G:i:s") . " " . $string . "\n",
     FILE_APPEND
   );
 }
@@ -86,6 +86,8 @@ function reset_akey($email) {
       ", array($key_candidate, $email));
     }
   }
+  
+  return $key_candidate;
 }
 
 function exit_error($responsecode) {
@@ -96,7 +98,37 @@ function exit_error($responsecode) {
     $returnable['explanation'] = "Password is too short";
   if($responsecode == 2)
     $returnable['explanation'] = "Email is already registered";
+  if($responsecode == 3)
+    $returnable['explanation'] = "Key not found";
   
   exit(json_encode($returnable));
 }
+
+function sendmail($to, $subject, $body) {
+  require_once("Mail.php");
+  global $ini;
+
+  /* mail setup recipients, subject etc */
+  $bcc = $ini['emaillogger'];
+  $recipients = $to.",".$bcc;
+  $headers["From"] = $ini['mailfrom'];
+  $headers["To"] = $to;
+  $headers["Subject"] = $subject;
+  $mailmsg = $body;
+
+  /* SMTP server name, port, user/passwd */
+  $smtpinfo["host"] = $ini['mailhost'];
+  $smtpinfo["port"] = $ini['mailport'];
+  $smtpinfo["auth"] = true;
+  $smtpinfo["username"] = $ini['mailusername'];
+  $smtpinfo["password"] = $ini['mailpassword'];
+
+  /* Create the mail object using the Mail::factory method */
+  $mail_object =& Mail::factory("smtp", $smtpinfo);
+
+  /* Ok send mail */
+  $mail_object->send($recipients, $headers, $mailmsg);
+}
+
+
 ?>
