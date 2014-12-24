@@ -29,7 +29,7 @@
                  ["$http", "$location", function($http, $location) {
     var o = this;
     this.submitRegisterForm = function () {
-      if(o.password1.length < 8) {
+      if(typeof(o.password1) === "undefined" || o.password1.length < 8) {
         o.regErrorMsg = "Your password must be at least 8 characters.";
         $("#RegError").modal();
       }
@@ -58,13 +58,14 @@
           }
           else {
             // there was an error
+            console.log(data.responsecode);
 
             if(data.responsecode === 2)
               o.regErrorMsg = "There is already an account with that email " +
                 "address. Please log in or click here if you have forgotten " +
                 "your password."
               
-            if(data.responsecode === 5)
+            else if(data.responsecode === 5)
               o.regErrorMsg = "Recaptcha thinks you are a robot. Please " +
                 "try again.";
 
