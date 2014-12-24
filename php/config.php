@@ -6,15 +6,16 @@ $ini = parse_ini_file("auth.ini");
 date_default_timezone_set("America/New_York");
 
 function pwhash($password) {
-  $allowed_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789./';
+  $allowed_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' .
+    'abcdefghijklmnopqrstuvwxyz0123456789./';
   $salt = "";
 
   for($i=0; $i<21; $i++) { // 21 is standard salt length
     $salt .= $allowed_chars[mt_rand(0,strlen($allowed_chars)-1)];
   }
+    
   return crypt($password, BLOWFISH_PRE . $salt . BLOWFISH_SUF);
 }
-
 
 function pdo_connect() {
   global $ini;
@@ -104,6 +105,12 @@ function exit_error($responsecode) {
     $returnable['explanation'] = "Database error";
   if($responsecode == 5)
     $returnable['explanation'] = "Recaptcha error";
+  if($responsecode == 6)
+    $returnable['explanation'] = "Account not activated";
+  if($responsecode == 7)
+    $returnable['explanation'] = "Wrong password";
+  if($responsecode == 8)
+    $returnable['explanation'] = "Email not found in users table";
   
   exit(json_encode($returnable));
 }

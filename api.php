@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("php/config.php");
 $contents = file_get_contents("php://input");
 

@@ -13,17 +13,86 @@ app.config(['$routeProvider', function($routeProvider) {
       templateUrl: 'partials/activate.html',
       controller: 'ActivateCtrl'
     }).
+    when('/dashboard', {
+      templateUrl: 'partials/dashboard.html',
+      controller: 'DashboardCtrl'
+    }).
     otherwise({
       redirectTo: '/welcome'
     });
 }]);
 
-function IndexCtrl($rootScope, $scope, $http) {
+function phpInit($rootScope, $scope, $http) {
   $http.get("api.php?q=init").success(function(data) {
+    console.log(data);
     $scope.projectname = data.projectname;
-    $scope.userid = data.userid;
     $rootScope.projectname = data.projectname;
+    
+    if(data.userid == null) {
+      $scope.hideLoginForm = false;
+      $scope.showUserName = false;
+      $scope.userid = null;
+      $scope.loggedInFname = null;
+      $scope.loggedInLname = null;
+    }
+    else {
+      $scope.hideLoginForm = true;
+      $scope.showUserName = true;
+      $scope.userid = data.userid;
+      $scope.loggedInFname = data.fname;
+      $scope.loggedInLname = data.lname;
+    }
   });
+}
+
+function IndexCtrl($rootScope, $scope, $http, $location) {
+  phpInit($rootScope, $scope, $http);
+  
+  $scope.submitLoginForm = function() {
+    phpObj = {email:$scope.loginEmail, password:$scope.loginPassword};
+    $http.post("api.php?q=login", phpObj).success(function(data){
+      console.log(data);
+      if(data.responsestring == "ERROR") {
+        
+        // Reset modal
+        $scope.showNonActivateError = false;
+        $scope.showWrongPasswordError = false;
+        $scope.showUserNotFoundError = false;
+        $scope.showUnknownError = false;
+        
+        if(data.responsecode == 6) {
+          // Account not activated
+          $scope.showNonActivateError = true;
+        }
+        else if(data.responsecode == 7) {
+          // Wrong password
+          $scope.showWrongPasswordError = true;
+        }
+        else if(data.responsecode == 8) {
+          // User does not exist
+          $scope.showUserNotFoundError = true;
+        }
+        else {
+          // Unknown error
+          $scope.showUnknownError = true;
+        }
+        $("#ErrorModal").modal();
+      }
+      else {
+        // Login successful
+        phpInit($rootScope, $scope, $http);
+        $location.path("dashboard");
+      }
+    });
+  }
+  
+  $scope.logout = function() {
+    $http.post("api.php?q=logout").success(function(data){
+      console.log(data);
+      phpInit($rootScope, $scope, $http);
+      $location.path("welcome");
+    });
+  }
 }
 
 function WelcomeCtrl($scope, $http, $location) {
@@ -107,8 +176,24 @@ function ActivateCtrl($scope, $http, $routeParams) {
   };
 }
 
+function DashboardCtrl($scope, $http) {
+}
+
 // If you're not minifying, you can replace the array literal with just the 
 // function name.
-app.controller("IndexCtrl", ["$rootScope", "$scope", "$http", IndexCtrl]);
-app.controller("WelcomeCtrl", ["$scope", "$http", "$location", WelcomeCtrl]);
-app.controller("ActivateCtrl", ["$scope", "$http", "$routeParams", ActivateCtrl]);
+app.controller(
+  "IndexCtrl", 
+  ["$rootScope", "$scope", "$http", "$location", IndexCtrl]
+);
+app.controller(
+  "WelcomeCtrl", 
+  ["$scope", "$http", "$location", WelcomeCtrl]
+);
+app.controller(
+  "ActivateCtrl", 
+  ["$scope", "$http", "$routeParams", ActivateCtrl]
+);
+app.controller(
+  "DashboardCtrl", 
+  ["$scope", "$http", DashboardCtrl]
+);
