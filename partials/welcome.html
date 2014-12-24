@@ -7,7 +7,13 @@
             <span aria-hidden="true">&times;</span>
             <span class="sr-only">Close</span>
           </button>
-          <h4 class="modal-title">Error creating an account</h4>
+          <h4 class="modal-title">
+            <span 
+              style="color: red" 
+              class="glyphicon glyphicon-exclamation-sign"
+            ></span>
+            Error creating an account
+          </h4>
         </div>
         <div class="modal-body">
           <p>{{regErrorMsg}}</p>
@@ -46,7 +52,7 @@
               id="email"
               name="email"
               placeholder="Enter email address"
-              ng-model="email"
+              ng-model="regEmail"
               required
             />
           </div>

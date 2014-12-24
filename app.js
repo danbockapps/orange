@@ -18,10 +18,11 @@ app.config(['$routeProvider', function($routeProvider) {
     });
 }]);
 
-function IndexCtrl($scope, $http) {
+function IndexCtrl($rootScope, $scope, $http) {
   $http.get("api.php?q=init").success(function(data) {
     $scope.projectname = data.projectname;
     $scope.userid = data.userid;
+    $rootScope.projectname = data.projectname;
   });
 }
 
@@ -41,7 +42,7 @@ function WelcomeCtrl($scope, $http, $location) {
       $scope.disableRegForm = true;
 
       phpObj = {
-        email:$scope.email,
+        email:$scope.regEmail,
         password:$scope.password1,
         recaptcha_response:grecaptcha.getResponse()
       };
@@ -85,6 +86,7 @@ function ActivateCtrl($scope, $http, $routeParams) {
     }
     else if(data.responsestring == "OK") {
       $scope.showSurvey = true;
+      $scope.$parent.hideLoginForm = true;
       actEmail = data.email;
     }
   });
@@ -100,12 +102,13 @@ function ActivateCtrl($scope, $http, $routeParams) {
       console.log(data);
       $scope.showSurvey = false;
       $scope.showCompleteMsg = true;
+      $scope.$parent.hideLoginForm = false;
     });
   };
 }
 
 // If you're not minifying, you can replace the array literal with just the 
 // function name.
-app.controller("IndexCtrl", ["$scope", "$http", IndexCtrl]);
+app.controller("IndexCtrl", ["$rootScope", "$scope", "$http", IndexCtrl]);
 app.controller("WelcomeCtrl", ["$scope", "$http", "$location", WelcomeCtrl]);
 app.controller("ActivateCtrl", ["$scope", "$http", "$routeParams", ActivateCtrl]);
