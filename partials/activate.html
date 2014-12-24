@@ -1,30 +1,5 @@
-<div class="row" ng-controller="ActivateController as a">
-  
-  
-  <div class="modal fade" id="ActivateError">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">
-            <span aria-hidden="true">&times;</span>
-            <span class="sr-only">Close</span>
-          </button>
-          <h4 class="modal-title">Error</h4>
-        </div>
-        <div class="modal-body">
-          <p>Please fill out all required fields.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">
-            Close
-          </button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->  
-  
-  
-  <div ng-show="a.survey">
+<div class="row">
+  <div ng-show="showSurvey">
     <div class="col-md-3"></div>
     <div class="col-md-6">
       <h1 class="text-center">Complete your registration</h1>
@@ -32,15 +7,16 @@
         Please provide the following information and then you'll be able to log
         in to your account.
       </p>
-      <form ng-submit="a.submitActivateForm()">
-        <fieldset ng-disabled="a.disableForm">
+      <form ng-submit="submitActForm()">
+        <fieldset ng-disabled="disableActForm">
           <div class="form-group">
             <label for="fname">First name:</label>
             <input 
               type="text" 
               id="fname" 
               class="form-control" 
-              ng-model="a.fname" 
+              ng-model="actFname" 
+              required
             />
           </div>
           
@@ -50,7 +26,8 @@
               type="text" 
               id="lname" 
               class="form-control" 
-              ng-model="a.lname" 
+              ng-model="actLname" 
+              required
             />
           </div>
           
@@ -60,14 +37,14 @@
               type="text" 
               id="favcol" 
               class="form-control" 
-              ng-model="a.favcol" 
+              ng-model="actFavcol" 
             />
           </div>
           
           <button 
             type="submit" 
             class="btn btn-default center-block"
-            ng-hide="a.disableForm"
+            ng-hide="disableActForm"
           >
             Submit
           </button>
@@ -75,7 +52,7 @@
           <img 
             class="center-block" 
             src="img/spinner.gif" 
-            ng-show="a.disableForm" 
+            ng-show="disableActForm" 
           />
         </fieldset>
       </form>
@@ -84,7 +61,7 @@
   </div>
   
   
-  <div class="col-xs-12" ng-show="a.regError">
+  <div class="col-xs-12" ng-show="showBadKeyMsg">
     <h3 class="text-center">
       The link you clicked on is out of date. Please click here to reset
       your password.
@@ -92,7 +69,7 @@
   </div>
   
   
-  <div class="col-xs-12" ng-show="a.complete">
+  <div class="col-xs-12" ng-show="showCompleteMsg">
     <h3 class="text-center">
       Your registration is now complete. You may log in above.
     </h3>

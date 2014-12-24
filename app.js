@@ -1,118 +1,111 @@
-(function(){
-  var app = angular.module('orange', ['ngRoute']);
+var app = angular.module('orange', ['ngRoute']);
 
-  app.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.
-      when('/welcome', {
-        templateUrl: 'partials/welcome.html'
-      }).
-      when('/emailsent', {
-        templateUrl: 'partials/emailsent.html'
-      }).
-      when('/activate/:key', {
-        templateUrl: 'partials/activate.html'
-      }).
-      otherwise({
-        redirectTo: '/welcome'
+app.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.
+    when('/welcome', {
+      templateUrl: 'partials/welcome.html',
+      controller: 'WelcomeCtrl'
+    }).
+    when('/emailsent', {
+      templateUrl: 'partials/emailsent.html'
+    }).
+    when('/activate/:key', {
+      templateUrl: 'partials/activate.html',
+      controller: 'ActivateCtrl'
+    }).
+    otherwise({
+      redirectTo: '/welcome'
+    });
+}]);
+
+function IndexCtrl($scope, $http) {
+  $http.get("api.php?q=init").success(function(data) {
+    $scope.projectname = data.projectname;
+    $scope.userid = data.userid;
+  });
+}
+
+function WelcomeCtrl($scope, $http, $location) {
+  $scope.submitRegisterForm = function () {
+    if(typeof($scope.password1) === "undefined" || $scope.password1.length < 8) {
+      $scope.regErrorMsg = "Your password must be at least 8 characters.";
+      $("#RegError").modal();
+    }
+    else if($scope.password1 !== $scope.password2) {
+      $scope.regErrorMsg = "Your password entries do not match.";
+      $("#RegError").modal();
+    }
+
+    else {
+      // Send a register API request
+      $scope.disableRegForm = true;
+
+      phpObj = {
+        email:$scope.email,
+        password:$scope.password1,
+        recaptcha_response:grecaptcha.getResponse()
+      };
+
+      $http.post("api.php?q=register", phpObj).success(function(data) {
+        console.log(data);
+
+        if(data.responsestring === "OK") {
+          // redirect to another page
+          $location.path('emailsent');
+        }
+        else {
+          // there was an error
+
+          if(data.responsecode === 2)
+            $scope.regErrorMsg = "There is already an account with that email " +
+              "address. Please log in or click here if you have forgotten " +
+              "your password."
+
+          else if(data.responsecode === 5)
+            $scope.regErrorMsg = "Recaptcha thinks you are a robot. Please " +
+              "try again.";
+
+          else
+            $scope.regErrorMsg = "There was an error with creating your account.";
+
+          $("#RegError").modal();
+          $scope.disableRegForm = false;
+        }
       });
-  }]);
+    }
+  };
+}
 
-  app.controller("OrangeController", ["$http", function($http) {
-    var o = this;
-    $http.get("api.php?q=init").success(function(data) {
-      o.projectname = data.projectname;
-      o.userid = data.userid;
-    });
-  }]);
+function ActivateCtrl($scope, $http, $routeParams) {
+  $http.get("api.php?q=check_key", {params:{key:$routeParams.key}})
+      .success(function(data) {
+    console.log(data);
+    if(data.responsestring == "ERROR") {
+      $scope.showBadKeyMsg = true;
+    }
+    else if(data.responsestring == "OK") {
+      $scope.showSurvey = true;
+      actEmail = data.email;
+    }
+  });
 
-  app.controller("WelcomeController",
-                 ["$http", "$location", function($http, $location) {
-    var o = this;
-    this.submitRegisterForm = function () {
-      if(typeof(o.password1) === "undefined" || o.password1.length < 8) {
-        o.regErrorMsg = "Your password must be at least 8 characters.";
-        $("#RegError").modal();
-      }
-      else if(o.password1 !== o.password2) {
-        o.regErrorMsg = "Your password entries do not match.";
-        $("#RegError").modal();
-      }
-      
-      else {
-        // Send a register API request
-        
-        o.disableForm = true;
-        
-        phpObj = {
-          email:o.email,
-          password:o.password1,
-          recaptcha_response:grecaptcha.getResponse()
-        };
-
-        $http.post("api.php?q=register", phpObj).success(function(data) {
-          console.log(data);
-
-          if(data.responsestring === "OK") {
-            // redirect to another page
-            $location.path('emailsent');
-          }
-          else {
-            // there was an error
-            console.log(data.responsecode);
-
-            if(data.responsecode === 2)
-              o.regErrorMsg = "There is already an account with that email " +
-                "address. Please log in or click here if you have forgotten " +
-                "your password."
-              
-            else if(data.responsecode === 5)
-              o.regErrorMsg = "Recaptcha thinks you are a robot. Please " +
-                "try again.";
-
-            else
-              o.regErrorMsg = "There was an error with creating your account.";
-
-            $("#RegError").modal();
-            o.disableForm = false;
-          }
-        });
-      }
-    };
-  }]);
-  
-  app.controller("ActivateController", 
-                 ["$http", "$routeParams", function($http, $routeParams) {
-    var o = this;
-    $http.get("api.php?q=check_key", {params:{key:$routeParams.key}})
-        .success(function(data) {
+  $scope.submitActForm = function() {
+    $scope.disableActForm = true;
+    $http.post("api.php?q=activate", {
+      fname:$scope.actFname, 
+      lname:$scope.actLname, 
+      email:actEmail, 
+      key:$routeParams.key
+    }).success(function(data) {
       console.log(data);
-      if(data.responsestring == "ERROR") {
-        o.regError = true;
-      }
-      else if(data.responsestring == "OK") {
-        o.survey = true;
-        o.email = data.email;
-      }
+      $scope.showSurvey = false;
+      $scope.showCompleteMsg = true;
     });
+  };
+}
 
-    this.submitActivateForm = function() {
-      if(o.fname == undefined || o.lname == undefined) {
-        $("#ActivateError").modal();
-      }
-      else {
-        o.disableForm = true;
-        $http.post("api.php?q=activate", {
-          fname:o.fname, 
-          lname:o.lname, 
-          email:o.email, 
-          key:$routeParams.key
-        }).success(function(data) {
-          console.log(data);
-          o.survey = false;
-          o.complete = true;
-        });
-      }
-    };
-  }]);
-  
-})();
+// If you're not minifying, you can replace the array literal with just the 
+// function name.
+app.controller("IndexCtrl", ["$scope", "$http", IndexCtrl]);
+app.controller("WelcomeCtrl", ["$scope", "$http", "$location", WelcomeCtrl]);
+app.controller("ActivateCtrl", ["$scope", "$http", "$routeParams", ActivateCtrl]);

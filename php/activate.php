@@ -1,6 +1,4 @@
 <?php
-sleep(15);
-
 if($post['email'] != email_for_key($post['key'])) {
   exit_error(3);
 }
