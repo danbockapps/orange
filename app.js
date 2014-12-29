@@ -140,25 +140,27 @@ function WelcomeCtrl($scope, $http, $location) {
         }
         else {
           // there was an error
+          $scope.$parent.showEmailAlreadyError = false;
+          $scope.$parent.showRecaptchaError = false;
+          $scope.$parent.showUnknownError = false;
 
           if(data.responsecode === 2)
-            $scope.regErrorMsg = "There is already an account with that email " +
-              "address. Please log in or click here if you have forgotten " +
-              "your password."
+            $scope.$parent.showEmailAlreadyError = true;
 
           else if(data.responsecode === 5)
-            $scope.regErrorMsg = "Recaptcha thinks you are a robot. Please " +
-              "try again.";
+            $scope.$parent.showRecaptchaError = true;
 
           else
-            $scope.regErrorMsg = "There was an error with creating your account.";
+            $scope.$parent.showUnknownError = true;
 
-          $("#RegError").modal();
+          $("#ErrorModal").modal();
           $scope.disableRegForm = false;
         }
       });
     }
   };
+  
+  $scope.showPasswordRecover = $scope.$parent.showPasswordRecover;
 }
 
 function ActivateCtrl($scope, $http, $routeParams) {

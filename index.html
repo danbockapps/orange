@@ -43,6 +43,7 @@
               An error occurred.
             </h4>
           </div>
+          
           <div class="modal-body" ng-show="showNonActivateError">
             <p>
               Your account has not been activated. Please follow the 
@@ -53,21 +54,41 @@
               </a>
             </p>
           </div>
+          
           <div class="modal-body" ng-show="showWrongPasswordError">
             <p>
               Incorrect password. Please try again.
             </p>
           </div>
+          
           <div class="modal-body" ng-show="showUserNotFoundError">
             <p>
               The email address you entered was not found.
             </p>
           </div>
+          
+          <div class="modal-body" ng-show="showEmailAlreadyError">
+            <p>
+              There is already an account with that email address. Please log 
+              in or 
+              <a href="javascript:" ng-click="showPasswordRecover()">
+                click here if you have forgotten your password.
+              </a>
+            </p>
+          </div>
+          
+          <div class="modal-body" ng-show="showRecaptchaError">
+            <p>
+              Recaptcha thinks you are a robot. Please try again.
+            </p>
+          </div>
+          
           <div class="modal-body" ng-show="showUnknownError">
             <p>
               An error occurred. Please try again.
             </p>
           </div>
+          
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">
               Close
