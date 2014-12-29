@@ -13,6 +13,14 @@ app.config(['$routeProvider', function($routeProvider) {
       templateUrl: 'partials/activate.html',
       controller: 'ActivateCtrl'
     }).
+    when('/passwordrecover/', {
+      templateUrl: 'partials/passwordrecover.html',
+      controller: 'PasswordRecoverCtrl'
+    }).
+    when('/passwordrecover/:key', {
+      templateUrl: 'partials/passwordrecover.html',
+      controller: 'PasswordRecoverCtrl'
+    }).
     when('/dashboard', {
       templateUrl: 'partials/dashboard.html',
       controller: 'DashboardCtrl'
@@ -86,10 +94,17 @@ function IndexCtrl($rootScope, $scope, $http, $location) {
     });
   }
   
+  $scope.showPasswordRecover = function() {
+    $location.path("passwordrecover");
+    $("#ErrorModal").modal('hide');
+  };
+  
   $scope.logout = function() {
     $http.post("api.php?q=logout").success(function(data){
       console.log(data);
       phpInit($rootScope, $scope, $http);
+      $scope.loginEmail = "";
+      $scope.loginPassword = "";
       $location.path("welcome");
     });
   }
@@ -176,6 +191,83 @@ function ActivateCtrl($scope, $http, $routeParams) {
   };
 }
 
+function PasswordRecoverCtrl($scope, $http, $location, $routeParams) {
+  if($routeParams.key == null) {
+    $scope.showParForm = true;
+  }
+  else {
+    // User is clicking on a link from email
+    $http.get("api.php?q=check_key", {params:{key:$routeParams.key}})
+        .success(function(data) {
+      console.log(data);
+      if(data.responsestring == "ERROR") {
+        $scope.showBadKeyMsg = true;
+      }
+      else if(data.responsestring == "OK") {
+        $scope.showNepForm = true;
+        $scope.$parent.hideLoginForm = true;
+        actEmail = data.email;
+        if(data.fname != null && data.lname != null) {
+          $scope.nameKnown = true;
+          $scope.nepFname = data.fname;
+          $scope.nepLname = data.lname;
+        }
+        else {
+          $(".nep-name").prop("required", true);
+        }
+      }
+    });
+  }
+  
+  $scope.submitParForm = function() {
+    $scope.disableParForm = true;
+    $http.post("api.php?q=passwordrecover", {
+      email:$scope.parEmail
+    }).success(function(data) {
+      console.log(data);
+      if(data.responsestring == "ERROR") {
+        if(data.responsecode == 8) {
+          $scope.disableParForm = false;
+          $scope.$parent.showUserNotFoundError = true;
+          $("#ErrorModal").modal();
+        }
+      }
+      else {
+        $scope.showParForm = false;
+        $scope.showCheckEmailMsg = true;
+      }
+    });
+  }
+  
+  $scope.submitNepForm = function() {
+    $scope.disableNepForm = true;
+    console.log($scope.nepFname + " " + $scope.nepLname);
+    
+    $http.post("api.php?q=passwordchange", {
+      key:$routeParams.key,
+      newpassword:$scope.nepPassword1,
+      fname:$scope.nepFname,
+      lname:$scope.nepLname
+    }).success(function(data) {
+      if(data.responsestring == "ERROR") {
+        if(data.responsecode == 4) {
+          $scope.$parent.showUnknownError = true;
+          $("#ErrorModal").modal();
+        }
+      }
+      else {
+        $scope.showNepForm = false;
+        $scope.showSuccessMsg = true;
+        $scope.$parent.hideLoginForm = false;
+      }
+    });
+  }
+  
+  $scope.showPasswordRecover = function() {
+    $location.path("passwordrecover");
+  };
+}
+
 function DashboardCtrl($scope, $http) {
 }
 
@@ -192,6 +284,10 @@ app.controller(
 app.controller(
   "ActivateCtrl", 
   ["$scope", "$http", "$routeParams", ActivateCtrl]
+);
+app.controller(
+  "PasswordRecoverCtrl",
+  ["$scope", "$http", "$location", "$routeParams", PasswordRecoverCtrl]
 );
 app.controller(
   "DashboardCtrl", 

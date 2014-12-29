@@ -11,4 +11,10 @@ $post = json_decode($contents, true);
 
 require("php/" . $_GET['q'] . ".php");
 
+// If the required file didn't already exit:
+exit(json_encode(array(
+  q => $_GET['q'],
+  responsestring => "OK"
+)));
+
 ?>

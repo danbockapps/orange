@@ -1,5 +1,5 @@
 <?php
-if($post['email'] != email_for_key($post['key'])) {
+if($post['email'] != email_for_key($post['key'])['email']) {
   exit_error(3);
 }
 

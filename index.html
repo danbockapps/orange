@@ -47,7 +47,10 @@
             <p>
               Your account has not been activated. Please follow the 
               instructions in the email that was sent to you. If you do not 
-              have the email, please click here to have it re-sent.
+              have the email, please
+              <a href="javascript:" ng-click="showPasswordRecover()">
+                click here to have it re-sent.
+              </a>
             </p>
           </div>
           <div class="modal-body" ng-show="showWrongPasswordError">
@@ -86,31 +89,36 @@
             </a>
           </div>
           <div>
-            <div class="nav navbar-nav navbar-right" ng-hide="hideLoginForm">
-              <form class="navbar-form" role="form" ng-submit="submitLoginForm()">
-                <div class="form-group">
-                  <input
-                    type="text" 
-                    class="form-control" 
-                    name="loginEmail" 
-                    ng-model="loginEmail"
-                    placeholder="Email"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <input 
-                    type="password" 
-                    class="form-control" 
-                    name="loginPassword" 
-                    ng-model="loginPassword"
-                    placeholder="Password"
-                    required
-                  />
-                </div>
-                <button type="submit" class="btn btn-default">Log In</button>
-              </form>
-            </div>
+            <ul class="nav navbar-nav navbar-right" ng-hide="hideLoginForm">
+              <li>
+                <form class="navbar-form" role="form" ng-submit="submitLoginForm()">
+                  <div class="form-group">
+                    <input
+                      type="text" 
+                      class="form-control" 
+                      name="loginEmail" 
+                      ng-model="loginEmail"
+                      placeholder="Email"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <input 
+                      type="password" 
+                      class="form-control" 
+                      name="loginPassword" 
+                      ng-model="loginPassword"
+                      placeholder="Password"
+                      required
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-default">Log In</button>
+                </form>
+              </li>
+              <li>
+                <a href="javascript:" ng-click="showPasswordRecover()">help</a>
+              </li>
+            </ul>
             <p class="nav navbar-text navbar-right" ng-show="showUserName">
               Logged in as {{loggedInFname}} {{loggedInLname}}
               <small><a href="#" ng-click="logout()">logout</a></small>

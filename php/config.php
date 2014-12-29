@@ -41,11 +41,17 @@ function pdo_upsert($sql, $qs) {
 }
 
 function pdo_select($query, $qs) {
-   $dbh = pdo_connect();
-   $sth = $dbh->prepare($query);
-   $sth->setFetchMode(PDO::FETCH_ASSOC);
-   $sth->execute($qs);
-   return $sth->fetchAll();
+  $dbh = pdo_connect();
+  $sth = $dbh->prepare($query);
+  $sth->setFetchMode(PDO::FETCH_ASSOC);
+  $sth->execute(is_array($qs) ? $qs : array($qs));
+  return $sth->fetchAll();
+}
+
+function select_one_record($query, $qs) {
+  $sorqr = pdo_select($query, $qs);
+  if(count($sorqr) == 1)
+    return $sorqr[0];
 }
 
 function logtxt($string) {
@@ -142,19 +148,23 @@ function sendmail($to, $subject, $body) {
 }
 
 function email_for_key($key) {
-  $key_search = pdo_select("
-    select email
+  return select_one_record("
+    select
+      email,
+      fname,
+      lname
     from users
     where akey = ?
   ", array($key));
-  
-  
-  if(count($key_search) != 1) {
-    return null;
-  }
-  else {
-    return $key_search[0]['email'];
-  }
+}
+
+function key_for_email($email) {
+  return select_one_record("
+    select
+      akey
+    from users
+    where email = ?
+  ", $email);
 }
 
 
