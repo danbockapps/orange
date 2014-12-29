@@ -28,8 +28,4 @@ else {
   $_SESSION['fname'] = $qr[0]['fname'];
   $_SESSION['lname'] = $qr[0]['lname'];
 }
-
-exit(json_encode(array(responsestring => "OK")));
-
-
 ?>

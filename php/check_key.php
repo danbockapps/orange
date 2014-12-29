@@ -4,11 +4,8 @@ if($ckqr['email'] == null) {
   exit_error(3);
 }
 else {
-  exit(json_encode(array(
-    responsestring => "OK",
-    email => $ckqr['email'],
-    fname => $ckqr['fname'],
-    lname => $ckqr['lname']
-  )));
+  $ok_array['email'] = $ckqr['email'];
+  $ok_array['fname'] = $ckqr['fname'];
+  $ok_array['lname'] = $ckqr['lname'];
 }
 ?>

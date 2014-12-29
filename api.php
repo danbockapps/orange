@@ -9,12 +9,14 @@ if($_GET['q'] != "init") {
 
 $post = json_decode($contents, true);
 
+// Initialize array that will be returned if no error.
+$ok_array = array(
+  q => $_GET['q'],
+  responsestring => "OK"
+);
+
 require("php/" . $_GET['q'] . ".php");
 
 // If the required file didn't already exit:
-exit(json_encode(array(
-  q => $_GET['q'],
-  responsestring => "OK"
-)));
-
+exit(json_encode($ok_array));
 ?>

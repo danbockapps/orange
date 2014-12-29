@@ -19,5 +19,4 @@ if(!$ur) {
 }
 
 reset_akey(email_for_key($post['key'])['email']);
-
 ?>

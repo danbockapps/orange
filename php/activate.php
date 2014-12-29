@@ -12,7 +12,6 @@ else {
   
   if($success) {
     reset_akey($post['email']);
-    exit(json_encode(array(responsestring=>"OK")));
   }
   else {
     exit_error(4);

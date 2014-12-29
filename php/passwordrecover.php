@@ -16,6 +16,4 @@ sendmail(
   "To reset your password, please follow this link: " .
     $ini['homeurl'] . "/#/passwordrecover/" . $eqr[0]['akey']
 );
-
-exit(json_encode(array(responsestring=>"OK")));
 ?>
