@@ -85,6 +85,18 @@
             </p>
           </div>
           
+          <div class="modal-body" ng-show="showPassword8Error">
+            <p>
+              Your password must be at least 8 characters.
+            </p>
+          </div>
+          
+          <div class="modal-body" ng-show="showPasswordMatchError">
+            <p>
+              Your password entries do not match.
+            </p>
+          </div>
+          
           <div class="modal-body" ng-show="showUnknownError">
             <p>
               An error occurred. Please try again.

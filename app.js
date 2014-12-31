@@ -116,13 +116,15 @@ function IndexCtrl($rootScope, $scope, $http, $location) {
 
 function WelcomeCtrl($scope, $http, $location) {
   $scope.submitRegisterForm = function () {
+    $scope.$parent.showPassword8Error = false;
+    $scope.$parent.showPasswordMatchError = false;
     if(typeof($scope.password1) === "undefined" || $scope.password1.length < 8) {
-      $scope.regErrorMsg = "Your password must be at least 8 characters.";
-      $("#RegError").modal();
+      $scope.$parent.showPassword8Error = true;
+      $("#ErrorModal").modal();
     }
     else if($scope.password1 !== $scope.password2) {
-      $scope.regErrorMsg = "Your password entries do not match.";
-      $("#RegError").modal();
+      $scope.$parent.showPasswordMatchError = true;
+      $("#ErrorModal").modal();
     }
 
     else {
