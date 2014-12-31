@@ -6,14 +6,18 @@ create table if not exists users (
   activated boolean default false,
   fname varchar(50),
   lname varchar(50),
+  admin boolean,
   dateuseradded timestamp default current_timestamp,
   constraint unique (email)
 ) engine=innodb;
 
 create table if not exists challenges (
   challengeid int unsigned auto_increment primary key,
+  regstartdttm datetime,
+  regenddttm datetime,
   startdttm datetime,
-  enddttm datetime
+  enddttm datetime,
+  deleted boolean default false
 ) engine=innodb;
 
 create table if not exists teams (

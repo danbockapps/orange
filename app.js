@@ -25,6 +25,10 @@ app.config(['$routeProvider', function($routeProvider) {
       templateUrl: 'partials/dashboard.html',
       controller: 'DashboardCtrl'
     }).
+    when('/admin', {
+      templateUrl: 'partials/admin.html',
+      controller: 'AdminCtrl'
+    }).
     otherwise({
       redirectTo: '/welcome'
     });
@@ -273,6 +277,39 @@ function PasswordRecoverCtrl($scope, $http, $location, $routeParams) {
 function DashboardCtrl($scope, $http) {
 }
 
+function AdminCtrl($scope, $http, $location) {
+  var refreshChallenges = function() {
+    $http.get("api.php?q=challenges").success(function(data) {
+      console.log(data);
+      $scope.challenges = data.challenges;
+      $scope.showNcForm = false;
+    });
+  }
+  
+  refreshChallenges();
+  
+  $scope.submitNcForm = function() {
+    $http.post("api.php?q=newchallenge", {
+      regstart:$scope.ncRegStart,
+      regend:$scope.ncRegEnd,
+      start:$scope.ncStart,
+      end:$scope.ncEnd
+    }).success(function(data) {
+      console.log(data);
+      refreshChallenges();
+    });
+  }
+  
+  $scope.deleteChallenge = function(id) {
+    $http.post("api.php?q=deletechallenge", {
+      challengeid:id
+    }).success(function(data) {
+      console.log(data);
+      refreshChallenges();
+    });
+  }
+}
+
 // If you're not minifying, you can replace the array literal with just the 
 // function name.
 app.controller(
@@ -294,4 +331,8 @@ app.controller(
 app.controller(
   "DashboardCtrl", 
   ["$scope", "$http", DashboardCtrl]
+);
+app.controller(
+  "AdminCtrl",
+  ["$scope", "$http", "$location", AdminCtrl]
 );

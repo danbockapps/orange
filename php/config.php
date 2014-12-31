@@ -37,7 +37,7 @@ function pdo_connect() {
 function pdo_upsert($sql, $qs) {
   $dbh = pdo_connect();
   $sth = $dbh->prepare($sql);
-  return $sth->execute($qs);
+  return $sth->execute(is_array($qs) ? $qs : array($qs));
 }
 
 function pdo_select($query, $qs) {
