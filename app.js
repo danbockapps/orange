@@ -57,6 +57,9 @@ function phpInit($rootScope, $scope, $http) {
   });
 }
 
+var placeholderSupported =
+    document.createElement("input").placeholder != undefined;
+
 function IndexCtrl($rootScope, $scope, $http, $location) {
   phpInit($rootScope, $scope, $http);
   
@@ -166,7 +169,7 @@ function WelcomeCtrl($scope, $http, $location) {
     }
   };
   
-  $scope.showPasswordRecover = $scope.$parent.showPasswordRecover;
+  $scope.phSup = placeholderSupported;
 }
 
 function ActivateCtrl($scope, $http, $routeParams) {
