@@ -1,3 +1,15 @@
-<h3 class="text-center">
-  Be Healthy Now has not yet started for 2015. Please check back later!
+<h3 class="text-center" ng-show="showPickTeams">
+  Create a new team or join an existing one.
+</h3>
+
+<h3 class="text-center" ng-show="showWaitMsg">
+  {{projectname}} has not yet started for 2015. Please check back later!
+</h3>
+
+<h3 class="text-center" ng-show="showClosedMsg">
+  Registration is closed for this year. Try again next year!
+</h3>
+
+<h3 class="text-center" ng-show="showDashboard">
+  Here's your dashboard.
 </h3>

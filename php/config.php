@@ -167,5 +167,9 @@ function key_for_email($email) {
   ", $email);
 }
 
+function user_current_team($userid) {
+  //TODO this function
+  return null;
+}
 
 ?>

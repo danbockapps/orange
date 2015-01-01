@@ -6,27 +6,31 @@ $ok_array = array_merge($ok_array, $_SESSION);
 $qr = select_one_record("
   select
     case
-      when sum(reg_open) is null then 0
-      else sum(reg_open)
-    end as reg_open,
+      when sum(regOpen) is null then 0
+      else sum(regOpen)
+    end as regOpen,
     case
-      when sum(chal_current) is null then 0
-      else sum(chal_current)
-    end as chal_current
+      when sum(chalCurrent) is null then 0
+      else sum(chalCurrent)
+    end as chalCurrent
   from (
     select
       case
         when regstartdttm < now() and regenddttm > now() then 1
         else 0
-      end as reg_open,
+      end as regOpen,
       case
         when startdttm < now() and enddttm > now() then 1
         else 0
-      end as chal_current
+      end as chalCurrent
     from challenges
     where !deleted
   ) current_challenges
 ", array());
 
 $ok_array = array_merge($ok_array, $qr);
+
+if(isset($_SESSION['userid'])) {
+  $ok_array['team_id'] = user_current_team($_SESSION['userid']);
+}
 ?>

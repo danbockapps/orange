@@ -46,7 +46,7 @@ function phpInit($rootScope, $scope, $http) {
   $http.get("api.php?q=init").success(function(data) {
     console.log(data);
     $scope.projectname = data.projectname;
-    $rootScope.projectname = data.projectname;
+    $rootScope.initData = data;
     
     if(data.userid == null) {
       $scope.hideLoginForm = false;
@@ -286,7 +286,71 @@ function PasswordRecoverCtrl($scope, $http, $location, $routeParams) {
   };
 }
 
-function DashboardCtrl($scope, $http) {
+function DashboardCtrl($rootScope, $scope, $http, $location) {  
+  $scope.$watch(
+    function() {
+      return $rootScope.initData;
+    },
+    function() {
+      // This function might get called before initData exists, so make sure it
+      // exists before calling stuff on it.
+      if($rootScope.initData) {
+        console.log("initData has now arrived from the server.");
+        
+        $scope.projectname = $rootScope.initData.projectname;
+        
+        // This just makes the code shorter.
+        var d = $rootScope.initData;
+        
+        if(d.chalCurrent) {
+          console.log("There is a current challenge.");
+          if(d.team_id) {
+            console.log("The user is on a team.");
+            $scope.showDashboard = true;
+          }
+          else {
+            console.log("The user is not on a team.");
+            if(d.regOpen) {
+              console.log("Registration is open.");
+              $scope.showPickTeams = true;
+            }
+            else {
+              console.log("Registration is closed.");
+              $scope.showClosedMsg = true;
+            }
+          }
+        }
+        else {
+          console.log("There is no current challenge.");
+          if(d.regOpen) {
+            console.log("Registration is open.");
+            if(d.team_id) {
+              console.log("The user is on a team.");
+              $scope.showWaitMsg = true;
+            }
+            else {
+              console.log("The user is not on a team.");
+              $scope.showPickTeams = true;
+            }
+          }
+          else {
+            console.log("Registration is not open.");
+            $scope.showClosedMsg = true;
+          }
+        }
+      }
+      else {
+        console.log("initData has not arrived from the server yet.");
+      }
+    }
+  );
+  
+  /*
+  if(!$rootScope.initData.team_id) {
+    $location.path("pickteams");
+  }
+  */
+
 }
 
 function AdminCtrl($scope, $http, $location) {
@@ -343,7 +407,7 @@ app.controller(
 );
 app.controller(
   "DashboardCtrl", 
-  ["$scope", "$http", DashboardCtrl]
+  ["$rootScope", "$scope", "$http", "$location", DashboardCtrl]
 );
 app.controller(
   "AdminCtrl",

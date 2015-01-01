@@ -18,5 +18,5 @@ $ok_array = array(
 require("php/" . $_GET['q'] . ".php");
 
 // If the required file didn't already exit:
-exit(json_encode($ok_array));
+exit(json_encode($ok_array, JSON_NUMERIC_CHECK));
 ?>
