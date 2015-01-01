@@ -1,10 +1,18 @@
 var app = angular.module('orange', ['ngRoute']);
 
-app.config(['$routeProvider', function($routeProvider) {
+function appConfig($routeProvider) {  
   $routeProvider.
-    when('/welcome', {
-      templateUrl: 'partials/welcome.html',
-      controller: 'WelcomeCtrl'
+    when('/', {
+      templateUrl: (
+        $.cookie("loggedin") ? 
+        'partials/dashboard.html' : 
+        'partials/welcome.html'
+      ),
+      controller: (
+        $.cookie("loggedin") ? 
+        'DashboardCtrl' : 
+        'WelcomeCtrl'
+      )
     }).
     when('/emailsent', {
       templateUrl: 'partials/emailsent.html'
@@ -30,9 +38,9 @@ app.config(['$routeProvider', function($routeProvider) {
       controller: 'AdminCtrl'
     }).
     otherwise({
-      redirectTo: '/welcome'
+      redirectTo: '/'
     });
-}]);
+}
 
 function phpInit($rootScope, $scope, $http) {
   $http.get("api.php?q=init").success(function(data) {
@@ -112,7 +120,7 @@ function IndexCtrl($rootScope, $scope, $http, $location) {
       phpInit($rootScope, $scope, $http);
       $scope.loginEmail = "";
       $scope.loginPassword = "";
-      $location.path("welcome");
+      $location.path("");
     });
   }
 }
@@ -144,7 +152,6 @@ function WelcomeCtrl($scope, $http, $location) {
         console.log(data);
 
         if(data.responsestring === "OK") {
-          // redirect to another page
           $location.path('emailsent');
         }
         else {
@@ -317,6 +324,7 @@ function AdminCtrl($scope, $http, $location) {
 
 // If you're not minifying, you can replace the array literal with just the 
 // function name.
+app.config(["$routeProvider", appConfig]);
 app.controller(
   "IndexCtrl", 
   ["$rootScope", "$scope", "$http", "$location", IndexCtrl]
