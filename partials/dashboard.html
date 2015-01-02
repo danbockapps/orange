@@ -1,6 +1,88 @@
-<h3 class="text-center" ng-show="showPickTeams">
-  Create a new team or join an existing one.
-</h3>
+<div ng-show="showPickTeams">
+  <div class="row" style="margin-bottom:2em">
+    <div class="col-xs-6">
+      <h2 class="text-center">Create a new team</h2>
+      <button class="btn btn-primary center-block" ng-click="createButton()">
+        <span class="glyphicon glyphicon-flash"></span>
+        Create
+      </button>
+    </div>
+    <div class="col-xs-6">
+      <h2 class="text-center">Join an existing team</h2>
+      <button class="btn btn-primary center-block" ng-click="joinButton()">
+        <span class="glyphicon glyphicon-search"></span>
+        Join
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div ng-show="showCreateForm">
+        <form ng-submit="submitCreateForm">
+        
+          <div class="form-group">
+            <label for="teamName">Team name:</label>
+            <input
+              type="text"
+              id="teamName"
+              class="form-control"
+              ng-model="createTeamName"
+              required
+            />
+          </div>
+          
+          <button
+            type="submit"
+            class="btn btn-primary center-block"
+            ng-hide="disableCreateForm"
+          >
+            Submit
+          </button>
+          
+          <img
+            class="center-block"
+            src="img/spinner.gif"
+            ng-show="disableCreateForm"
+          />
+          
+        </form>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div ng-show="showJoinForm">
+        <form ng-submit="submitJoinForm">
+        
+          <div class="form-group">
+            <label for="teamId">Team ID Number:</label>
+            <input
+              type="text"
+              id="teamId"
+              class="form-control"
+              ng-model="joinTeamId"
+              required
+            />
+          </div>
+          
+          <button
+            type="submit"
+            class="btn btn-primary center-block"
+            ng-hide="disableJoinForm"
+          >
+            Submit
+          </button>
+          
+          <img
+            class="center-block"
+            src="img/spinner.gif"
+            ng-show="disableJoinForm"
+          />
+          
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <h3 class="text-center" ng-show="showWaitMsg">
   {{projectname}} has not yet started for 2015. Please check back later!

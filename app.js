@@ -343,6 +343,16 @@ function DashboardCtrl($rootScope, $scope, $http, $location) {
       }
     }
   );
+  
+  $scope.createButton = function() {
+    $scope.showCreateForm = true;
+    $scope.showJoinForm = false;
+  }
+  
+  $scope.joinButton = function() {
+    $scope.showJoinForm = true;
+    $scope.showCreateForm = false;
+  }
 }
 
 function AdminCtrl($scope, $http, $location) {
