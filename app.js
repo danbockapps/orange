@@ -65,9 +65,6 @@ function phpInit($rootScope, $scope, $http) {
   });
 }
 
-var placeholderSupported =
-    document.createElement("input").placeholder != undefined;
-
 function IndexCtrl($rootScope, $scope, $http, $location) {
   phpInit($rootScope, $scope, $http);
   
@@ -349,29 +346,64 @@ function DashboardCtrl($rootScope, $scope, $http, $location) {
 }
 
 function AdminCtrl($scope, $http, $location) {
+  var challengeObjs;
+  
   var refreshChallenges = function() {
     $http.get("api.php?q=challenges").success(function(data) {
       console.log(data);
+      
       $scope.challenges = data.challenges;
       $scope.showNcForm = false;
+
+      challengeObjs = [];
+      for(var key in $scope.challenges) {
+        var c = $scope.challenges[key];
+        
+        challengeObjs.push(new Challenge(
+          c.regStart,
+          c.regEnd,
+          c.start,
+          c.end
+        ));
+      }
     });
   }
   
   refreshChallenges();
   
   $scope.submitNcForm = function() {
-    $http.post("api.php?q=newchallenge", {
-      regstart:$scope.ncRegStart,
-      regend:$scope.ncRegEnd,
-      start:$scope.ncStart,
-      end:$scope.ncEnd
-    }).success(function(data) {
-      console.log(data);
-      refreshChallenges();
-    });
+    var potentialChallenge = new Challenge(
+      $scope.ncRegStart, 
+      $scope.ncRegEnd, 
+      $scope.ncStart, 
+      $scope.ncEnd
+    );
+    var conflict = false;
+    for(var c in challengeObjs) {
+      if(potentialChallenge.datesOverlap(challengeObjs[c])) {
+        conflict = true;
+      }
+    }
+    
+    if(conflict) {
+      $scope.$parent.showUnknownError = true;
+      $("#ErrorModal").modal();
+    }
+    else {
+      $http.post("api.php?q=newchallenge", {
+        regstart:$scope.ncRegStart,
+        regend:$scope.ncRegEnd,
+        start:$scope.ncStart,
+        end:$scope.ncEnd
+      }).success(function(data) {
+        console.log(data);
+        refreshChallenges();
+      });
+    }
   }
   
   $scope.deleteChallenge = function(id) {
+    //TODO don't allow delete if participants are registered.
     $http.post("api.php?q=deletechallenge", {
       challengeid:id
     }).success(function(data) {

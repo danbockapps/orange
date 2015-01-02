@@ -83,15 +83,15 @@
   async 
   defer
 ></script>
-<script>
+<script> // "
   var onloadCallback = function() {
     grecaptcha.render('drecaptcha', {
       'sitekey' : '6Lcmbf8SAAAAAHuWfDgbj0jYTpVI-kqPt-9oPkh4'
     });
     
-    // (I have no idea why I have to use setTimeout here)
-    setTimeout(function() {
+    // This is such a terrible way to do this
+    setInterval(function() {
       $("#drecaptcha > div > div").css("width", "");
-    }, 500);
+    }, 1000);
   };
 </script>

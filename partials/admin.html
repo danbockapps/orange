@@ -13,6 +13,7 @@
         <th>Reg end</th>
         <th>Program start</th>
         <th>Program end</th>
+        <th class="text-center">Participants</th>
         <th><!-- delete buttons --></th>
       </tr>
       
@@ -22,24 +23,27 @@
         <td style="vertical-align:middle">{{challenge.regEnd}}</td>
         <td style="vertical-align:middle">{{challenge.start}}</td>
         <td style="vertical-align:middle">{{challenge.end}}</td>
+        <td style="vertical-align:middle" class="text-center"><!-- TODO -->0</td>
         <td>
           <button 
             type="button" 
-            class="btn btn-danger"
-            ng-click="deleteChallenge(challenge.challengeid)"
+            class="btn btn-primary"
+            ng-click="deleteChallenge(challenge.id)"
           >
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
             Delete
           </button>
         </td>
       </tr>
       
       <tr ng-hide="showNcForm">
-        <td colspan="6">
+        <td colspan="7">
           <button
             type="button"
-            class="btn btn-success center-block"
+            class="btn btn-primary center-block"
             ng-click="showNcForm=true"
           >
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             New Challenge
           </button>
         </td>
@@ -51,35 +55,40 @@
           <td>
             <input
               type="text"
-              class="form-control" 
+              class="form-control orange-dttm" 
               ng-model="ncRegStart" 
               placeholder="2015-02-01 08:00:00"
+              data-date-format="YYYY-MM-DD HH:mm:ss"
             />
           </td>
           <td>
             <input
               type="text"
-              class="form-control" 
+              class="form-control orange-dttm" 
               ng-model="ncRegEnd" 
               placeholder="2015-04-01 17:00:00"
+              data-date-format="YYYY-MM-DD HH:mm:ss"
             />
           </td>
           <td>
             <input
               type="text"
-              class="form-control" 
+              class="form-control orange-dttm"
               ng-model="ncStart" 
               placeholder="2015-04-02 08:00:00"
+              data-date-format="YYYY-MM-DD HH:mm:ss"
             />
           </td>
           <td>
             <input
               type="text"
-              class="form-control" 
+              class="form-control orange-dttm" 
               ng-model="ncEnd" 
               placeholder="2015-06-01 08:00:00"
+              data-date-format="YYYY-MM-DD HH:mm:ss"
             />
           </td>
+          <td><!-- participants column --></td>
           <td>
             <button ng-click="submitNcForm()" class="btn btn-primary">
               Add
@@ -90,3 +99,8 @@
     </table>
   </div>
 </div>
+<script>
+  $(function () {
+    $('.orange-dttm').datetimepicker();
+  });
+</script>
