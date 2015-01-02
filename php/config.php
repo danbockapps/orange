@@ -98,7 +98,7 @@ function reset_akey($email) {
 }
 
 function exit_error($responsecode) {
-  $returnable['responsestring'] = "ERROR";
+  $returnable['responseString'] = "ERROR";
   $returnable['responseCode'] = $responsecode;
   
   if($responsecode == 1)
