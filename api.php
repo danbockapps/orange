@@ -12,7 +12,7 @@ $post = json_decode($contents, true);
 // Initialize array that will be returned if no error.
 $ok_array = array(
   q => $_GET['q'],
-  responsestring => "OK"
+  responseString => "OK"
 );
 
 require("php/" . $_GET['q'] . ".php");

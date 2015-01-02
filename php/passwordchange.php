@@ -8,7 +8,7 @@ $ur = pdo_upsert("
     lname = ?
   where akey = ?
 ", array(
-  pwhash($post['newpassword']),
+  pwhash($post['newPassword']),
   $post['fname'],
   $post['lname'],
   $post['key']

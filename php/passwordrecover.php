@@ -5,8 +5,6 @@ $eqr = pdo_select("
   where email = ?
 ", $post['email']);
 
-logtxt(print_r($eqr, true));
-
 if(empty($eqr))
   exit_error(8);
 

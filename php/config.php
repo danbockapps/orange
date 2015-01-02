@@ -99,7 +99,7 @@ function reset_akey($email) {
 
 function exit_error($responsecode) {
   $returnable['responsestring'] = "ERROR";
-  $returnable['responsecode'] = $responsecode;
+  $returnable['responseCode'] = $responsecode;
   
   if($responsecode == 1)
     $returnable['explanation'] = "Password is too short";

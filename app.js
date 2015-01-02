@@ -4,12 +4,12 @@ function appConfig($routeProvider) {
   $routeProvider.
     when('/', {
       templateUrl: (
-        $.cookie("loggedin") ? 
+        $.cookie("loggedIn") ? 
         'partials/dashboard.html' : 
         'partials/welcome.html'
       ),
       controller: (
-        $.cookie("loggedin") ? 
+        $.cookie("loggedIn") ? 
         'DashboardCtrl' : 
         'WelcomeCtrl'
       )
@@ -73,9 +73,9 @@ function IndexCtrl($rootScope, $scope, $http, $location) {
   
   $scope.submitLoginForm = function() {
     phpObj = {email:$scope.loginEmail, password:$scope.loginPassword};
-    $http.post("api.php?q=login", phpObj).success(function(data){
+    $http.post("api.php?q=login", phpObj).success(function(data) {
       console.log(data);
-      if(data.responsestring == "ERROR") {
+      if(data.responseString == "ERROR") {
         
         // Reset modal
         $scope.showNonActivateError = false;
@@ -83,15 +83,15 @@ function IndexCtrl($rootScope, $scope, $http, $location) {
         $scope.showUserNotFoundError = false;
         $scope.showUnknownError = false;
         
-        if(data.responsecode == 6) {
+        if(data.responseCode == 6) {
           // Account not activated
           $scope.showNonActivateError = true;
         }
-        else if(data.responsecode == 7) {
+        else if(data.responseCode == 7) {
           // Wrong password
           $scope.showWrongPasswordError = true;
         }
-        else if(data.responsecode == 8) {
+        else if(data.responseCode == 8) {
           // User does not exist
           $scope.showUserNotFoundError = true;
         }
@@ -115,7 +115,7 @@ function IndexCtrl($rootScope, $scope, $http, $location) {
   };
   
   $scope.logout = function() {
-    $http.post("api.php?q=logout").success(function(data){
+    $http.post("api.php?q=logout").success(function(data) {
       console.log(data);
       phpInit($rootScope, $scope, $http);
       $scope.loginEmail = "";
@@ -129,6 +129,10 @@ function WelcomeCtrl($scope, $http, $location) {
   $scope.submitRegisterForm = function () {
     $scope.$parent.showPassword8Error = false;
     $scope.$parent.showPasswordMatchError = false;
+    $scope.$parent.showEmailAlreadyError = false;
+    $scope.$parent.showRecaptchaError = false;
+    $scope.$parent.showUnknownError = false;
+    
     if(typeof($scope.password1) === "undefined" || $scope.password1.length < 8) {
       $scope.$parent.showPassword8Error = true;
       $("#ErrorModal").modal();
@@ -145,25 +149,23 @@ function WelcomeCtrl($scope, $http, $location) {
       phpObj = {
         email:$scope.regEmail,
         password:$scope.password1,
-        recaptcha_response:grecaptcha.getResponse()
+        recaptchaResponse:grecaptcha.getResponse()
       };
 
       $http.post("api.php?q=register", phpObj).success(function(data) {
         console.log(data);
 
-        if(data.responsestring === "OK") {
+        if(data.responseString === "OK") {
           $location.path('emailsent');
         }
         else {
           // there was an error
-          $scope.$parent.showEmailAlreadyError = false;
-          $scope.$parent.showRecaptchaError = false;
-          $scope.$parent.showUnknownError = false;
 
-          if(data.responsecode === 2)
+
+          if(data.responseCode === 2)
             $scope.$parent.showEmailAlreadyError = true;
 
-          else if(data.responsecode === 5)
+          else if(data.responseCode === 5)
             $scope.$parent.showRecaptchaError = true;
 
           else
@@ -183,10 +185,10 @@ function ActivateCtrl($scope, $http, $routeParams) {
   $http.get("api.php?q=check_key", {params:{key:$routeParams.key}})
       .success(function(data) {
     console.log(data);
-    if(data.responsestring == "ERROR") {
+    if(data.responseString == "ERROR") {
       $scope.showBadKeyMsg = true;
     }
-    else if(data.responsestring == "OK") {
+    else if(data.responseString == "OK") {
       $scope.showSurvey = true;
       $scope.$parent.hideLoginForm = true;
       actEmail = data.email;
@@ -218,10 +220,10 @@ function PasswordRecoverCtrl($scope, $http, $location, $routeParams) {
     $http.get("api.php?q=check_key", {params:{key:$routeParams.key}})
         .success(function(data) {
       console.log(data);
-      if(data.responsestring == "ERROR") {
+      if(data.responseString == "ERROR") {
         $scope.showBadKeyMsg = true;
       }
-      else if(data.responsestring == "OK") {
+      else if(data.responseString == "OK") {
         $scope.showNepForm = true;
         $scope.$parent.hideLoginForm = true;
         actEmail = data.email;
@@ -243,8 +245,8 @@ function PasswordRecoverCtrl($scope, $http, $location, $routeParams) {
       email:$scope.parEmail
     }).success(function(data) {
       console.log(data);
-      if(data.responsestring == "ERROR") {
-        if(data.responsecode == 8) {
+      if(data.responseString == "ERROR") {
+        if(data.responseCode == 8) {
           $scope.disableParForm = false;
           $scope.$parent.showUserNotFoundError = true;
           $("#ErrorModal").modal();
@@ -263,12 +265,12 @@ function PasswordRecoverCtrl($scope, $http, $location, $routeParams) {
     
     $http.post("api.php?q=passwordchange", {
       key:$routeParams.key,
-      newpassword:$scope.nepPassword1,
+      newPassword:$scope.nepPassword1,
       fname:$scope.nepFname,
       lname:$scope.nepLname
     }).success(function(data) {
-      if(data.responsestring == "ERROR") {
-        if(data.responsecode == 4) {
+      if(data.responseString == "ERROR") {
+        if(data.responseCode == 4) {
           $scope.$parent.showUnknownError = true;
           $("#ErrorModal").modal();
         }
@@ -344,13 +346,6 @@ function DashboardCtrl($rootScope, $scope, $http, $location) {
       }
     }
   );
-  
-  /*
-  if(!$rootScope.initData.team_id) {
-    $location.path("pickteams");
-  }
-  */
-
 }
 
 function AdminCtrl($scope, $http, $location) {

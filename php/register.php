@@ -6,7 +6,7 @@ $recaptcha_success = json_decode(file_get_contents(
   "https://www.google.com/recaptcha/api/siteverify?secret=" . 
   $ini['recaptcha_secret'] . 
   "&response=" .
-  $post['recaptcha_response']
+  $post['recaptchaResponse']
 ))->success;
 
 if($recaptcha_success != 1)             exit_error(5);
