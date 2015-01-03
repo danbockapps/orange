@@ -353,6 +353,52 @@ function DashboardCtrl($rootScope, $scope, $http, $location) {
     $scope.showJoinForm = true;
     $scope.showCreateForm = false;
   }
+  
+  $scope.submitCreateForm = function() {
+    $scope.hideJoinButton = true;
+    $scope.disableCreateForm = true;
+    $scope.hideCreateSubmit = true;
+    $scope.showCreateSpinner = true;
+    
+    $http.post("api.php?q=newteam", {teamName: $scope.createTeamName})
+    .success(function(data) {
+      console.log(data);
+      if(data.responseString == "OK") {
+        $scope.showCreateSpinner = false;
+        $scope.joinCode = data.joinCode;
+        $scope.showTeamCreated = true;
+      }
+      else {
+        $scope.$parent.showUnknownError = true;
+        $("#ErrorModal").modal();
+      }
+    });
+  }
+  
+  $scope.submitJoinForm = function() {
+    $scope.hideCreateButton = true;
+    $scope.disableJoinForm = true;
+    $scope.hideJoinSubmit = true;
+    $scope.showJoinSpinner = true;
+    
+    $http.post("api.php?q=jointeam", {joinCode: $scope.joinJoinCode})
+    .success(function(data) {
+      console.log(data);
+      if(data.responseString == "OK") {
+        $scope.showJoinSpinner = false;
+        $scope.teamName = data.teamName;
+        $scope.showTeamJoined = true;
+      }
+      else {
+        $scope.$parent.showUnknownError = true;
+        $("#ErrorModal").modal();
+      }
+    });
+  }
+  
+  $scope.getStarted = function() {
+    $location.path("");
+  }
 }
 
 function AdminCtrl($scope, $http, $location) {
