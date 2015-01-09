@@ -8,7 +8,8 @@ create table if not exists users (
   lname varchar(50),
   admin boolean,
   dateuseradded timestamp default current_timestamp,
-  constraint unique (email)
+  constraint unique (email),
+  constraint unique (akey)
 ) engine=innodb;
 
 create table if not exists challenges (
@@ -25,9 +26,11 @@ create table if not exists teams (
   challengeid int unsigned,
   captainid int unsigned,
   teamname varchar(30),
+  joincode varchar(6),
   dateteamadded datetime,
   constraint foreign key (challengeid) references challenges (challengeid),
-  constraint foreign key (captainid) references users (userid)
+  constraint foreign key (captainid) references users (userid),
+  constraint unique(joincode)
 ) engine=innodb;
 
 create table if not exists team_members (

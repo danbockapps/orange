@@ -2,6 +2,7 @@
 CRYPT_BLOWFISH or die ('No Blowfish found.');
 define("BLOWFISH_PRE", "$2y$05$");
 define("BLOWFISH_SUF", "$");
+define("REG_OPEN", 1);
 $ini = parse_ini_file("auth.ini");
 date_default_timezone_set("America/New_York");
 
@@ -170,6 +171,11 @@ function key_for_email($email) {
 function user_current_team($userid) {
   //TODO this function
   return null;
+}
+
+function current_challengeid($status) {
+  //TODO this function
+  return 1;
 }
 
 ?>
