@@ -1,5 +1,5 @@
 <?php
-$ok_array['challenges'] = pdo_select("
+$ok_array['challenge'] = select_one_record("
   select
     challengeid as id,
     regstartdttm as regStart,

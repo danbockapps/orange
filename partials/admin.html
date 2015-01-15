@@ -5,59 +5,44 @@
 </div>
 <div class="row">
   <div class="col-xs-12">
-    <h2>Challenges</h2>
+    <h2>Challenge dates</h2>
     <table class="table">
       <tr>
-        <th>ID</th>
         <th>Reg start</th>
         <th>Reg end</th>
         <th>Program start</th>
         <th>Program end</th>
-        <th class="text-center">Participants</th>
-        <th><!-- delete buttons --></th>
+        <th><!-- Submit button column --></td>
       </tr>
       
-      <tr ng-repeat="challenge in challenges">
-        <td style="vertical-align:middle">{{challenge.id}}</td>
+      <tr>
         <td style="vertical-align:middle">{{challenge.regStart}}</td>
         <td style="vertical-align:middle">{{challenge.regEnd}}</td>
         <td style="vertical-align:middle">{{challenge.start}}</td>
         <td style="vertical-align:middle">{{challenge.end}}</td>
-        <td style="vertical-align:middle" class="text-center"><!-- TODO -->0</td>
-        <td>
-          <button 
-            type="button" 
-            class="btn btn-primary"
-            ng-click="deleteChallenge(challenge.id)"
-          >
-            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-            Delete
-          </button>
-        </td>
+        <td><!-- Submit button column --></td>
       </tr>
       
       <tr ng-hide="showNcForm">
-        <td colspan="7">
+        <td colspan="5">
           <button
             type="button"
             class="btn btn-primary center-block"
             ng-click="showNcForm=true"
           >
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            New Challenge
+            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+            Change Dates
           </button>
         </td>
       </tr>
       
       <tr ng-show="showNcForm">
         <form role="form">
-          <td><!-- ID column --></td>
           <td>
             <input
               type="text"
               class="form-control orange-dttm" 
               ng-model="ncRegStart" 
-              placeholder="2015-02-01 08:00:00"
               data-date-format="YYYY-MM-DD HH:mm:ss"
             />
           </td>
@@ -66,7 +51,6 @@
               type="text"
               class="form-control orange-dttm" 
               ng-model="ncRegEnd" 
-              placeholder="2015-04-01 17:00:00"
               data-date-format="YYYY-MM-DD HH:mm:ss"
             />
           </td>
@@ -75,7 +59,6 @@
               type="text"
               class="form-control orange-dttm"
               ng-model="ncStart" 
-              placeholder="2015-04-02 08:00:00"
               data-date-format="YYYY-MM-DD HH:mm:ss"
             />
           </td>
@@ -84,15 +67,13 @@
               type="text"
               class="form-control orange-dttm" 
               ng-model="ncEnd" 
-              placeholder="2015-06-01 08:00:00"
               data-date-format="YYYY-MM-DD HH:mm:ss"
             />
           </td>
-          <td><!-- participants column --></td>
           <td>
             <button ng-click="submitNcForm()" class="btn btn-primary">
               <span class="glyphicon glyphicon-ok-circle"></span>
-              Add
+              Submit
             </button>
           </td>
         </form>

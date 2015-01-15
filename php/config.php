@@ -118,8 +118,27 @@ function exit_error($responsecode) {
     $returnable['explanation'] = "Wrong password";
   if($responsecode == 8)
     $returnable['explanation'] = "Email not found in users table";
+  if($responsecode == 9)
+    $returnable['explanation'] = "Not logged in as administrator";
+  if($responsecode == 10)
+    $returnable['explanation'] = "Date error";
   
   exit(json_encode($returnable));
+}
+
+function am_i_admin() {
+  $qr = select_one_record("
+    select admin
+    from users
+    where userid = ?
+  ", $_SESSION['userid']);
+    
+  return $qr['admin'];
+}
+
+function require_admin() {
+  if(!am_i_admin())
+    exit_error(9);
 }
 
 function sendmail($to, $subject, $body) {

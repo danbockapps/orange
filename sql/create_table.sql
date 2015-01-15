@@ -6,7 +6,7 @@ create table if not exists users (
   activated boolean default false,
   fname varchar(50),
   lname varchar(50),
-  admin boolean,
+  admin boolean default false,
   dateuseradded timestamp default current_timestamp,
   constraint unique (email),
   constraint unique (akey)
