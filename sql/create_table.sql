@@ -24,18 +24,17 @@ create table if not exists challenges (
 create table if not exists teams (
   teamid int unsigned auto_increment primary key,
   challengeid int unsigned,
-  captainid int unsigned,
   teamname varchar(30),
   joincode varchar(6),
   dateteamadded datetime,
   constraint foreign key (challengeid) references challenges (challengeid),
-  constraint foreign key (captainid) references users (userid),
   constraint unique(joincode)
 ) engine=innodb;
 
 create table if not exists team_members (
   teamid int unsigned,
   userid int unsigned,
+  captain boolean,
   dateuserteamadded datetime,
   constraint primary key (teamid, userid),
   constraint foreign key (teamid) references teams (teamid),
@@ -54,4 +53,3 @@ create table if not exists reports (
   constraint foreign key (userid) references users (userid),
   constraint foreign key (activityid) references activities (activityid)
 ) engine=innodb;
-

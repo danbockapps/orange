@@ -1,9 +1,11 @@
 <?php
-//TODO make sure the team creator is not already on a team
+if(user_current_team($_SESSION['userid']) != null)
+  exit_error(13);
+
 $found_unique_join_code = false;
 
 while(!$found_unique_join_code) {
-  $join_code_candidate = mt_rand(0, 999999);
+  $join_code_candidate = str_pad(mt_rand(0, 999999), 6, "0", STR_PAD_LEFT);
   
   $search = select_one_record("
     select count(*) as count
@@ -17,21 +19,42 @@ while(!$found_unique_join_code) {
     pdo_upsert("
       insert into teams (
         challengeid,
-        captainid,
         teamname,
         joincode,
         dateteamadded
-      ) values (?, ?, ?, ?, now())
+      ) values (?, ?, ?, now())
     ", array(
-      current_challengeid(REG_OPEN),
-      $_SESSION['userid'],
+      current_challengeid(),
       $post['teamName'],
-      str_pad($join_code_candidate, 6, "0", STR_PAD_LEFT)
+      $join_code_candidate
     ));
+    
+    $qr = select_one_record(
+      "select teamid from teams where joincode = ?",
+      $join_code_candidate
+    );
+
+    pdo_upsert("
+      insert into team_members (
+        teamid,
+        userid,
+        captain,
+        dateuserteamadded
+      ) values (?, ?, true, now())
+    ", array(
+      $qr['teamid'],
+      $_SESSION['userid']
+    ));
+    
+    sendmail(
+      email_for_user($_SESSION['userid']),
+      "Your " . $ini['projectname'] . " Join Code",
+      "Your team, " . $post['teamName'] . ", has been created. " .
+      "Your join code is:\n\n" .
+      $join_code_candidate . "\n\n" .
+      "Tell your friends to enter the join code to join your team."
+    );
   }
-
-  //TODO add team captain to team_members table
-
 }
 
 $ok_array['joinCode'] = $join_code_candidate;

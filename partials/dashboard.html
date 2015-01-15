@@ -56,7 +56,8 @@
         <div ng-show="showTeamCreated" class="alert alert-success">
           <p style="padding-bottom:1em">
             Your team has been created. Your team's Join Code is
-            <strong>{{joinCode}}</strong>. Give your Join Code to your teammates
+            <strong>{{joinCode}}</strong>. (We have emailed this to you at 
+            {{userEmail}}.) Give your Join Code to your teammates
             so they can join your team. Good luck with the challenge!
           </p>
           <button class="btn btn-success btn-block" ng-click="getStarted()">

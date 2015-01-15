@@ -2,7 +2,6 @@
 CRYPT_BLOWFISH or die ('No Blowfish found.');
 define("BLOWFISH_PRE", "$2y$05$");
 define("BLOWFISH_SUF", "$");
-define("REG_OPEN", 1);
 $ini = parse_ini_file("auth.ini");
 date_default_timezone_set("America/New_York");
 
@@ -35,7 +34,7 @@ function pdo_connect() {
   return $dbh;
 }
 
-function pdo_upsert($sql, $qs) {
+function pdo_upsert($sql, $qs = null) {
   $dbh = pdo_connect();
   $sth = $dbh->prepare($sql);
   return $sth->execute(is_array($qs) ? $qs : array($qs));
@@ -49,10 +48,14 @@ function pdo_select($query, $qs) {
   return $sth->fetchAll();
 }
 
-function select_one_record($query, $qs) {
+function select_one_record($query, $qs = null) {
   $sorqr = pdo_select($query, $qs);
-  if(count($sorqr) == 1)
+  if(count($sorqr) == 0)
+    return null;
+  else if(count($sorqr) == 1)
     return $sorqr[0];
+  else
+    throw new Exception("Unexpected records returned.");
 }
 
 function logtxt($string) {
@@ -123,6 +126,8 @@ function exit_error($responsecode) {
     $returnable['explanation'] = "Not logged in as administrator";
   if($responsecode == 10)
     $returnable['explanation'] = "Date error";
+  if($responsecode == 13)
+    $returnable['explanation'] = "User already on a team";
   
   exit(json_encode($returnable));
 }
@@ -143,6 +148,9 @@ function require_admin() {
 }
 
 function sendmail($to, $subject, $body) {
+  // Prevent email-related "strict" errors from showing in the log
+  $old_error_level = error_reporting(E_ALL & ~E_STRICT);
+  
   require_once("Mail.php");
   global $ini;
 
@@ -166,6 +174,8 @@ function sendmail($to, $subject, $body) {
 
   /* Ok send mail */
   $mail_object->send($recipients, $headers, $mailmsg);
+  
+  error_reporting($old_error_level);
 }
 
 function email_for_key($key) {
@@ -188,14 +198,33 @@ function key_for_email($email) {
   ", $email);
 }
 
-function user_current_team($userid) {
-  //TODO this function
-  return null;
+function email_for_user($userid) {
+  $qr = select_one_record("
+    select email
+    from users
+    where userid = ?
+  ", $userid);
+  return $qr['email'];
 }
 
-function current_challengeid($status) {
-  //TODO this function
-  return 1;
+function user_current_team($userid) {
+  $qr = select_one_record("
+    select teamid
+    from
+      team_members tm
+      natural join teams t
+    where
+      t.challengeid = ? and
+      tm.userid = ?
+  ", array(current_challengeid(), $userid));
+  
+  // If no team is found, this will return null.
+  return $qr['teamid'];
+}
+
+function current_challengeid() {
+  $qr = select_one_record("select challengeid from challenges where !deleted");
+  return $qr['challengeid'];
 }
 
 ?>

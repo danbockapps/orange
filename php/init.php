@@ -26,11 +26,12 @@ $qr = select_one_record("
     from challenges
     where !deleted
   ) current_challenges
-", array());
+");
 
 $ok_array = array_merge($ok_array, $qr);
 
 if(isset($_SESSION['userid'])) {
   $ok_array['team_id'] = user_current_team($_SESSION['userid']);
+  $ok_array['userEmail'] = email_for_user($_SESSION['userid']);
 }
 ?>

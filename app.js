@@ -249,6 +249,7 @@ function DashboardCtrl($rootScope, $scope, $http, $location) {
         console.log("initData has now arrived from the server.");
         
         $scope.projectname = $rootScope.initData.projectname;
+        $scope.userEmail = $rootScope.initData.userEmail;
         
         // This just makes the code shorter.
         var d = $rootScope.initData;
