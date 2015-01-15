@@ -71,34 +71,7 @@ function IndexCtrl($rootScope, $scope, $http, $location) {
   $scope.submitLoginForm = function() {
     phpObj = {email:$scope.loginEmail, password:$scope.loginPassword};
     $http.post("api.php?q=login", phpObj).success(function(data) {
-      console.log(data);
-      if(data.responseString == "ERROR") {
-        
-        // Reset modal
-        $scope.showNonActivateError = false;
-        $scope.showWrongPasswordError = false;
-        $scope.showUserNotFoundError = false;
-        $scope.showUnknownError = false;
-        
-        if(data.responseCode == 6) {
-          // Account not activated
-          $scope.showNonActivateError = true;
-        }
-        else if(data.responseCode == 7) {
-          // Wrong password
-          $scope.showWrongPasswordError = true;
-        }
-        else if(data.responseCode == 8) {
-          // User does not exist
-          $scope.showUserNotFoundError = true;
-        }
-        else {
-          // Unknown error
-          $scope.showUnknownError = true;
-        }
-        $("#ErrorModal").modal();
-      }
-      else {
+      if(processApiResponse($scope, $scope, data)) {
         // Login successful
         phpInit($rootScope, $scope, $http);
         $location.path("dashboard");
@@ -113,29 +86,25 @@ function IndexCtrl($rootScope, $scope, $http, $location) {
   
   $scope.logout = function() {
     $http.post("api.php?q=logout").success(function(data) {
-      console.log(data);
-      phpInit($rootScope, $scope, $http);
-      $scope.loginEmail = "";
-      $scope.loginPassword = "";
-      $location.path("");
+      if(processApiResponse($scope, $scope, data)) {
+        phpInit($rootScope, $scope, $http);
+        $scope.loginEmail = "";
+        $scope.loginPassword = "";
+        $location.path("");
+      }
     });
   }
 }
 
 function WelcomeCtrl($scope, $http, $location) {
   $scope.submitRegisterForm = function () {
-    $scope.$parent.showPassword8Error = false;
-    $scope.$parent.showPasswordMatchError = false;
-    $scope.$parent.showEmailAlreadyError = false;
-    $scope.$parent.showRecaptchaError = false;
-    $scope.$parent.showUnknownError = false;
     
     if(typeof($scope.password1) === "undefined" || $scope.password1.length < 8) {
-      $scope.$parent.showPassword8Error = true;
+      $scope.$parent.modalMsg = 1;
       $("#ErrorModal").modal();
     }
     else if($scope.password1 !== $scope.password2) {
-      $scope.$parent.showPasswordMatchError = true;
+      $scope.$parent.modalMsg = 11;
       $("#ErrorModal").modal();
     }
 
@@ -150,25 +119,11 @@ function WelcomeCtrl($scope, $http, $location) {
       };
 
       $http.post("api.php?q=register", phpObj).success(function(data) {
-        console.log(data);
-
-        if(data.responseString === "OK") {
+        if(processApiResponse($scope, $scope.$parent, data)) {
           $location.path('emailsent');
         }
         else {
           // there was an error
-
-
-          if(data.responseCode === 2)
-            $scope.$parent.showEmailAlreadyError = true;
-
-          else if(data.responseCode === 5)
-            $scope.$parent.showRecaptchaError = true;
-
-          else
-            $scope.$parent.showUnknownError = true;
-
-          $("#ErrorModal").modal();
           $scope.disableRegForm = false;
         }
       });
@@ -241,43 +196,40 @@ function PasswordRecoverCtrl($scope, $http, $location, $routeParams) {
     $http.post("api.php?q=passwordrecover", {
       email:$scope.parEmail
     }).success(function(data) {
-      console.log(data);
-      if(data.responseString == "ERROR") {
-        if(data.responseCode == 8) {
-          $scope.disableParForm = false;
-          $scope.$parent.showUserNotFoundError = true;
-          $("#ErrorModal").modal();
-        }
-      }
-      else {
+      if(processApiResponse($scope, $scope.$parent, data)) {
         $scope.showParForm = false;
         $scope.showCheckEmailMsg = true;
+      }
+      else {
+        $scope.disableParForm = false;
       }
     });
   }
   
   $scope.submitNepForm = function() {
-    $scope.disableNepForm = true;
-    console.log($scope.nepFname + " " + $scope.nepLname);
-    
-    $http.post("api.php?q=passwordchange", {
-      key:$routeParams.key,
-      newPassword:$scope.nepPassword1,
-      fname:$scope.nepFname,
-      lname:$scope.nepLname
-    }).success(function(data) {
-      if(data.responseString == "ERROR") {
-        if(data.responseCode == 4) {
-          $scope.$parent.showUnknownError = true;
-          $("#ErrorModal").modal();
+    if(typeof($scope.nepPassword1) === "undefined" || $scope.nepPassword1.length < 8) {
+      $scope.$parent.modalMsg = 1;
+      $("#ErrorModal").modal();
+    }
+    else if($scope.nepPassword1 !== $scope.nepPassword2) {
+      $scope.$parent.modalMsg = 11;
+      $("#ErrorModal").modal();
+    }
+    else {
+      $scope.disableNepForm = true;
+      $http.post("api.php?q=passwordchange", {
+        key:$routeParams.key,
+        newPassword:$scope.nepPassword1,
+        fname:$scope.nepFname,
+        lname:$scope.nepLname
+      }).success(function(data) {
+        if(processApiResponse($scope, $scope.$parent, data)) {
+          $scope.showNepForm = false;
+          $scope.showSuccessMsg = true;
+          $scope.$parent.hideLoginForm = false;
         }
-      }
-      else {
-        $scope.showNepForm = false;
-        $scope.showSuccessMsg = true;
-        $scope.$parent.hideLoginForm = false;
-      }
-    });
+      });
+    }
   }
   
   $scope.showPasswordRecover = function() {
@@ -362,15 +314,10 @@ function DashboardCtrl($rootScope, $scope, $http, $location) {
     
     $http.post("api.php?q=newteam", {teamName: $scope.createTeamName})
     .success(function(data) {
-      console.log(data);
-      if(data.responseString == "OK") {
+      if(processApiResponse($scope, $scope.$parent, data)) {
         $scope.showCreateSpinner = false;
         $scope.joinCode = data.joinCode;
         $scope.showTeamCreated = true;
-      }
-      else {
-        $scope.$parent.showUnknownError = true;
-        $("#ErrorModal").modal();
       }
     });
   }
@@ -383,15 +330,10 @@ function DashboardCtrl($rootScope, $scope, $http, $location) {
     
     $http.post("api.php?q=jointeam", {joinCode: $scope.joinJoinCode})
     .success(function(data) {
-      console.log(data);
-      if(data.responseString == "OK") {
+      if(processApiResponse($scope, $scope.$parent, data)) {
         $scope.showJoinSpinner = false;
         $scope.teamName = data.teamName;
         $scope.showTeamJoined = true;
-      }
-      else {
-        $scope.$parent.showUnknownError = true;
-        $("#ErrorModal").modal();
       }
     });
   }
@@ -420,13 +362,8 @@ function AdminCtrl($scope, $http, $location) {
       start:$scope.ncStart,
       end:$scope.ncEnd
     }).success(function(data) {
-      console.log(data);
-      
-      if(data.responseString == "OK")
+      if(processApiResponse($scope, $scope.$parent, data)) {
         refreshChallenges();
-      else {
-        $scope.$parent.showUnknownError = true;
-        $("#ErrorModal").modal();
       }
     });
   }

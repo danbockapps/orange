@@ -47,7 +47,36 @@
             </h4>
           </div>
           
-          <div class="modal-body" ng-show="showNonActivateError">
+          <!-- responseCode 1 -->
+          <div class="modal-body" ng-show="modalMsg==1">
+            <p>
+              Your password must be at least 8 characters.
+            </p>
+          </div>
+
+          <!-- responseCode 2 -->
+          <div class="modal-body" ng-show="modalMsg==2">
+            <p>
+              There is already an account with that email address. Please log 
+              in or 
+              <a href="javascript:" ng-click="showPasswordRecover()">
+                click here if you have forgotten your password.
+              </a>
+            </p>
+          </div>
+          
+          <!-- responseCode 3 (key not found) not in modal -->
+          <!-- responseCode 4 (database error) not in modal -->
+
+          <!-- responseCode 5 -->          
+          <div class="modal-body" ng-show="modalMsg==5">
+            <p>
+              Recaptcha thinks you are a robot. Please try again.
+            </p>
+          </div>
+
+          <!-- responseCode 6 -->
+          <div class="modal-body" ng-show="modalMsg==6">
             <p>
               Your account has not been activated. Please follow the 
               instructions in the email that was sent to you. If you do not 
@@ -58,47 +87,41 @@
             </p>
           </div>
           
-          <div class="modal-body" ng-show="showWrongPasswordError">
+          <!-- responseCode 7 -->
+          <div class="modal-body" ng-show="modalMsg==7">
             <p>
               Incorrect password. Please try again.
             </p>
           </div>
-          
-          <div class="modal-body" ng-show="showUserNotFoundError">
+
+          <!-- responseCode 8 -->
+          <div class="modal-body" ng-show="modalMsg==8">
             <p>
               The email address you entered was not found.
             </p>
           </div>
-          
-          <div class="modal-body" ng-show="showEmailAlreadyError">
+
+          <!-- responseCode 9 -->
+          <div class="modal-body" ng-show="modalMsg==9">
             <p>
-              There is already an account with that email address. Please log 
-              in or 
-              <a href="javascript:" ng-click="showPasswordRecover()">
-                click here if you have forgotten your password.
-              </a>
+              You have to be logged in as an admin to do that.
+            </p>
+          </div>
+
+          <!-- responseCode 10 -->
+          <div class="modal-body" ng-show="modalMsg==10">
+            <p>
+              There was an error with the dates you entered.
             </p>
           </div>
           
-          <div class="modal-body" ng-show="showRecaptchaError">
-            <p>
-              Recaptcha thinks you are a robot. Please try again.
-            </p>
-          </div>
-          
-          <div class="modal-body" ng-show="showPassword8Error">
-            <p>
-              Your password must be at least 8 characters.
-            </p>
-          </div>
-          
-          <div class="modal-body" ng-show="showPasswordMatchError">
+          <div class="modal-body" ng-show="modalMsg==11">
             <p>
               Your password entries do not match.
             </p>
           </div>
           
-          <div class="modal-body" ng-show="showUnknownError">
+          <div class="modal-body" ng-show="modalMsg==12">
             <p>
               An error occurred. Please try again.
             </p>

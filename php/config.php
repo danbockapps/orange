@@ -99,6 +99,7 @@ function reset_akey($email) {
 }
 
 function exit_error($responsecode) {
+  $returnable['q'] = $_GET['q'];
   $returnable['responseString'] = "ERROR";
   $returnable['responseCode'] = $responsecode;
   
