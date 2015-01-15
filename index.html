@@ -47,14 +47,12 @@
             </h4>
           </div>
           
-          <!-- responseCode 1 -->
           <div class="modal-body" ng-show="modalMsg==1">
             <p>
               Your password must be at least 8 characters.
             </p>
           </div>
 
-          <!-- responseCode 2 -->
           <div class="modal-body" ng-show="modalMsg==2">
             <p>
               There is already an account with that email address. Please log 
@@ -64,18 +62,13 @@
               </a>
             </p>
           </div>
-          
-          <!-- responseCode 3 (key not found) not in modal -->
-          <!-- responseCode 4 (database error) not in modal -->
 
-          <!-- responseCode 5 -->          
           <div class="modal-body" ng-show="modalMsg==5">
             <p>
               Recaptcha thinks you are a robot. Please try again.
             </p>
           </div>
 
-          <!-- responseCode 6 -->
           <div class="modal-body" ng-show="modalMsg==6">
             <p>
               Your account has not been activated. Please follow the 
@@ -87,28 +80,24 @@
             </p>
           </div>
           
-          <!-- responseCode 7 -->
           <div class="modal-body" ng-show="modalMsg==7">
             <p>
               Incorrect password. Please try again.
             </p>
           </div>
 
-          <!-- responseCode 8 -->
           <div class="modal-body" ng-show="modalMsg==8">
             <p>
               The email address you entered was not found.
             </p>
           </div>
 
-          <!-- responseCode 9 -->
           <div class="modal-body" ng-show="modalMsg==9">
             <p>
               You have to be logged in as an admin to do that.
             </p>
           </div>
 
-          <!-- responseCode 10 -->
           <div class="modal-body" ng-show="modalMsg==10">
             <p>
               There was an error with the dates you entered.
@@ -124,6 +113,12 @@
           <div class="modal-body" ng-show="modalMsg==12">
             <p>
               An error occurred. Please try again.
+            </p>
+          </div>
+          
+          <div class="modal-body" ng-show="modalMsg==14">
+            <p>
+              There's no team with that Join Code.
             </p>
           </div>
           

@@ -128,6 +128,8 @@ function exit_error($responsecode) {
     $returnable['explanation'] = "Date error";
   if($responsecode == 13)
     $returnable['explanation'] = "User already on a team";
+  if($responsecode == 14)
+    $returnable['explanation'] = "Join Code not found";
   
   exit(json_encode($returnable));
 }

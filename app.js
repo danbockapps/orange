@@ -331,10 +331,14 @@ function DashboardCtrl($rootScope, $scope, $http, $location) {
     
     $http.post("api.php?q=jointeam", {joinCode: $scope.joinJoinCode})
     .success(function(data) {
+      $scope.showJoinSpinner = false;
       if(processApiResponse($scope, $scope.$parent, data)) {
-        $scope.showJoinSpinner = false;
         $scope.teamName = data.teamName;
         $scope.showTeamJoined = true;
+      }
+      else {
+        $scope.disableJoinForm = false;
+        $scope.hideJoinSubmit = false;
       }
     });
   }
