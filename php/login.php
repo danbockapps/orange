@@ -27,6 +27,5 @@ else {
   $_SESSION['userid'] = $qr[0]['userid'];
   $_SESSION['fname'] = $qr[0]['fname'];
   $_SESSION['lname'] = $qr[0]['lname'];
-  setcookie("loggedIn", true);
 }
 ?>

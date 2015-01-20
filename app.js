@@ -3,17 +3,13 @@ var app = angular.module('orange', ['ngRoute']);
 function appConfig($routeProvider) {  
   $routeProvider.
     when('/', {
-      templateUrl: (
-        $.cookie("loggedIn") ? 
-        'partials/dashboard.html' : 
-        'partials/welcome.html'
-      ),
-      controller: (
-        $.cookie("loggedIn") ? 
-        'DashboardCtrl' : 
-        'WelcomeCtrl'
-      )
+      templateUrl: 'partials/switchboard.html',
+      controller: 'SwitchboardCtrl'
     }).
+    when('/welcome', {
+      templateUrl: 'partials/welcome.html',
+      controller: 'WelcomeCtrl'
+    }). 
     when('/emailsent', {
       templateUrl: 'partials/emailsent.html'
     }).
@@ -42,7 +38,7 @@ function appConfig($routeProvider) {
     });
 }
 
-function phpInit($rootScope, $scope, $http) {
+function phpInit($rootScope, $scope, $http, $location) {
   $http.get("api.php?q=init").success(function(data) {
     console.log(data);
     $scope.projectname = data.projectname;
@@ -62,19 +58,23 @@ function phpInit($rootScope, $scope, $http) {
       $scope.loggedInFname = data.fname;
       $scope.loggedInLname = data.lname;
     }
+    
+    // pass null as the last arg to this function and there'll be no redirect
+    if($location != null) {
+      $location.path(data.userid ? "dashboard" : "welcome");
+    }
   });
 }
 
-function IndexCtrl($rootScope, $scope, $http, $location) {
-  phpInit($rootScope, $scope, $http);
+function IndexCtrl($rootScope, $scope, $http, $location, $route) {
+  phpInit($rootScope, $scope, $http, $location);
   
   $scope.submitLoginForm = function() {
     phpObj = {email:$scope.loginEmail, password:$scope.loginPassword};
     $http.post("api.php?q=login", phpObj).success(function(data) {
       if(processApiResponse($scope, $scope, data)) {
         // Login successful
-        phpInit($rootScope, $scope, $http);
-        $location.path("dashboard");
+        phpInit($rootScope, $scope, $http, $location);
       }
     });
   }
@@ -87,12 +87,20 @@ function IndexCtrl($rootScope, $scope, $http, $location) {
   $scope.logout = function() {
     $http.post("api.php?q=logout").success(function(data) {
       if(processApiResponse($scope, $scope, data)) {
-        phpInit($rootScope, $scope, $http);
+        phpInit($rootScope, $scope, $http, $location);
         $scope.loginEmail = "";
         $scope.loginPassword = "";
-        $location.path("");
       }
     });
+  }
+}
+
+function SwitchboardCtrl($rootScope, $location) {
+  if($rootScope.initData && $rootScope.initData.userid) {
+    $location.path("dashboard");
+  }
+  else {
+    $location.path("welcome");
   }
 }
 
@@ -383,7 +391,11 @@ function AdminCtrl($scope, $http, $location) {
 app.config(["$routeProvider", appConfig]);
 app.controller(
   "IndexCtrl", 
-  ["$rootScope", "$scope", "$http", "$location", IndexCtrl]
+  ["$rootScope", "$scope", "$http", "$location", "$route", IndexCtrl]
+);
+app.controller(
+  "SwitchboardCtrl",
+  ["$rootScope", "$location", SwitchboardCtrl]
 );
 app.controller(
   "WelcomeCtrl", 
