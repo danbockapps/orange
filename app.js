@@ -3,12 +3,13 @@ var app = angular.module('orange', ['ngRoute']);
 function appConfig($routeProvider) {  
   $routeProvider.
     when('/', {
-      templateUrl: 'partials/switchboard.html',
+      templateUrl: function() {
+        if(initData.userid)
+          return 'partials/dashboard.html';
+        else
+          return 'partials/welcome.html';
+      },
       controller: 'SwitchboardCtrl'
-    }).
-    when('/welcome', {
-      templateUrl: 'partials/welcome.html',
-      controller: 'WelcomeCtrl'
     }). 
     when('/emailsent', {
       templateUrl: 'partials/emailsent.html'
@@ -25,10 +26,6 @@ function appConfig($routeProvider) {
       templateUrl: 'partials/passwordrecover.html',
       controller: 'PasswordRecoverCtrl'
     }).
-    when('/dashboard', {
-      templateUrl: 'partials/dashboard.html',
-      controller: 'DashboardCtrl'
-    }).
     when('/admin', {
       templateUrl: 'partials/admin.html',
       controller: 'AdminCtrl'
@@ -39,10 +36,12 @@ function appConfig($routeProvider) {
 }
 
 function phpInit($rootScope, $scope, $http, $location) {
+  //TODO make this API call not happen twice when the app is first loaded
   $http.get("api.php?q=init").success(function(data) {
     console.log(data);
     $scope.projectname = data.projectname;
     $rootScope.initData = data;
+    initData = data;
     
     if(data.userid == null) {
       $scope.hideLoginForm = false;
@@ -61,13 +60,15 @@ function phpInit($rootScope, $scope, $http, $location) {
     
     // pass null as the last arg to this function and there'll be no redirect
     if($location != null) {
-      $location.path(data.userid ? "dashboard" : "welcome");
+      // "?a=b" is to trick Angular into calling the function in
+      // routeProvider when templateUrl.
+      $location.path("?a=b");
     }
   });
 }
 
 function IndexCtrl($rootScope, $scope, $http, $location, $route) {
-  phpInit($rootScope, $scope, $http, $location);
+  phpInit($rootScope, $scope, $http);
   
   $scope.submitLoginForm = function() {
     phpObj = {email:$scope.loginEmail, password:$scope.loginPassword};
@@ -95,16 +96,14 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route) {
   }
 }
 
-function SwitchboardCtrl($rootScope, $location) {
-  if($rootScope.initData && $rootScope.initData.userid) {
-    $location.path("dashboard");
-  }
-  else {
-    $location.path("welcome");
-  }
+function SwitchboardCtrl($rootScope, $scope, $http, $location) {
+  if(initData.userid)
+    dashboardSubCtrl($rootScope, $scope, $http, $location);
+  else
+    welcomeSubCtrl($scope, $http, $location);
 }
 
-function WelcomeCtrl($scope, $http, $location) {
+function welcomeSubCtrl($scope, $http, $location) {
   $scope.submitRegisterForm = function () {
     
     if(typeof($scope.password1) === "undefined" || $scope.password1.length < 8) {
@@ -245,7 +244,7 @@ function PasswordRecoverCtrl($scope, $http, $location, $routeParams) {
   };
 }
 
-function DashboardCtrl($rootScope, $scope, $http, $location) {  
+function dashboardSubCtrl($rootScope, $scope, $http, $location) {  
   $scope.$watch(
     function() {
       return $rootScope.initData;
@@ -395,11 +394,7 @@ app.controller(
 );
 app.controller(
   "SwitchboardCtrl",
-  ["$rootScope", "$location", SwitchboardCtrl]
-);
-app.controller(
-  "WelcomeCtrl", 
-  ["$scope", "$http", "$location", WelcomeCtrl]
+  ["$rootScope", "$scope", "$http", "$location", SwitchboardCtrl]
 );
 app.controller(
   "ActivateCtrl", 
@@ -408,10 +403,6 @@ app.controller(
 app.controller(
   "PasswordRecoverCtrl",
   ["$scope", "$http", "$location", "$routeParams", PasswordRecoverCtrl]
-);
-app.controller(
-  "DashboardCtrl", 
-  ["$rootScope", "$scope", "$http", "$location", DashboardCtrl]
 );
 app.controller(
   "AdminCtrl",
