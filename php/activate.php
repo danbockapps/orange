@@ -4,11 +4,34 @@ if($post['email'] != email_for_key($post['key'])['email']) {
 }
 
 else {
+  $sqlArray = array(pwhash($post['password']));
+  
+  if(isset($post['fname']) && isset($post['lname'])) {
+    $surveyFields = "
+      ,fname = ?
+      ,lname = ?
+    ";
+    $sqlArray = array_merge($sqlArray, array(
+      $post['fname'],
+      $post['lname']
+    ));
+  }
+  else {
+    $surveyFields = "";
+  }
+  $sqlArray = array_merge($sqlArray, array(
+    $post['email'],
+    $post['key']
+  ));
+  
   $success = pdo_upsert("
     update users
-    set activated = 1, fname = ?, lname = ?
+    set
+      activated = true, 
+      password = ?
+      " . $surveyFields . "
     where email = ? and akey = ?
-  ", array($post['fname'], $post['lname'], $post['email'], $post['key']));
+  ", $sqlArray);
   
   if($success) {
     reset_akey($post['email']);

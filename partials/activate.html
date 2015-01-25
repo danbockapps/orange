@@ -1,77 +1,136 @@
 <div class="row">
-  <div ng-show="showSurvey">
-    <div class="col-md-3"></div>
-    <div class="col-md-6">
-      <h1 class="text-center">Complete your registration</h1>
-      <p>
-        Please provide the following information and then you'll be able to log
-        in to your account.
-      </p>
-      <form ng-submit="submitActForm()">
-        <fieldset ng-disabled="disableActForm">
-          <div class="form-group">
-            <label for="fname">First name:</label>
-            <input 
-              type="text" 
-              id="fname" 
-              class="form-control" 
-              ng-model="actFname" 
-              required
-            />
-          </div>
-          
-          <div class="form-group">
-            <label for="lname">Last name:</label>
-            <input 
-              type="text" 
-              id="lname" 
-              class="form-control" 
-              ng-model="actLname" 
-              required
-            />
-          </div>
-          
-          <div class="form-group">
-            <label for="favcol">Favorite color:</label>
-            <input 
-              type="text" 
-              id="favcol" 
-              class="form-control" 
-              ng-model="actFavcol" 
-            />
-          </div>
-          
-          <button 
-            type="submit" 
-            class="btn btn-default center-block"
-            ng-hide="disableActForm"
-          >
-            Submit
-          </button>
-          
-          <img 
-            class="center-block" 
-            src="img/spinner.gif" 
-            ng-show="disableActForm" 
+  <div class="col-md-3"></div>
+  
+  <div class="col-md-6" ng-show="showParForm">
+    <h1 class="text-center">Forgot your password?</h1>
+    <p class="text-center">
+      Enter your email address and we'll send you instructions to reset it.
+      You can also use this to activate your account.
+    </p>
+    <form ng-submit="submitParForm()">
+      <fieldset ng-disabled="disableParForm">
+        <div class="form-group">
+          <label for="parEmail">Email:</label>
+          <input
+            type="email"
+            id="parEmail"
+            class="form-control"
+            ng-model="parEmail"
           />
-        </fieldset>
-      </form>
-    </div>
-    <div class="col-md-3"></div>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary center-block"
+          ng-hide="disableParForm"
+        >
+          Submit
+        </button>
+        <img
+          class="center-block"
+          src="img/spinner.gif"
+          ng-show="disableParForm"
+        />
+      </fieldset>
+    </form>
   </div>
   
+  <div class="col-md-6" ng-show="showNepForm">
+    <h1 class="text-center">Complete your registration</h1>
+    <p>
+      Please provide the following information and then you'll be able to log
+      in to your account.
+    </p>
+    <form ng-submit="submitNepForm()">
+      <fieldset ng-disabled="disableNepForm">
+        <div class="form-group">
+          <label for="password1">Select a password:</label>
+          <input 
+            type="password" 
+            id="password1" 
+            class="form-control" 
+            ng-model="nepPassword1" 
+            required
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="password2">Re-enter password:</label>
+          <input 
+            type="password" 
+            id="password2" 
+            class="form-control" 
+            ng-model="nepPassword2" 
+            required
+          />
+        </div>
+        
+        <div class="form-group" ng-hide="nameKnown" ng-required="!nameKnown">
+          <label for="fname">First name:</label>
+          <input 
+            type="text" 
+            id="fname" 
+            class="form-control" 
+            ng-model="nepFname" 
+          />
+        </div>
+        
+        <div class="form-group" ng-hide="nameKnown" ng-required="!nameKnown">
+          <label for="lname">Last name:</label>
+          <input 
+            type="text" 
+            id="lname" 
+            class="form-control" 
+            ng-model="nepLname" 
+          />
+        </div>
+        
+        <div class="form-group" ng-hide="nameKnown" ng-required="!nameKnown">
+          <label for="zip">Zip code:</label>
+          <input 
+            type="text" 
+            id="zip" 
+            class="form-control" 
+            ng-model="nepZip" 
+          />
+        </div>
+        
+        <button 
+          type="submit" 
+          class="btn btn-default center-block"
+          ng-hide="disableNepForm"
+        >
+          Submit
+        </button>
+        
+        <img 
+          class="center-block" 
+          src="img/spinner.gif" 
+          ng-show="disableNepForm" 
+        />
+      </fieldset>
+    </form>
+  </div>
   
-  <div class="col-xs-12" ng-show="showBadKeyMsg">
-    <h3 class="text-center">
-      The link you clicked on is out of date. Please click here to reset
-      your password.
+  <div class="col-md-6" ng-show="showCheckEmailMsg">
+    <h3>
+      Please check your email for instructions to reset your password.
     </h3>
   </div>
   
-  
-  <div class="col-xs-12" ng-show="showCompleteMsg">
-    <h3 class="text-center">
-      Your registration is now complete. You may log in above.
+  <div class="col-md-6" ng-show="showBadKeyMsg">
+    <h3>
+      The link you clicked on is out of date. Please
+      <a href="javascript:" ng-click="showPasswordRecover()">
+        click here to reset your password.
+      </a>
     </h3>
   </div>
+  
+  <div class="col-md-6" ng-show="showCompleteMsg">
+    <h3 class="text-center">
+      All set! You may log in above.
+    </h3>
+  </div>
+  
+  <div class="col-md-3"></div>
 </div>

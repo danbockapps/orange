@@ -19,12 +19,12 @@ function appConfig($routeProvider) {
       controller: 'ActivateCtrl'
     }).
     when('/passwordrecover/', {
-      templateUrl: 'partials/passwordrecover.html',
-      controller: 'PasswordRecoverCtrl'
+      templateUrl: 'partials/activate.html',
+      controller: 'ActivateCtrl'
     }).
     when('/passwordrecover/:key', {
-      templateUrl: 'partials/passwordrecover.html',
-      controller: 'PasswordRecoverCtrl'
+      templateUrl: 'partials/activate.html',
+      controller: 'ActivateCtrl'
     }).
     when('/admin', {
       templateUrl: 'partials/admin.html',
@@ -105,73 +105,31 @@ function SwitchboardCtrl($rootScope, $scope, $http, $location) {
 
 function welcomeSubCtrl($scope, $http, $location) {
   $scope.submitRegisterForm = function () {
-    
-    if(typeof($scope.password1) === "undefined" || $scope.password1.length < 8) {
-      $scope.$parent.modalMsg = 1;
-      $("#ErrorModal").modal();
-    }
-    else if($scope.password1 !== $scope.password2) {
-      $scope.$parent.modalMsg = 11;
-      $("#ErrorModal").modal();
-    }
+    // Send a register API request
+    $scope.disableRegForm = true;
 
-    else {
-      // Send a register API request
-      $scope.disableRegForm = true;
+    phpObj = {
+      email:$scope.regEmail,
+      recaptchaResponse:grecaptcha.getResponse()
+    };
 
-      phpObj = {
-        email:$scope.regEmail,
-        password:$scope.password1,
-        recaptchaResponse:grecaptcha.getResponse()
-      };
-
-      $http.post("api.php?q=register", phpObj).success(function(data) {
-        if(processApiResponse($scope, $scope.$parent, data)) {
-          $location.path('emailsent');
-        }
-        else {
-          // there was an error
-          $scope.disableRegForm = false;
-        }
-      });
-    }
+    $http.post("api.php?q=register", phpObj).success(function(data) {
+      if(processApiResponse($scope, $scope.$parent, data)) {
+        $location.path('emailsent');
+      }
+      else {
+        // there was an error
+        $scope.disableRegForm = false;
+      }
+    });
   };
   
   $scope.phSup = placeholderSupported;
 }
 
 function ActivateCtrl($scope, $http, $routeParams) {
-  $http.get("api.php?q=check_key", {params:{key:$routeParams.key}})
-      .success(function(data) {
-    console.log(data);
-    if(data.responseString == "ERROR") {
-      $scope.showBadKeyMsg = true;
-    }
-    else if(data.responseString == "OK") {
-      $scope.showSurvey = true;
-      $scope.$parent.hideLoginForm = true;
-      actEmail = data.email;
-    }
-  });
-
-  $scope.submitActForm = function() {
-    $scope.disableActForm = true;
-    $http.post("api.php?q=activate", {
-      fname:$scope.actFname, 
-      lname:$scope.actLname, 
-      email:actEmail, 
-      key:$routeParams.key
-    }).success(function(data) {
-      console.log(data);
-      $scope.showSurvey = false;
-      $scope.showCompleteMsg = true;
-      $scope.$parent.hideLoginForm = false;
-    });
-  };
-}
-
-function PasswordRecoverCtrl($scope, $http, $location, $routeParams) {
   if($routeParams.key == null) {
+    // User is looking for login help. Ask for email address.
     $scope.showParForm = true;
   }
   else {
@@ -182,18 +140,19 @@ function PasswordRecoverCtrl($scope, $http, $location, $routeParams) {
       if(data.responseString == "ERROR") {
         $scope.showBadKeyMsg = true;
       }
-      else if(data.responseString == "OK") {
+      else {
         $scope.showNepForm = true;
-        $scope.$parent.hideLoginForm = true;
-        actEmail = data.email;
         if(data.fname != null && data.lname != null) {
+          // Name and survey data are already in db
           $scope.nameKnown = true;
-          $scope.nepFname = data.fname;
-          $scope.nepLname = data.lname;
         }
         else {
-          $(".nep-name").prop("required", true);
+          // Name and survey data are not in db. Require them.
+          // Should be unnecessary due to ng-required. Commenting out.
+          // $(".name-and-survey").prop("required", true);
         }
+        $scope.$parent.hideLoginForm = true;
+        actEmail = data.email;
       }
     });
   }
@@ -224,20 +183,26 @@ function PasswordRecoverCtrl($scope, $http, $location, $routeParams) {
     }
     else {
       $scope.disableNepForm = true;
-      $http.post("api.php?q=passwordchange", {
-        key:$routeParams.key,
-        newPassword:$scope.nepPassword1,
-        fname:$scope.nepFname,
-        lname:$scope.nepLname
-      }).success(function(data) {
-        if(processApiResponse($scope, $scope.$parent, data)) {
-          $scope.showNepForm = false;
-          $scope.showSuccessMsg = true;
-          $scope.$parent.hideLoginForm = false;
-        }
+      
+      var phpObj = {};
+      phpObj.email = actEmail;
+      phpObj.key = $routeParams.key;
+      phpObj.password = $scope.nepPassword1;
+      if(!$scope.nameKnown) {
+        phpObj.fname = $scope.nepFname;
+        phpObj.lname = $scope.nepLname;
+        phpObj.zip = $scope.nepZip;
+        //TODO more survey questions
+      }
+      
+      $http.post("api.php?q=activate", phpObj).success(function(data) {
+        console.log(data);
+        $scope.showNepForm = false;
+        $scope.showCompleteMsg = true;
+        $scope.$parent.hideLoginForm = false;
       });
     }
-  }
+  };
   
   $scope.showPasswordRecover = function() {
     $location.path("passwordrecover");
@@ -399,10 +364,6 @@ app.controller(
 app.controller(
   "ActivateCtrl", 
   ["$scope", "$http", "$routeParams", ActivateCtrl]
-);
-app.controller(
-  "PasswordRecoverCtrl",
-  ["$scope", "$http", "$location", "$routeParams", PasswordRecoverCtrl]
 );
 app.controller(
   "AdminCtrl",

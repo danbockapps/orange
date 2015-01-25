@@ -1,5 +1,4 @@
 <?php
-if(strlen($post['password']) < 8)       exit_error(1);
 if(email_already_in_db($post['email'])) exit_error(2);
 
 $recaptcha_success = json_decode(file_get_contents(
@@ -15,7 +14,7 @@ pdo_upsert(
   "insert into users (email, password) values (?, ?)",
   array(
     $post['email'], 
-    pwhash($post['password'])
+    "No password yet"
   )
 );
 
