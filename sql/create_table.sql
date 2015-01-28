@@ -7,6 +7,9 @@ create table if not exists users (
   fname varchar(50),
   lname varchar(50),
   admin boolean default false,
+  age tinyint unsigned,
+  sex varchar(1),
+  heightinches tinyint unsigned,
   dateuseradded timestamp default current_timestamp,
   constraint unique (email),
   constraint unique (akey)

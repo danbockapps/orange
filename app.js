@@ -145,11 +145,13 @@ function ActivateCtrl($scope, $http, $routeParams) {
         if(data.fname != null && data.lname != null) {
           // Name and survey data are already in db
           $scope.nameKnown = true;
+          $scope.header = "Reset your password";
         }
         else {
+          $scope.header = "Complete your registration";
+          
           // Name and survey data are not in db. Require them.
-          // Should be unnecessary due to ng-required. Commenting out.
-          // $(".name-and-survey").prop("required", true);
+          $(".name-and-survey").prop("required", true);
         }
         $scope.$parent.hideLoginForm = true;
         actEmail = data.email;
@@ -191,8 +193,9 @@ function ActivateCtrl($scope, $http, $routeParams) {
       if(!$scope.nameKnown) {
         phpObj.fname = $scope.nepFname;
         phpObj.lname = $scope.nepLname;
-        phpObj.zip = $scope.nepZip;
-        //TODO more survey questions
+        phpObj.age = $scope.nepAge;
+        phpObj.sex = $scope.nepSex;
+        phpObj.heightinches = $scope.heightinches;
       }
       
       $http.post("api.php?q=activate", phpObj).success(function(data) {

@@ -35,7 +35,7 @@
   </div>
   
   <div class="col-md-6" ng-show="showNepForm">
-    <h1 class="text-center">Complete your registration</h1>
+    <h1 class="text-center">{{header}}</h1>
     <p>
       Please provide the following information and then you'll be able to log
       in to your account.
@@ -64,33 +64,55 @@
           />
         </div>
         
-        <div class="form-group" ng-hide="nameKnown" ng-required="!nameKnown">
+        <div class="form-group" ng-hide="nameKnown">
           <label for="fname">First name:</label>
           <input 
             type="text" 
             id="fname" 
-            class="form-control" 
+            class="form-control name-and-survey" 
             ng-model="nepFname" 
           />
         </div>
         
-        <div class="form-group" ng-hide="nameKnown" ng-required="!nameKnown">
+        <div class="form-group" ng-hide="nameKnown">
           <label for="lname">Last name:</label>
           <input 
             type="text" 
             id="lname" 
-            class="form-control" 
+            class="form-control name-and-survey" 
             ng-model="nepLname" 
           />
         </div>
         
-        <div class="form-group" ng-hide="nameKnown" ng-required="!nameKnown">
-          <label for="zip">Zip code:</label>
+        <div class="form-group" ng-hide="nameKnown">
+          <label for="age">Age:</label>
+          <input 
+            type="number" 
+            id="age" 
+            class="form-control name-and-survey" 
+            ng-model="nepAge" 
+          />
+        </div>
+        
+        <div class="form-group" ng-hide="nameKnown">
+          <label for="sex">Sex:</label>
+          <select 
+            id="sex" 
+            class="form-control name-and-survey" 
+            ng-model="nepSex" 
+          >
+            <option value="F">F</option>
+            <option value="M">M</option>
+          </select>
+        </div>
+        
+        <div class="form-group" ng-hide="nameKnown">
+          <label for="heightinches">Height in inches:</label>
           <input 
             type="text" 
-            id="zip" 
-            class="form-control" 
-            ng-model="nepZip" 
+            id="heightinches" 
+            class="form-control name-and-survey" 
+            ng-model="nepHeightinches" 
           />
         </div>
         
