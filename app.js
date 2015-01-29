@@ -195,7 +195,16 @@ function ActivateCtrl($scope, $http, $routeParams) {
         phpObj.lname = $scope.nepLname;
         phpObj.age = $scope.nepAge;
         phpObj.sex = $scope.nepSex;
-        phpObj.heightinches = $scope.heightinches;
+        phpObj.heightinches = $scope.nepHeightinches;
+        
+        // TODO move these changing metrics to a separate survey page
+        // for repeat participants
+        phpObj.weight = $scope.nepWeight;
+        phpObj.zip = $scope.nepZip;
+        phpObj.activityLevel = $scope.nepActivityLevel;
+        phpObj.exerciseMins = $scope.nepExerciseMins;
+        phpObj.exerciseTypes = $scope.nepExerciseTypes;
+        phpObj.fruits = $scope.nepFruits;
       }
       
       $http.post("api.php?q=activate", phpObj).success(function(data) {

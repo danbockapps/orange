@@ -89,7 +89,7 @@
           <input 
             type="number" 
             id="age" 
-            class="form-control name-and-survey" 
+            class="form-control name-and-survey perm" 
             ng-model="nepAge" 
           />
         </div>
@@ -98,7 +98,7 @@
           <label for="sex">Sex:</label>
           <select 
             id="sex" 
-            class="form-control name-and-survey" 
+            class="form-control name-and-survey perm" 
             ng-model="nepSex" 
           >
             <option value="F">F</option>
@@ -107,13 +107,142 @@
         </div>
         
         <div class="form-group" ng-hide="nameKnown">
-          <label for="heightinches">Height in inches:</label>
-          <input 
-            type="text" 
+          <label for="heightinches">Height:</label>
+          <select 
             id="heightinches" 
-            class="form-control name-and-survey" 
+            class="form-control name-and-survey perm" 
             ng-model="nepHeightinches" 
+          >
+            <option value="48">4 feet 0 inches</option>
+            <option value="49">4 feet 1 inches</option>
+            <option value="50">4 feet 2 inches</option>
+            <option value="51">4 feet 3 inches</option>
+            <option value="52">4 feet 4 inches</option>
+            <option value="53">4 feet 5 inches</option>
+            <option value="54">4 feet 6 inches</option>
+            <option value="55">4 feet 7 inches</option>
+            <option value="56">4 feet 8 inches</option>
+            <option value="57">4 feet 9 inches</option>
+            <option value="58">4 feet 10 inches</option>
+            <option value="59">4 feet 11 inches</option>
+            <option value="60">5 feet 0 inches</option>
+            <option value="61">5 feet 1 inches</option>
+            <option value="62">5 feet 2 inches</option>
+            <option value="63">5 feet 3 inches</option>
+            <option value="64">5 feet 4 inches</option>
+            <option value="65">5 feet 5 inches</option>
+            <option value="66">5 feet 6 inches</option>
+            <option value="67">5 feet 7 inches</option>
+            <option value="68">5 feet 8 inches</option>
+            <option value="69">5 feet 9 inches</option>
+            <option value="70">5 feet 10 inches</option>
+            <option value="71">5 feet 11 inches</option>
+            <option value="72">6 feet 0 inches</option>
+            <option value="73">6 feet 1 inches</option>
+            <option value="74">6 feet 2 inches</option>
+            <option value="75">6 feet 3 inches</option>
+            <option value="76">6 feet 4 inches</option>
+            <option value="77">6 feet 5 inches</option>
+            <option value="78">6 feet 6 inches</option>
+            <option value="79">6 feet 7 inches</option>
+            <option value="80">6 feet 8 inches</option>
+            <option value="81">6 feet 9 inches</option>
+            <option value="82">6 feet 10 inches</option>
+            <option value="83">6 feet 11 inches</option>
+          </select>
+        </div>
+
+        <div class="form-group" ng-hide="nameKnown">
+          <label for="weight">Weight:</label>
+          <input
+            type="number"
+            id="weight"
+            class="form-control name-and-survey"
+            ng-model="nepWeight"
           />
+        </div>
+
+        <div class="form-group" ng-hide="nameKnown">
+          <label for="zip">Zip Code:</label>
+          <input
+            type="text"
+            id="zip"
+            class="form-control name-and-survey"
+            ng-model="nepZip"
+          />
+        </div>
+
+        <div class="form-group" ng-hide="nameKnown">
+          <label for="activityLevel">What's your activity level?</label>
+          <select
+            id="activityLevel"
+            class="form-control name-and-survey"
+            ng-model="nepActivityLevel"
+          >
+            <option value="1">
+              <b>Sedentary</b>: little to no exercise
+            </option>
+            <option value="2">
+              <b>Moderate</b>: less than 2.5 hours of moderate exercise per week
+            </option>
+            <option value="3">
+              <b>High</b>: at least 1 hour and 15 minutes of vigorous exercise per week
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group" ng-hide="nameKnown">
+          <label for="exerciseMins">How much time per week do you exercise?</label>
+          <select
+            id="exerciseMins"
+            class="form-control name-and-survey"
+            ng-model="nepExerciseMins"
+          >
+            <option value="1">
+              0 to 30 minutes
+            </option>
+            <option value="2">
+              30 to 60 minutes
+            </option>
+            <option value="3">
+              60 to 90 minutes
+            </option>
+            <option value="4">
+              More than 90 minutes
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group" ng-hide="nameKnown">
+          <label for="exerciseTypes">What types of exercise do you do?</label>
+          <input
+            type="text"
+            id="exerciseTypes"
+            class="form-control name-and-survey"
+            ng-model="nepExerciseTypes"
+          />
+        </div>
+
+        <div class="form-group" ng-hide="nameKnown">
+          <label for="fruits">How many fruits and vegetables do you eat each day?</label>
+          <select
+            id="fruits"
+            class="form-control name-and-survey"
+            ng-model="nepFruits"
+          >
+            <option value="1">
+              0
+            </option>
+            <option value="2">
+              1 or 2
+            </option>
+            <option value="3">
+              3 or 4
+            </option>
+            <option value="4">
+              5 or more
+            </option>
+          </select>
         </div>
         
         <button 

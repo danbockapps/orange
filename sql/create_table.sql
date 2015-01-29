@@ -24,6 +24,21 @@ create table if not exists challenges (
   deleted boolean default false
 ) engine=innodb;
 
+create table if not exists surveys (
+  surveyid int unsigned auto_increment primary key,
+  challengeid int unsigned,
+  userid int unsigned,
+  weight smallint unsigned,
+  zip varchar(10),
+  activitylevel tinyint unsigned, /* valid values: 1, 2, 3 */
+  exercisemins tinyint unsigned,  /* valid values: 1, 2, 3, 4 */
+  exercisetypes text,
+  fruits tinyint unsigned,        /* valid values: 1, 2, 3, 4 */
+  datesurveyadded timestamp default current_timestamp,
+  constraint foreign key (challengeid) references challenges (challengeid),
+  constraint foreign key (userid) references users (userid)
+) engine=innodb;
+
 create table if not exists teams (
   teamid int unsigned auto_increment primary key,
   challengeid int unsigned,

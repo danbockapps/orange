@@ -33,7 +33,7 @@ else {
     $post['key']
   ));
   
-  $success = pdo_upsert("
+  $success_users = pdo_upsert("
     update users
     set
       activated = true, 
@@ -42,7 +42,42 @@ else {
     where email = ? and akey = ?
   ", $sqlArray);
   
-  if($success) {
+  // TODO move these changing metrics to a separate survey page for repeat
+  // participants
+  $success_survey = true;
+  if(
+    isset($post['weight']) &&
+    isset($post['zip']) &&
+    isset($post['activityLevel']) &&
+    isset($post['exerciseMins']) &&
+    isset($post['exerciseTypes']) &&
+    isset($post['fruits'])
+  ) {
+    // Update surveys table
+    $success_survey = pdo_upsert("
+      insert into surveys (
+        challengeid,
+        userid,
+        weight, 
+        zip, 
+        activitylevel, 
+        exercisemins, 
+        exercisetypes,
+        fruits
+      ) values (?, ?, ?, ?, ?, ?, ?, ?)
+    ", array(
+      current_challengeid(),
+      user_for_email($post['email']),
+      $post['weight'],
+      $post['zip'],
+      $post['activityLevel'],
+      $post['exerciseMins'],
+      $post['exerciseTypes'],
+      $post['fruits']
+    ));
+  }
+  
+  if($success_users && $success_survey) {
     reset_akey($post['email']);
   }
   else {

@@ -209,6 +209,15 @@ function email_for_user($userid) {
   return $qr['email'];
 }
 
+function user_for_email($email) {
+  $qr = select_one_record("
+    select userid
+    from users
+    where email = ?
+  ", $email);
+  return $qr['userid'];
+}
+
 function user_current_team($userid) {
   $qr = select_one_record("
     select teamid
