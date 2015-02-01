@@ -193,7 +193,6 @@ function ActivateCtrl($scope, $http, $routeParams) {
 }
 
 function dashboardSubCtrl($rootScope, $scope, $http, $location) {  
-  //TODO don't show user create and join options when she's already on a team.
   $scope.$watch(
     function() {
       return $rootScope.initData;
@@ -301,8 +300,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
   }
   
   $scope.getStarted = function() {
-    //TODO this isn't doing anything
-    $location.path("");
+    phpInit($rootScope, $scope, $http, $location);
   }
 }
 
