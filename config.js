@@ -17,6 +17,46 @@ function appInit() {
   });
 }
 
+function setLoginVars(data, $scope) {
+  if(data.userid == null) {
+    $scope.hideLoginForm = false;
+    $scope.showUserName = false;
+    $scope.userid = null;
+    $scope.loggedInFname = null;
+    $scope.loggedInLname = null;
+  }
+  else {
+    $scope.hideLoginForm = true;
+    $scope.showUserName = true;
+    $scope.userid = data.userid;
+    $scope.loggedInFname = data.fname;
+    $scope.loggedInLname = data.lname;
+  }
+}
+
+function phpInit($scope, $http, $location) {
+  // The conditional is so the API call doesn't happen twice when the app is
+  // first loaded
+  if(!initData.valid) {
+    $http.get("api.php?q=init").success(function(data) {
+      console.log(data);
+      initData = data;
+      
+      setLoginVars(data, $scope);
+      
+      // pass null as the last arg to this function and there'll be no redirect
+      if($location != null) {
+        // "?a=b" is to trick Angular into calling the function in
+        // routeProvider/when/templateUrl.
+        $location.path("?a=b");
+      }
+    });
+  }
+  else {
+    setLoginVars(initData, $scope);
+  }
+}
+
 function processApiResponse($scope, modalScope, data) {
   console.log(data);
 
