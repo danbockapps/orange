@@ -17,7 +17,8 @@ function appInit() {
   });
 }
 
-function setLoginVars(data, $scope) {
+function setLoginVars(data, $rootScope, $scope) {
+  $rootScope.initData = data;
   if(data.userid == null) {
     $scope.hideLoginForm = false;
     $scope.showUserName = false;
@@ -34,7 +35,7 @@ function setLoginVars(data, $scope) {
   }
 }
 
-function phpInit($scope, $http, $location) {
+function phpInit($rootScope, $scope, $http, $location) {
   // The conditional is so the API call doesn't happen twice when the app is
   // first loaded
   if(!initData.valid) {
@@ -42,7 +43,7 @@ function phpInit($scope, $http, $location) {
       console.log(data);
       initData = data;
       
-      setLoginVars(data, $scope);
+      setLoginVars(data, $rootScope, $scope);
       
       // pass null as the last arg to this function and there'll be no redirect
       if($location != null) {
@@ -53,7 +54,7 @@ function phpInit($scope, $http, $location) {
     });
   }
   else {
-    setLoginVars(initData, $scope);
+    setLoginVars(initData, $rootScope, $scope);
   }
 }
 

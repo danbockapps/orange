@@ -37,8 +37,7 @@ function appConfig($routeProvider) {
 
 function IndexCtrl($rootScope, $scope, $http, $location, $route) {
   $scope.projectname = initData.projectname;
-  $rootScope.initData = initData;
-  phpInit($scope, $http);
+  phpInit($rootScope, $scope, $http);
   
   $scope.submitLoginForm = function() {
     phpObj = {email:$scope.loginEmail, password:$scope.loginPassword};
@@ -46,7 +45,7 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route) {
       if(processApiResponse($scope, $scope, data)) {
         // Login successful
         initData.valid = false;
-        phpInit($scope, $http, $location);
+        phpInit($rootScope, $scope, $http, $location);
       }
     });
   }
@@ -60,7 +59,7 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route) {
     $http.post("api.php?q=logout").success(function(data) {
       if(processApiResponse($scope, $scope, data)) {
         initData.valid = false;
-        phpInit($scope, $http, $location);
+        phpInit($rootScope, $scope, $http, $location);
         $scope.loginEmail = "";
         $scope.loginPassword = "";
       }
@@ -194,6 +193,7 @@ function ActivateCtrl($scope, $http, $routeParams) {
 }
 
 function dashboardSubCtrl($rootScope, $scope, $http, $location) {  
+  //TODO don't show user create and join options when she's already on a team.
   $scope.$watch(
     function() {
       return $rootScope.initData;
@@ -206,6 +206,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
         
         $scope.projectname = $rootScope.initData.projectname;
         $scope.userEmail = $rootScope.initData.userEmail;
+        console.log("$scope.userEmail is " + $scope.userEmail);
         
         // This just makes the code shorter.
         var d = $rootScope.initData;
@@ -300,11 +301,13 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
   }
   
   $scope.getStarted = function() {
+    //TODO this isn't doing anything
     $location.path("");
   }
 }
 
 function AdminCtrl($scope, $http, $location) {
+  // TODO don't show this page if user is not logged in as an admin
   var refreshChallenges = function() {
     $http.get("api.php?q=challenge").success(function(data) {
       console.log(data);
