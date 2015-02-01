@@ -29,7 +29,8 @@
       }
     </style>
   </head>
-  <body ng-controller="IndexCtrl">
+  <!-- body is display:none until appInit() is finished. -->
+  <body ng-controller="IndexCtrl" style="display:none">
     <div class="modal fade" id="ErrorModal">
       <div class="modal-dialog">
         <div class="modal-content">

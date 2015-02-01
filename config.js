@@ -6,7 +6,6 @@ var initData;
 appInit();
 
 function appInit() {
-  //TODO put a spinner or something on the page while this is loading
   $.get("api.php?q=init", function(data) {
     initData = $.parseJSON(data);
     initData.valid = true;
@@ -14,6 +13,7 @@ function appInit() {
     
     // Manually start Angular so it doesn't try to start before appInit
     angular.bootstrap(document, ['orange']);
+    $("body").css("display", "");
   });
 }
 
