@@ -35,47 +35,58 @@ function appConfig($routeProvider) {
     });
 }
 
-function phpInit($rootScope, $scope, $http, $location) {
-  //TODO make this API call not happen twice when the app is first loaded
-  $http.get("api.php?q=init").success(function(data) {
-    console.log(data);
-    $scope.projectname = data.projectname;
-    $rootScope.initData = data;
-    initData = data;
-    
-    if(data.userid == null) {
-      $scope.hideLoginForm = false;
-      $scope.showUserName = false;
-      $scope.userid = null;
-      $scope.loggedInFname = null;
-      $scope.loggedInLname = null;
-    }
-    else {
-      $scope.hideLoginForm = true;
-      $scope.showUserName = true;
-      $scope.userid = data.userid;
-      $scope.loggedInFname = data.fname;
-      $scope.loggedInLname = data.lname;
-    }
-    
-    // pass null as the last arg to this function and there'll be no redirect
-    if($location != null) {
-      // "?a=b" is to trick Angular into calling the function in
-      // routeProvider when templateUrl.
-      $location.path("?a=b");
-    }
-  });
+function setLoginVars(data, $scope) {
+  if(data.userid == null) {
+    $scope.hideLoginForm = false;
+    $scope.showUserName = false;
+    $scope.userid = null;
+    $scope.loggedInFname = null;
+    $scope.loggedInLname = null;
+  }
+  else {
+    $scope.hideLoginForm = true;
+    $scope.showUserName = true;
+    $scope.userid = data.userid;
+    $scope.loggedInFname = data.fname;
+    $scope.loggedInLname = data.lname;
+  }
+}
+
+function phpInit($scope, $http, $location) {
+  // The conditional is so the API call doesn't happen twice when the app is
+  // first loaded
+  if(!initData.valid) {
+    $http.get("api.php?q=init").success(function(data) {
+      console.log(data);
+      initData = data;
+      
+      setLoginVars(data, $scope);
+      
+      // pass null as the last arg to this function and there'll be no redirect
+      if($location != null) {
+        // "?a=b" is to trick Angular into calling the function in
+        // routeProvider/when/templateUrl.
+        $location.path("?a=b");
+      }
+    });
+  }
+  else {
+    setLoginVars(initData, $scope);
+  }
 }
 
 function IndexCtrl($rootScope, $scope, $http, $location, $route) {
-  phpInit($rootScope, $scope, $http);
+  $scope.projectname = initData.projectname;
+  $rootScope.initData = initData;
+  phpInit($scope, $http);
   
   $scope.submitLoginForm = function() {
     phpObj = {email:$scope.loginEmail, password:$scope.loginPassword};
     $http.post("api.php?q=login", phpObj).success(function(data) {
       if(processApiResponse($scope, $scope, data)) {
         // Login successful
-        phpInit($rootScope, $scope, $http, $location);
+        initData.valid = false;
+        phpInit($scope, $http, $location);
       }
     });
   }
@@ -88,7 +99,8 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route) {
   $scope.logout = function() {
     $http.post("api.php?q=logout").success(function(data) {
       if(processApiResponse($scope, $scope, data)) {
-        phpInit($rootScope, $scope, $http, $location);
+        initData.valid = false;
+        phpInit($scope, $http, $location);
         $scope.loginEmail = "";
         $scope.loginPassword = "";
       }
