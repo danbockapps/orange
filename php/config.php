@@ -3,6 +3,7 @@ CRYPT_BLOWFISH or die ('No Blowfish found.');
 define("BLOWFISH_PRE", "$2y$05$");
 define("BLOWFISH_SUF", "$");
 $ini = parse_ini_file("auth.ini");
+ini_set("include_path", $ini['add_to_ipath'] . ini_get("include_path") );
 date_default_timezone_set("America/New_York");
 
 function pwhash($password) {
