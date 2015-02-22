@@ -148,10 +148,10 @@
             style="color: black; font-size: 2em;"
           >
             <img
-              src="img/BeHealthyNow15-sunperson.gif"
-              style="height: 80px; width: 80px; padding: 10px;"
+              src="img/BeHealthyNow15-logoC.gif"
+              class="img-responsive"
+              style="padding: 10px;"
             />
-            Be Healthy Now
           </a>
         </div>
         <div class="col-md-6" style="margin-top: 1.4em;"  ng-hide="hideLoginForm">
@@ -191,8 +191,10 @@
                       Log In
                     </button>
                   </div>
-                  <div class="col-md-4" style="margin-top: 0.5em; display: block; margin-left: auto; margin-right: auto;">
-                    
+                  <div
+                    class="col-md-4"
+                    style="margin-top: 0.5em; display: block; margin-left: auto; margin-right: auto;"
+                  >
                     <fb:login-button 
                       scope="public_profile,email" 
                       onlogin="checkLoginState();"
@@ -212,7 +214,7 @@
           </div>
         </div>
         
-        <div class="col-md-6" ng-show="showUserName">
+        <div class="col-md-6" ng-show="showUserName" style="margin-top: 0.5em;">
           Logged in as {{loggedInFname}} {{loggedInLname}}
           <small><a href="#" ng-click="logout()">logout</a></small>
         </div>
