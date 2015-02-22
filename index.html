@@ -10,7 +10,6 @@
     <title ng-bind="initData.projectname"></title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/css/bootstrap-datetimepicker.min.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -24,11 +23,16 @@
         padding-top: 20px;
         padding-bottom: 20px;
       }
-      .navbar {
-        margin-bottom: 20px;
-      }
       #welcome p, #welcome ul, #welcome ol {
         margin: 10px;
+      }
+      .login-input {
+        padding: 1px;
+      }
+      .vcenter {
+        display: inline-block;
+        vertical-align: middle;
+        float: none;
       }
     </style>
   </head>
@@ -136,54 +140,83 @@
     </div><!-- /.modal -->  
 
     <div class="container">
-
-      <nav
-        class="navbar navbar-default"
-        role="navigation"
-      >
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <a href="#/" class="navbar-brand" ng-bind="projectname">
-            </a>
+      
+      <div class="row" style="background-color: #f5f5f5">
+        <div class="col-md-6">
+          <a
+            href="#/"
+            style="color: black; font-size: 2em;"
+          >
+            <img
+              src="img/BeHealthyNow15-sunperson.gif"
+              style="height: 80px; width: 80px; padding: 10px;"
+            />
+            Be Healthy Now
+          </a>
+        </div>
+        <div class="col-md-6" style="margin-top: 1.4em;"  ng-hide="hideLoginForm">
+          <div class="row">
+            <form role="form" ng-submit="submitLoginForm()">
+              <div class="col-md-3 login-input">
+                <div class="form-group">
+                  <input
+                    type="text" 
+                    class="form-control" 
+                    name="loginEmail" 
+                    ng-model="loginEmail"
+                    placeholder="Email"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-3 login-input">
+                <div class="form-group">
+                  <input 
+                    type="password" 
+                    class="form-control" 
+                    name="loginPassword" 
+                    ng-model="loginPassword"
+                    placeholder="Password"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-4">
+                    <button 
+                      type="submit" 
+                      class="btn btn-default"
+                    >
+                      Log In
+                    </button>
+                  </div>
+                  <div class="col-md-4" style="margin-top: 0.5em; display: block; margin-left: auto; margin-right: auto;">
+                    
+                    <fb:login-button 
+                      scope="public_profile,email" 
+                      onlogin="checkLoginState();"
+                    >
+                    </fb:login-button>
+                  </div>
+                  <div class="col-md-4" style="margin-top: 0.5em;" class="text-center">
+                    <a
+                      href="javascript:"
+                      ng-click="showPasswordRecover()"
+                      class="text-center"
+                    >help</a>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
-          <div>
-            <ul class="nav navbar-nav navbar-right" ng-hide="hideLoginForm">
-              <li>
-                <form class="navbar-form" role="form" ng-submit="submitLoginForm()">
-                  <div class="form-group">
-                    <input
-                      type="text" 
-                      class="form-control" 
-                      name="loginEmail" 
-                      ng-model="loginEmail"
-                      placeholder="Email"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <input 
-                      type="password" 
-                      class="form-control" 
-                      name="loginPassword" 
-                      ng-model="loginPassword"
-                      placeholder="Password"
-                      required
-                    />
-                  </div>
-                  <button type="submit" class="btn btn-default">Log In</button>
-                </form>
-              </li>
-              <li>
-                <a href="javascript:" ng-click="showPasswordRecover()">help</a>
-              </li>
-            </ul>
-            <p class="nav navbar-text navbar-right" ng-show="showUserName">
-              Logged in as {{loggedInFname}} {{loggedInLname}}
-              <small><a href="#" ng-click="logout()">logout</a></small>
-            </p>
-          </div><!--/.nav-collapse -->
-        </div><!--/.container-fluid -->
-      </nav>
+        </div>
+        
+        <div class="col-md-6" ng-show="showUserName">
+          Logged in as {{loggedInFname}} {{loggedInLname}}
+          <small><a href="#" ng-click="logout()">logout</a></small>
+        </div>
+      </div>
 
       <div ng-view></div>
 

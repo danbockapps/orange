@@ -1,5 +1,6 @@
 create table if not exists users (
   userid int unsigned auto_increment primary key,
+  fbid varchar(128),
   email varchar(100),
   password varchar(9999),
   akey varchar(32),
