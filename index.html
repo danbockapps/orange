@@ -154,67 +154,45 @@
             />
           </a>
         </div>
-        <div class="col-md-6" style="margin-top: 1.4em;"  ng-hide="hideLoginForm">
-          <div class="row">
-            <form role="form" ng-submit="submitLoginForm()">
-              <div class="col-md-3 login-input">
-                <div class="form-group">
-                  <input
-                    type="text" 
-                    class="form-control" 
-                    name="loginEmail" 
-                    ng-model="loginEmail"
-                    placeholder="Email"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-md-3 login-input">
-                <div class="form-group">
-                  <input 
-                    type="password" 
-                    class="form-control" 
-                    name="loginPassword" 
-                    ng-model="loginPassword"
-                    placeholder="Password"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="row">
-                  <div class="col-md-4">
-                    <button 
-                      type="submit" 
-                      class="btn btn-default"
-                    >
-                      Log In
-                    </button>
-                  </div>
-                  <div
-                    class="col-md-4"
-                    style="margin-top: 0.5em; display: block; margin-left: auto; margin-right: auto;"
-                  >
-                    <fb:login-button 
-                      scope="public_profile,email" 
-                      onlogin="checkLoginState();"
-                    >
-                    </fb:login-button>
-                  </div>
-                  <div class="col-md-4" style="margin-top: 0.5em;" class="text-center">
-                    <a
-                      href="javascript:"
-                      ng-click="showPasswordRecover()"
-                      class="text-center"
-                    >help</a>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-4" style="margin-top: 0.4em;" ng-hide="hideLoginForm">
+          <form role="form" ng-submit="submitLoginForm()">
+            <div class="form-group">
+              <input
+                type="text" 
+                class="form-control" 
+                name="loginEmail" 
+                ng-model="loginEmail"
+                placeholder="Email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <input 
+                type="password" 
+                class="form-control" 
+                name="loginPassword" 
+                ng-model="loginPassword"
+                placeholder="Password"
+                required
+              />
+            </div>
+
+            <button type="submit" class="btn btn-default">
+              Log In
+            </button>
+            <a
+              href="javascript:"
+              ng-click="showPasswordRecover()"
+              class="text-center"
+            >help</a>
+
+          </form>
         </div>
         
-        <div class="col-md-6" ng-show="showUserName" style="margin-top: 0.5em;">
+        <div class="col-md-4" ng-show="showUserName" style="margin-top: 0.5em;">
           Logged in as {{loggedInFname}} {{loggedInLname}}
           <small><a href="#" ng-click="logout()">logout</a></small>
         </div>
