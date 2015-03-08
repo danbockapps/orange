@@ -37,6 +37,7 @@ function appConfig($routeProvider) {
 
 function IndexCtrl($rootScope, $scope, $http, $location, $route) {
   $scope.projectname = initData.projectname;
+  $scope.fbLoginUrl = initData.fbLoginUrl;
   phpInit($rootScope, $scope, $http);
   
   $scope.submitLoginForm = function() {

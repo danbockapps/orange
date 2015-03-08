@@ -7,13 +7,16 @@ ini_set("include_path", $ini['add_to_ipath'] . ini_get("include_path") );
 date_default_timezone_set("America/New_York");
 
 require __DIR__ . '/facebook-php-sdk-v4-4.0-dev/autoload.php';
-use Facebook\FacebookJavaScriptLoginHelper;
-use Facebook\FacebookRequest;
+// use Facebook\FacebookJavaScriptLoginHelper;
+use Facebook\FacebookRedirectLoginHelper;
+//use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
 use Facebook\GraphUser;
-
 FacebookSession::setDefaultApplication($ini['fb_app_id'], $ini['fb_secret']);
+$fb_redirect_url = $ini['homeurl'] . "/fb_redirect.php";
+$helper = new FacebookRedirectLoginHelper(
+    $fb_redirect_url, $ini['fb_app_id'], $ini['fb_secret']);
 
 function pwhash($password) {
   $allowed_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' .

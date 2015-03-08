@@ -38,6 +38,7 @@ function setLoginVars(data, $rootScope, $scope) {
 function phpInit($rootScope, $scope, $http, $location) {
   // The conditional is so the API call doesn't happen twice when the app is
   // first loaded
+  // Maybe the if should be one function and the else another?
   if(!initData.valid) {
     $http.get("api.php?q=init").success(function(data) {
       console.log(data);
