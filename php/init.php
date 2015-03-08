@@ -36,31 +36,9 @@ $qr = select_one_record("
 
 $ok_array = array_merge($ok_array, $qr);
 
-
-
-
 if(isset($_SESSION['userid'])) {
   $ok_array['team_id'] = user_current_team($_SESSION['userid']);
   $ok_array['userEmail'] = email_for_user($_SESSION['userid']);
-}
-else {
-
-  // Is the user logged in using Facebook?
-  $helper = new FacebookJavaScriptLoginHelper();
-  try {
-    $session = $helper->getSession();
-  } catch(FacebookRequestException $ex) {
-    // When Facebook returns an error
-  } catch(\Exception $ex) {
-    // When validation fails or other local issues
-  }
-  
-  if($session) {
-    logtxt("session!");
-  }
-  else {
-    logtxt("no session :(");
-  }
 }
 
 ?>
