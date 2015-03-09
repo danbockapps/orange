@@ -1,10 +1,4 @@
 <?php
-use Facebook\FacebookJavaScriptLoginHelper;
-use Facebook\FacebookRequest;
-use Facebook\FacebookRequestException;
-use Facebook\FacebookSession;
-use Facebook\GraphUser;
-
 $ok_array["projectname"] = $ini['projectname'];
 $ok_array = array_merge($ok_array, $_SESSION);
 
@@ -41,6 +35,6 @@ if(isset($_SESSION['userid'])) {
   $ok_array['userEmail'] = email_for_user($_SESSION['userid']);
 }
 
-$ok_array['fbLoginUrl'] = $helper->getLoginUrl();
+$ok_array['fbLoginUrl'] = $helper->getLoginUrl(array("scope" => "email"));
 
 ?>

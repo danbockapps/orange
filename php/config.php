@@ -9,7 +9,7 @@ date_default_timezone_set("America/New_York");
 require __DIR__ . '/facebook-php-sdk-v4-4.0-dev/autoload.php';
 // use Facebook\FacebookJavaScriptLoginHelper;
 use Facebook\FacebookRedirectLoginHelper;
-//use Facebook\FacebookRequest;
+use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
 use Facebook\GraphUser;
@@ -222,13 +222,24 @@ function email_for_user($userid) {
   return $qr['email'];
 }
 
-function user_for_email($email) {
+function userid_for_email($email) {
   $qr = select_one_record("
     select userid
     from users
     where email = ?
   ", $email);
   return $qr['userid'];
+}
+
+function user_for_email($email) {
+  return select_one_record("
+    select
+      userid,
+      fname,
+      lname
+    from users
+    where email = ?
+  ", $email);
 }
 
 function user_current_team($userid) {
@@ -251,13 +262,32 @@ function current_challengeid() {
   return $qr['challengeid'];
 }
 
-function userid_for_fbid($fbid) {
-  $qr = select_one_record("
-    select userid
+function user_for_fbid($fbid) {
+  return select_one_record("
+    select
+      userid,
+      fname,
+      lname
     from users
-    where fb_id = ?
-  ", $fb_id);
-  return $qr['userid'];
+    where fbid = ?
+  ", $fbid);
+}
+
+function fb_user_in_db($fbid) {
+  $qr = select_one_record("
+    select count(*) as count
+    from users
+    where fbid = ?
+  ", $fbid);
+  return $qr['count'];
+}
+
+function set_fbid($email, $fbid) {
+  pdo_upsert("
+    update users
+    set fbid = ?
+    where email = ?
+  ", array($fbid, $email));
 }
 
 ?>

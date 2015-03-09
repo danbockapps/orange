@@ -67,7 +67,7 @@ else {
       ) values (?, ?, ?, ?, ?, ?, ?, ?)
     ", array(
       current_challengeid(),
-      user_for_email($post['email']),
+      userid_for_email($post['email']),
       $post['weight'],
       $post['zip'],
       $post['activityLevel'],
