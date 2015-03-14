@@ -56,21 +56,24 @@ if ($session) {
     else {
       // Register new user
       pdo_upsert("
-        insert into users (email, password, fname, lname) values (?, ?, ?, ?)",
+        insert into users (email, password, fname, lname, fbid)
+        values (?, ?, ?, ?, ?)",
         array(
           $graphObject->getEmail(),
           "Registered via Facebook",
           $graphObject->getFirstName(),
-          $graphObject->getLastName()
+          $graphObject->getLastName(),
+          $info->getId()
         )
       );
       
-      //TODO redirect to survey and show subset of survey
+      header("Location: " . $ini['homeurl'] . "/#/activate/" . 
+          reset_akey($graphObject->getEmail()));
     }
   }
 }
 else {
-  echo("No session."); 
+  echo("An error occurred. Please click your back button and try again."); 
 }
 
 ?>

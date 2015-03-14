@@ -42,63 +42,61 @@
     </p>
     <form ng-submit="submitNepForm()">
       <fieldset ng-disabled="disableNepForm">
-        <div class="form-group">
+        <div class="form-group" ng-hide="fbid && !activated">
           <label for="password1">Select a password:</label>
           <input 
             type="password" 
             id="password1" 
-            class="form-control" 
+            class="form-control password" 
             ng-model="nepPassword1" 
-            required
           />
         </div>
         
-        <div class="form-group">
+        <div class="form-group" ng-hide="fbid && !activated">
           <label for="password2">Re-enter password:</label>
           <input 
             type="password" 
             id="password2" 
-            class="form-control" 
+            class="form-control password" 
             ng-model="nepPassword2" 
-            required
           />
         </div>
         
-        <div class="form-group" ng-hide="nameKnown">
+        <div class="form-group" ng-hide="fbid || activated">
           <label for="fname">First name:</label>
           <input 
             type="text" 
             id="fname" 
-            class="form-control name-and-survey" 
+            class="form-control name" 
             ng-model="nepFname" 
           />
         </div>
         
-        <div class="form-group" ng-hide="nameKnown">
+        <div class="form-group" ng-hide="fbid || activated">
           <label for="lname">Last name:</label>
           <input 
             type="text" 
             id="lname" 
-            class="form-control name-and-survey" 
+            class="form-control name" 
             ng-model="nepLname" 
           />
         </div>
         
-        <div class="form-group" ng-hide="nameKnown">
+        <div class="form-group" ng-hide="activated">
           <label for="age">Age:</label>
           <input 
             type="number" 
             id="age" 
-            class="form-control name-and-survey perm" 
+            class="form-control survey perm" 
             ng-model="nepAge" 
           />
         </div>
         
-        <div class="form-group" ng-hide="nameKnown">
+        <div class="form-group" ng-hide="activated">
           <label for="sex">Sex:</label>
           <select 
             id="sex" 
-            class="form-control name-and-survey perm" 
+            class="form-control survey perm" 
             ng-model="nepSex" 
           >
             <option selected="true" disabled="true" value=""></option>
@@ -107,11 +105,11 @@
           </select>
         </div>
         
-        <div class="form-group" ng-hide="nameKnown">
+        <div class="form-group" ng-hide="activated">
           <label for="heightinches">Height:</label>
           <select 
             id="heightinches" 
-            class="form-control name-and-survey perm" 
+            class="form-control survey perm" 
             ng-model="nepHeightinches" 
           >
             <option selected="true" disabled="true" value=""></option>
@@ -154,31 +152,31 @@
           </select>
         </div>
 
-        <div class="form-group" ng-hide="nameKnown">
+        <div class="form-group" ng-hide="activated">
           <label for="weight">Weight:</label>
           <input
             type="number"
             id="weight"
-            class="form-control name-and-survey"
+            class="form-control survey"
             ng-model="nepWeight"
           />
         </div>
 
-        <div class="form-group" ng-hide="nameKnown">
+        <div class="form-group" ng-hide="activated">
           <label for="zip">Zip Code:</label>
           <input
             type="text"
             id="zip"
-            class="form-control name-and-survey"
+            class="form-control survey"
             ng-model="nepZip"
           />
         </div>
 
-        <div class="form-group" ng-hide="nameKnown">
+        <div class="form-group" ng-hide="activated">
           <label for="activityLevel">What's your activity level?</label>
           <select
             id="activityLevel"
-            class="form-control name-and-survey"
+            class="form-control survey"
             ng-model="nepActivityLevel"
           >
             <option selected="true" disabled="true" value=""></option>
@@ -194,11 +192,11 @@
           </select>
         </div>
 
-        <div class="form-group" ng-hide="nameKnown">
+        <div class="form-group" ng-hide="activated">
           <label for="exerciseMins">How much time per week do you exercise?</label>
           <select
             id="exerciseMins"
-            class="form-control name-and-survey"
+            class="form-control survey"
             ng-model="nepExerciseMins"
           >
             <option selected="true" disabled="true" value=""></option>
@@ -217,21 +215,21 @@
           </select>
         </div>
 
-        <div class="form-group" ng-hide="nameKnown">
+        <div class="form-group" ng-hide="activated">
           <label for="exerciseTypes">What types of exercise do you do?</label>
           <input
             type="text"
             id="exerciseTypes"
-            class="form-control name-and-survey"
+            class="form-control survey"
             ng-model="nepExerciseTypes"
           />
         </div>
 
-        <div class="form-group" ng-hide="nameKnown">
+        <div class="form-group" ng-hide="activated">
           <label for="fruits">How many fruits and vegetables do you eat each day?</label>
           <select
             id="fruits"
-            class="form-control name-and-survey"
+            class="form-control survey"
             ng-model="nepFruits"
           >
             <option selected="true" disabled="true" value=""></option>

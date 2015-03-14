@@ -7,7 +7,6 @@ ini_set("include_path", $ini['add_to_ipath'] . ini_get("include_path") );
 date_default_timezone_set("America/New_York");
 
 require __DIR__ . '/facebook-php-sdk-v4-4.0-dev/autoload.php';
-// use Facebook\FacebookJavaScriptLoginHelper;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
@@ -198,7 +197,9 @@ function email_for_key($key) {
     select
       email,
       fname,
-      lname
+      lname,
+      activated,
+      fbid
     from users
     where akey = ?
   ", array($key));

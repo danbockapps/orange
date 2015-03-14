@@ -37,7 +37,6 @@ function appConfig($routeProvider) {
 
 function IndexCtrl($rootScope, $scope, $http, $location, $route) {
   $scope.projectname = initData.projectname;
-  $scope.fbLoginUrl = initData.fbLoginUrl;
   phpInit($rootScope, $scope, $http);
   
   $scope.submitLoginForm = function() {
@@ -99,7 +98,7 @@ function welcomeSubCtrl($scope, $http, $location) {
   $scope.phSup = placeholderSupported;
 }
 
-function ActivateCtrl($scope, $http, $routeParams) {
+function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
   if($routeParams.key == null) {
     // User is looking for login help. Ask for email address.
     $scope.showParForm = true;
@@ -114,17 +113,29 @@ function ActivateCtrl($scope, $http, $routeParams) {
       }
       else {
         $scope.showNepForm = true;
-        if(data.fname != null && data.lname != null) {
-          // Name and survey data are already in db
-          $scope.nameKnown = true;
+        $scope.activated = data.activated;
+        $scope.fbid = data.fbid;
+        
+        console.log("fbid and activated: ");
+        console.log($scope.fbid);
+        console.log($scope.activated);
+        
+        if(data.activated) {
           $scope.header = "Reset your password";
+          $(".password").prop("required", true);
+          console.log("only password is required");
         }
         else {
           $scope.header = "Complete your registration";
-          
-          // Name and survey data are not in db. Require them.
-          $(".name-and-survey").prop("required", true);
+          $(".survey").prop("required", true);
+          console.log("survey is required");
+          if(!data.fbid) {
+            $(".name").prop("required", true);
+            $(".password").prop("required", true);
+            console.log("name and password are required.");
+          }
         }
+        
         $scope.$parent.hideLoginForm = true;
         actEmail = data.email;
       }
@@ -147,43 +158,64 @@ function ActivateCtrl($scope, $http, $routeParams) {
   }
   
   $scope.submitNepForm = function() {
-    if(typeof($scope.nepPassword1) === "undefined" || $scope.nepPassword1.length < 8) {
-      $scope.$parent.modalMsg = 1;
-      $("#ErrorModal").modal();
+    var error = false;
+    if($scope.activated || !$scope.fbid) {
+      // User is choosing a password.
+      if(typeof($scope.nepPassword1) === "undefined" || $scope.nepPassword1.length < 8) {
+        $scope.$parent.modalMsg = 1;
+        error = true;
+        $("#ErrorModal").modal();
+      }
+      else if($scope.nepPassword1 !== $scope.nepPassword2) {
+        $scope.$parent.modalMsg = 11;
+        error = true;
+        $("#ErrorModal").modal();
+      }
     }
-    else if($scope.nepPassword1 !== $scope.nepPassword2) {
-      $scope.$parent.modalMsg = 11;
-      $("#ErrorModal").modal();
-    }
-    else {
+    if(!error) {
       $scope.disableNepForm = true;
       
+      var allFields = {};
       var phpObj = {};
-      phpObj.email = actEmail;
-      phpObj.key = $routeParams.key;
-      phpObj.password = $scope.nepPassword1;
-      if(!$scope.nameKnown) {
-        phpObj.fname = $scope.nepFname;
-        phpObj.lname = $scope.nepLname;
-        phpObj.age = $scope.nepAge;
-        phpObj.sex = $scope.nepSex;
-        phpObj.heightinches = $scope.nepHeightinches;
-        
-        // TODO move these changing metrics to a separate survey page
-        // for repeat participants
-        phpObj.weight = $scope.nepWeight;
-        phpObj.zip = $scope.nepZip;
-        phpObj.activityLevel = $scope.nepActivityLevel;
-        phpObj.exerciseMins = $scope.nepExerciseMins;
-        phpObj.exerciseTypes = $scope.nepExerciseTypes;
-        phpObj.fruits = $scope.nepFruits;
+      
+      allFields.email = actEmail;
+      allFields.key = $routeParams.key;
+      allFields.password = $scope.nepPassword1;
+      allFields.fname = $scope.nepFname;
+      allFields.lname = $scope.nepLname;
+      allFields.age = $scope.nepAge;
+      allFields.sex = $scope.nepSex;
+      allFields.heightinches = $scope.nepHeightinches;
+      
+      // TODO move these changing metrics to a separate survey page
+      // for repeat participants
+      allFields.weight = $scope.nepWeight;
+      allFields.zip = $scope.nepZip;
+      allFields.activityLevel = $scope.nepActivityLevel;
+      allFields.exerciseMins = $scope.nepExerciseMins;
+      allFields.exerciseTypes = $scope.nepExerciseTypes;
+      allFields.fruits = $scope.nepFruits;
+      
+      for(var i in allFields) {
+        if(typeof(allFields[i]) !== "undefined")
+          phpObj[i] = allFields[i];
       }
+      
+      console.dir(allFields);
+      console.dir(phpObj);
+      
       
       $http.post("api.php?q=activate", phpObj).success(function(data) {
         console.log(data);
-        $scope.showNepForm = false;
-        $scope.showCompleteMsg = true;
-        $scope.$parent.hideLoginForm = false;
+        
+        if($scope.fbid) {
+          window.location.replace("fb_init.php");
+        }
+        else {
+          $scope.showNepForm = false;
+          $scope.showCompleteMsg = true;
+          $scope.$parent.hideLoginForm = false;
+        }
       });
     }
   };
@@ -349,7 +381,7 @@ app.controller(
 );
 app.controller(
   "ActivateCtrl", 
-  ["$scope", "$http", "$routeParams", ActivateCtrl]
+  ["$rootScope", "$scope", "$http", "$location", "$routeParams", ActivateCtrl]
 );
 app.controller(
   "AdminCtrl",

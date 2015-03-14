@@ -1,51 +1,48 @@
 <?php
+
 if($post['email'] != email_for_key($post['key'])['email']) {
   exit_error(3);
 }
-
 else {
-  $sqlArray = array(pwhash($post['password']));
+  $success_password = true;
+  $success_name = true;
+  $success_survey_u = true;
+  $success_survey_s = true;
+  
+  
+  /**** UPDATE PASSWORD ****/
+  
+  if(isset($post['password'])) {
+    $success_password = pdo_upsert("
+      update users
+      set
+        activated = true,
+        password = ?
+      where email = ? and akey = ?
+    ", array(pwhash($post['password']), $post['email'], $post['key']));
+  }
+
+  
+  /**** UPDATE FIRST AND LAST NAME ****/
   
   if(isset($post['fname']) && isset($post['lname'])) {
-    // User is activating for the first time and is submitting all this info
-    $surveyFields = "
-      ,fname = ?
-      ,lname = ?
-      ,age = ?
-      ,sex = ?
-      ,heightinches = ?
-    ";
-    $sqlArray = array_merge($sqlArray, array(
-      $post['fname'],
-      $post['lname'],
-      $post['age'],
-      $post['sex'],
-      $post['heightinches']
-    ));
+    $success_name = pdo_upsert("
+      update users
+      set
+        activated = true,
+        fname = ?,
+        lname = ?
+      where email = ? and akey = ?
+    ", array($post['fname'], $post['lname'], $post['email'], $post['key']));
   }
-  else {
-    // User has activated in the past. fname, lname, etc. should already be
-    // in database.
-    $surveyFields = "";
-  }
-  $sqlArray = array_merge($sqlArray, array(
-    $post['email'],
-    $post['key']
-  ));
   
-  $success_users = pdo_upsert("
-    update users
-    set
-      activated = true, 
-      password = ?
-      " . $surveyFields . "
-    where email = ? and akey = ?
-  ", $sqlArray);
   
-  // TODO move these changing metrics to a separate survey page for repeat
-  // participants
-  $success_survey = true;
+  /**** UPDATE SURVEY AND OTHER INFO ****/
+  
   if(
+    isset($post['age']) &&
+    isset($post['sex']) &&
+    isset($post['heightinches']) &&
     isset($post['weight']) &&
     isset($post['zip']) &&
     isset($post['activityLevel']) &&
@@ -53,13 +50,28 @@ else {
     isset($post['exerciseTypes']) &&
     isset($post['fruits'])
   ) {
-    // Update surveys table
-    $success_survey = pdo_upsert("
+    $success_survey_u = pdo_upsert("
+      update users
+      set
+        activated = true,
+        age = ?,
+        sex = ?,
+        heightinches = ?
+     where email = ? and akey = ?
+    ", array(
+      $post['age'], 
+      $post['sex'], 
+      $post['heightinches'], 
+      $post['email'], 
+      $post['key']
+    ));
+    
+    $success_survey_s = pdo_upsert("
       insert into surveys (
         challengeid,
         userid,
-        weight, 
-        zip, 
+        weight,
+        zip,
         activitylevel, 
         exercisemins, 
         exercisetypes,
@@ -73,11 +85,11 @@ else {
       $post['activityLevel'],
       $post['exerciseMins'],
       $post['exerciseTypes'],
-      $post['fruits']
+      $post['fruits'] 
     ));
   }
   
-  if($success_users && $success_survey) {
+  if($success_password && $success_name && $success_survey_u && $success_survey_s) {
     reset_akey($post['email']);
   }
   else {

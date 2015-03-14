@@ -35,6 +35,4 @@ if(isset($_SESSION['userid'])) {
   $ok_array['userEmail'] = email_for_user($_SESSION['userid']);
 }
 
-$ok_array['fbLoginUrl'] = $helper->getLoginUrl(array("scope" => "email"));
-
 ?>
