@@ -1,5 +1,73 @@
 <div class="row">  
-  <div class="col-md-8" id="welcome">
+  <div class="col-md-4 col-md-push-8">
+    <div class="panel panel-default" style="margin-top: 20px;">
+      <div class="panel-heading">
+        <h3 class="panel-title text-center">Register Now</h3>
+      </div>
+      <div class="panel-body">
+        <div ng-hide="showRegisterForm">
+          <a
+            href="fb_init.php"
+            class="btn btn-primary btn-block btn-lg"
+            style="background-color:#3b5998"
+          >
+            <img 
+              src="img/fb.png" 
+              style="max-height:33px"
+            />
+            Register with Facebook
+          </a>
+          <p class="text-center" style="margin:14px 0px">or</p>
+          <button
+            type="button" 
+            class="btn btn-default btn-block btn-lg"
+            ng-click="showRegisterForm=true"
+          >
+            Register using email
+          </button>
+        </div>
+        <form 
+          role="form" 
+          ng-submit="submitRegisterForm()" 
+          ng-show="showRegisterForm"
+        >
+          <fieldset ng-disabled="disableRegForm">
+            <div class="form-group">
+              <label ng-hide="phSup" for="email">Email address:</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="Enter email address"
+                ng-model="regEmail"
+                required
+              />
+            </div>
+            <div
+              id="drecaptcha" 
+              class="text-center" 
+              style="margin-bottom: 1em"
+            ></div>
+            <button
+              type="submit" 
+              class="btn btn-primary center-block"
+              ng-hide="disableRegForm"
+            >
+              Submit
+            </button>
+            <img
+              src="img/spinner.gif"
+              class="center-block"
+              ng-show="disableRegForm"
+              style="padding-top:7px; padding-bottom:7px"
+            />
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-8 col-md-pull-4" id="welcome">
     <h1 class="text-center">Welcome to <strong>Be Healthy Now</strong></h1>
 
     <img
@@ -92,51 +160,6 @@
       <strong>Registration begins February 23. The competition kicks-off April 11th from 9 - 11 am at the Burlington YMCA and continues through June 19th.</strong>
     </p>
 
-  </div>
-
-  <div class="col-md-4">
-    <div class="panel panel-default" style="margin-top: 20px;">
-      <div class="panel-heading">
-        <h3 class="panel-title text-center">Register Now</h3>
-      </div>
-      <form 
-        class="panel-body"
-        role="form" 
-        ng-submit="submitRegisterForm()" 
-      >
-        <fieldset ng-disabled="disableRegForm">
-          <div class="form-group">
-            <label ng-hide="phSup" for="email">Email address:</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              placeholder="Enter email address"
-              ng-model="regEmail"
-              required
-            />
-          </div>
-          <div
-            id="drecaptcha" 
-            class="text-center" 
-            style="margin-bottom: 1em"
-          ></div>
-          <button
-            type="submit" 
-            class="btn btn-primary center-block"
-            ng-hide="disableRegForm"
-          >
-            Submit
-          </button>
-          <img
-            src="img/spinner.gif"
-            class="center-block"
-            ng-show="disableRegForm"
-            style="padding-top:7px; padding-bottom:7px"
-          />
-        </fieldset>
-      </form>
-    </div>
   </div>
 </div>
 <script
