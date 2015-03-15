@@ -136,7 +136,6 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
           }
         }
         
-        $scope.$parent.hideLoginForm = true;
         actEmail = data.email;
       }
     });
@@ -214,7 +213,6 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
         else {
           $scope.showNepForm = false;
           $scope.showCompleteMsg = true;
-          $scope.$parent.hideLoginForm = false;
         }
       });
     }

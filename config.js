@@ -20,15 +20,13 @@ function appInit() {
 function setLoginVars(data, $rootScope, $scope) {
   $rootScope.initData = data;
   if(data.userid == null) {
-    $scope.hideLoginForm = false;
-    $scope.showUserName = false;
+    $scope.rightCorner = 'buttons';
     $scope.userid = null;
     $scope.loggedInFname = null;
     $scope.loggedInLname = null;
   }
   else {
-    $scope.hideLoginForm = true;
-    $scope.showUserName = true;
+    $scope.rightCorner = 'name';
     $scope.userid = data.userid;
     $scope.loggedInFname = data.fname;
     $scope.loggedInLname = data.lname;

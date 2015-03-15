@@ -44,6 +44,7 @@ if ($session) {
     
     if(email_already_in_db($graphObject->getEmail())) {
       // Add user's FB ID to DB and log in
+      // TODO don't log in if user has not activated
       set_fbid($graphObject->getEmail(), $info->getId());
       $ueqr = user_for_email($graphObject->getEmail());
       
