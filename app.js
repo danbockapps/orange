@@ -331,6 +331,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
   }
   
   $scope.getStarted = function() {
+    initData.valid = false;
     phpInit($rootScope, $scope, $http, $location);
   }
 }
