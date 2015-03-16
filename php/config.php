@@ -283,12 +283,24 @@ function fb_user_in_db($fbid) {
   return $qr['count'];
 }
 
-function set_fbid($email, $fbid) {
+function set_fbid($email, $fbid, $fname, $lname) {
   pdo_upsert("
     update users
-    set fbid = ?
+    set 
+      fbid = ?,
+      fname = ?,
+      lname = ?
     where email = ?
-  ", array($fbid, $email));
+  ", array($fbid, $fname, $lname, $email));
+}
+
+function fb_user_activated($fbid) {
+  $qr = select_one_record("
+    select count(*) as count
+    from users
+    where activated and fbid = ?
+  ", $fbid);
+  return $qr['count'];
 }
 
 ?>
