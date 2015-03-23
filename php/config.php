@@ -25,7 +25,7 @@ function pwhash($password) {
   for($i=0; $i<21; $i++) { // 21 is standard salt length
     $salt .= $allowed_chars[mt_rand(0,strlen($allowed_chars)-1)];
   }
-    
+
   return crypt($password, BLOWFISH_PRE . $salt . BLOWFISH_SUF);
 }
 
@@ -73,7 +73,8 @@ function select_one_record($query, $qs = null) {
 function logtxt($string) {
   file_put_contents(
     "log.txt",
-    date("Y-m-d G:i:s") . " " . $string . "\n",
+    date("Y-m-d G:i:s") . " " . $_SERVER['REMOTE_ADDR'] . " " .
+        $_SESSION['userid'] . " " . $string . "\n",
     FILE_APPEND
   );
 }
@@ -89,17 +90,17 @@ function email_already_in_db($email) {
 
 function reset_akey($email) {
   $done = false;
-  
+
   while(!$done) {
     $key_candidate = md5(uniqid(rand(), true));
-    
+
     //Make sure the key is unique
     $key_search = pdo_select("
       select count(*) as count
       from users
       where akey = ?
     ", array($key_candidate));
-    
+
     if($key_search[0]['count'] == 0) {
       $done = true;
       pdo_upsert("
@@ -109,7 +110,7 @@ function reset_akey($email) {
       ", array($key_candidate, $email));
     }
   }
-  
+
   return $key_candidate;
 }
 
@@ -117,7 +118,7 @@ function exit_error($responsecode) {
   $returnable['q'] = $_GET['q'];
   $returnable['responseString'] = "ERROR";
   $returnable['responseCode'] = $responsecode;
-  
+
   if($responsecode == 1)
     $returnable['explanation'] = "Password is too short";
   if($responsecode == 2)
@@ -142,7 +143,7 @@ function exit_error($responsecode) {
     $returnable['explanation'] = "User already on a team";
   if($responsecode == 14)
     $returnable['explanation'] = "Join Code not found";
-  
+
   exit(json_encode($returnable));
 }
 
@@ -152,7 +153,7 @@ function am_i_admin() {
     from users
     where userid = ?
   ", $_SESSION['userid']);
-    
+
   return $qr['admin'];
 }
 
@@ -164,7 +165,7 @@ function require_admin() {
 function sendmail($to, $subject, $body) {
   // Prevent email-related "strict" errors from showing in the log
   $old_error_level = error_reporting(E_ALL & ~E_STRICT);
-  
+
   require_once("Mail.php");
   global $ini;
 
@@ -188,7 +189,7 @@ function sendmail($to, $subject, $body) {
 
   /* Ok send mail */
   $mail_object->send($recipients, $headers, $mailmsg);
-  
+
   error_reporting($old_error_level);
 }
 
@@ -253,7 +254,7 @@ function user_current_team($userid) {
       t.challengeid = ? and
       tm.userid = ?
   ", array(current_challengeid(), $userid));
-  
+
   // If no team is found, this will return null.
   return $qr['teamid'];
 }
@@ -286,7 +287,7 @@ function fb_user_in_db($fbid) {
 function set_fbid($email, $fbid, $fname, $lname) {
   pdo_upsert("
     update users
-    set 
+    set
       fbid = ?,
       fname = ?,
       lname = ?
