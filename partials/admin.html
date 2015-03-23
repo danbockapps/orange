@@ -5,6 +5,49 @@
 </div>
 <div class="row">
   <div class="col-xs-12">
+    <h2>Participants ({{participants.length}})</h2>
+    <table class="table">
+      <tr>
+        <th>
+          <strong>
+            <a href="" ng-click="predicate='lname'; reverse=!reverse">
+              Name
+            </a>
+          </strong>
+        </th>
+        <th>
+          <strong>
+            <a href="" ng-click="predicate='dateuseradded'; reverse=!reverse">
+              Registered
+            </a>
+          </strong>
+        </th>
+        <th>
+          <strong>
+            <a href="" ng-click="predicate='teamname'; reverse=!reverse">
+              Team
+            </a>
+          </strong>
+        </th>
+      </tr>
+      <tr ng-repeat="p in participants | orderBy:predicate:reverse">
+        <td>
+          <strong>{{p.lname}}, {{p.fname}}</strong>
+          <img ng-show="p.fbid" src="img/fb24.png" />
+        </td>
+        <td>
+          {{p.dateuseradded}}
+        </td>
+        <td>
+          {{p.teamname}}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
     <h2>Challenge dates</h2>
     <table class="table">
       <tr>
@@ -14,7 +57,7 @@
         <th>Program end</th>
         <th><!-- Submit button column --></td>
       </tr>
-      
+
       <tr>
         <td style="vertical-align:middle">{{challenge.regStart}}</td>
         <td style="vertical-align:middle">{{challenge.regEnd}}</td>
@@ -22,7 +65,7 @@
         <td style="vertical-align:middle">{{challenge.end}}</td>
         <td><!-- Submit button column --></td>
       </tr>
-      
+
       <tr ng-hide="showNcForm">
         <td colspan="5">
           <button
@@ -35,22 +78,14 @@
           </button>
         </td>
       </tr>
-      
+
       <tr ng-show="showNcForm">
         <form role="form">
           <td>
             <input
               type="text"
-              class="form-control orange-dttm" 
-              ng-model="ncRegStart" 
-              data-date-format="YYYY-MM-DD HH:mm:ss"
-            />
-          </td>
-          <td>
-            <input
-              type="text"
-              class="form-control orange-dttm" 
-              ng-model="ncRegEnd" 
+              class="form-control orange-dttm"
+              ng-model="ncRegStart"
               data-date-format="YYYY-MM-DD HH:mm:ss"
             />
           </td>
@@ -58,15 +93,23 @@
             <input
               type="text"
               class="form-control orange-dttm"
-              ng-model="ncStart" 
+              ng-model="ncRegEnd"
               data-date-format="YYYY-MM-DD HH:mm:ss"
             />
           </td>
           <td>
             <input
               type="text"
-              class="form-control orange-dttm" 
-              ng-model="ncEnd" 
+              class="form-control orange-dttm"
+              ng-model="ncStart"
+              data-date-format="YYYY-MM-DD HH:mm:ss"
+            />
+          </td>
+          <td>
+            <input
+              type="text"
+              class="form-control orange-dttm"
+              ng-model="ncEnd"
               data-date-format="YYYY-MM-DD HH:mm:ss"
             />
           </td>

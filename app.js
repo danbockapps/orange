@@ -338,6 +338,13 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
 
 function AdminCtrl($scope, $http, $location) {
   // TODO don't show this page if user is not logged in as an admin
+  
+  $http.get("api.php?q=participants").success(function(data) {
+    if(processApiResponse($scope, $scope.$parent, data)) {
+      $scope.participants = data.participants;
+    }
+  });
+  
   var refreshChallenges = function() {
     $http.get("api.php?q=challenge").success(function(data) {
       console.log(data);
