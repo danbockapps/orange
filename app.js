@@ -1,6 +1,6 @@
 var app = angular.module('orange', ['ngRoute']);
 
-function appConfig($routeProvider) {  
+function appConfig($routeProvider) {
   $routeProvider.
     when('/', {
       templateUrl: function() {
@@ -10,7 +10,7 @@ function appConfig($routeProvider) {
           return 'partials/welcome.html';
       },
       controller: 'SwitchboardCtrl'
-    }). 
+    }).
     when('/emailsent', {
       templateUrl: 'partials/emailsent.html'
     }).
@@ -38,7 +38,7 @@ function appConfig($routeProvider) {
 function IndexCtrl($rootScope, $scope, $http, $location, $route) {
   $scope.projectname = initData.projectname;
   phpInit($rootScope, $scope, $http);
-  
+
   $scope.submitLoginForm = function() {
     phpObj = {email:$scope.loginEmail, password:$scope.loginPassword};
     $http.post("api.php?q=login", phpObj).success(function(data) {
@@ -49,12 +49,12 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route) {
       }
     });
   }
-  
+
   $scope.showPasswordRecover = function() {
     $location.path("passwordrecover");
     $("#ErrorModal").modal('hide');
   };
-  
+
   $scope.logout = function() {
     $http.post("api.php?q=logout").success(function(data) {
       if(processApiResponse($scope, $scope, data)) {
@@ -94,7 +94,7 @@ function welcomeSubCtrl($scope, $http, $location) {
       }
     });
   };
-  
+
   $scope.phSup = placeholderSupported;
 }
 
@@ -115,11 +115,11 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
         $scope.showNepForm = true;
         $scope.activated = data.activated;
         $scope.fbid = data.fbid;
-        
+
         console.log("fbid and activated: ");
         console.log($scope.fbid);
         console.log($scope.activated);
-        
+
         if(data.activated) {
           $scope.header = "Reset your password";
           $(".password").prop("required", true);
@@ -135,12 +135,12 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
             console.log("name and password are required.");
           }
         }
-        
+
         actEmail = data.email;
       }
     });
   }
-  
+
   $scope.submitParForm = function() {
     $scope.disableParForm = true;
     $http.post("api.php?q=passwordrecover", {
@@ -155,7 +155,7 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
       }
     });
   }
-  
+
   $scope.submitNepForm = function() {
     var error = false;
     if($scope.activated || !$scope.fbid) {
@@ -173,10 +173,10 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
     }
     if(!error) {
       $scope.disableNepForm = true;
-      
+
       var allFields = {};
       var phpObj = {};
-      
+
       allFields.email = actEmail;
       allFields.key = $routeParams.key;
       allFields.password = $scope.nepPassword1;
@@ -185,7 +185,7 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
       allFields.age = $scope.nepAge;
       allFields.sex = $scope.nepSex;
       allFields.heightinches = $scope.nepHeightinches;
-      
+
       // TODO move these changing metrics to a separate survey page
       // for repeat participants
       allFields.weight = $scope.nepWeight;
@@ -194,19 +194,19 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
       allFields.exerciseMins = $scope.nepExerciseMins;
       allFields.exerciseTypes = $scope.nepExerciseTypes;
       allFields.fruits = $scope.nepFruits;
-      
+
       for(var i in allFields) {
         if(typeof(allFields[i]) !== "undefined")
           phpObj[i] = allFields[i];
       }
-      
+
       console.dir(allFields);
       console.dir(phpObj);
-      
-      
+
+
       $http.post("api.php?q=activate", phpObj).success(function(data) {
         console.log(data);
-        
+
         if($scope.fbid) {
           window.location.replace("fb_init.php");
         }
@@ -217,13 +217,13 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
       });
     }
   };
-  
+
   $scope.showPasswordRecover = function() {
     $location.path("passwordrecover");
   };
 }
 
-function dashboardSubCtrl($rootScope, $scope, $http, $location) {  
+function dashboardSubCtrl($rootScope, $scope, $http, $location) {
   $scope.$watch(
     function() {
       return $rootScope.initData;
@@ -233,19 +233,22 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
       // exists before calling stuff on it.
       if($rootScope.initData) {
         console.log("initData has now arrived from the server.");
-        
+
         $scope.projectname = $rootScope.initData.projectname;
         $scope.userEmail = $rootScope.initData.userEmail;
         console.log("$scope.userEmail is " + $scope.userEmail);
-        
+
         // This just makes the code shorter.
         var d = $rootScope.initData;
-        
+
         if(d.chalCurrent) {
           console.log("There is a current challenge.");
           if(d.team_id) {
             console.log("The user is on a team.");
             $scope.showDashboard = true;
+            $http.get("api.php?q=activities").success(function(data) {
+              $scope.activities = data.activities;
+            });
           }
           else {
             console.log("The user is not on a team.");
@@ -283,23 +286,23 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
       }
     }
   );
-  
+
   $scope.createButton = function() {
     $scope.showCreateForm = true;
     $scope.showJoinForm = false;
   }
-  
+
   $scope.joinButton = function() {
     $scope.showJoinForm = true;
     $scope.showCreateForm = false;
   }
-  
+
   $scope.submitCreateForm = function() {
     $scope.hideJoinButton = true;
     $scope.disableCreateForm = true;
     $scope.hideCreateSubmit = true;
     $scope.showCreateSpinner = true;
-    
+
     $http.post("api.php?q=newteam", {teamName: $scope.createTeamName})
     .success(function(data) {
       if(processApiResponse($scope, $scope.$parent, data)) {
@@ -309,13 +312,13 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
       }
     });
   }
-  
+
   $scope.submitJoinForm = function() {
     $scope.hideCreateButton = true;
     $scope.disableJoinForm = true;
     $scope.hideJoinSubmit = true;
     $scope.showJoinSpinner = true;
-    
+
     $http.post("api.php?q=jointeam", {joinCode: $scope.joinJoinCode})
     .success(function(data) {
       $scope.showJoinSpinner = false;
@@ -329,7 +332,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
       }
     });
   }
-  
+
   $scope.getStarted = function() {
     initData.valid = false;
     phpInit($rootScope, $scope, $http, $location);
@@ -339,7 +342,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
 function AdminCtrl($scope, $http, $location) {
   $scope.predicate = 'dateuseradded';
   $scope.reverse = true;
-  
+
   $http.get("api.php?q=participants").success(function(data) {
     if(processApiResponse($scope, $scope.$parent, data)) {
       $scope.participants = data.participants;
@@ -348,18 +351,18 @@ function AdminCtrl($scope, $http, $location) {
           $scope.participants[i].teamname = "";
     }
   });
-  
+
   var refreshChallenges = function() {
     $http.get("api.php?q=challenge").success(function(data) {
       console.log(data);
-      
+
       $scope.challenge = data.challenge;
       $scope.showNcForm = false;
     });
   }
-  
+
   refreshChallenges();
-  
+
   $scope.submitNcForm = function() {
     var r = confirm("WARNING! This creates a new challenge and locks out " +
         "participants from the old challenge.");
@@ -378,11 +381,11 @@ function AdminCtrl($scope, $http, $location) {
   }
 }
 
-// If you're not minifying, you can replace the array literal with just the 
+// If you're not minifying, you can replace the array literal with just the
 // function name.
 app.config(["$routeProvider", appConfig]);
 app.controller(
-  "IndexCtrl", 
+  "IndexCtrl",
   ["$rootScope", "$scope", "$http", "$location", "$route", IndexCtrl]
 );
 app.controller(
@@ -390,7 +393,7 @@ app.controller(
   ["$rootScope", "$scope", "$http", "$location", SwitchboardCtrl]
 );
 app.controller(
-  "ActivateCtrl", 
+  "ActivateCtrl",
   ["$rootScope", "$scope", "$http", "$location", "$routeParams", ActivateCtrl]
 );
 app.controller(
