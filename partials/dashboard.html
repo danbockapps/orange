@@ -125,9 +125,37 @@
   Registration is closed for this year. Try again next year!
 </h3>
 
-<div ng-show="showDashboard">
-  <!-- TODO -->
-  <div ng-repeat="a in activities">
-    {{a.shortdesc}}
+<div class="row" ng-show="showDashboard">
+  <div class="col-md-6">
+    <div ng-repeat="a in activities" style="margin-top:1em">
+      <button
+        type="button"
+        class="btn btn-primary btn-lg btn-block"
+        ng-click="submitActivity(a.activityid)"
+      >
+        {{a.shortdesc}}
+      </button>
+      {{a.longdesc}}
+    </div>
+  </div>
+  <div class="col-md-6">
+    <table class="table" style="margin-top:1em">
+      <tr>
+        <th>
+          Date
+        </th>
+        <th>
+          Activity
+        </th>
+        <th>
+          Points
+        </th>
+      </tr>
+      <tr ng-repeat="report in reports | orderBy:'-reportdttm'">
+        <td>{{dateFormat(report.reportdttm)}}</td>
+        <td>{{report.shortdesc}}</td>
+        <td>{{report.pointvalue}}</td>
+      </tr>
+    </table>
   </div>
 </div>

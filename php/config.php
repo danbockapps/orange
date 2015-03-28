@@ -52,7 +52,7 @@ function pdo_upsert($sql, $qs = null) {
   return $sth->execute(is_array($qs) ? $qs : array($qs));
 }
 
-function pdo_select($query, $qs) {
+function pdo_select($query, $qs = null) {
   $dbh = pdo_connect();
   $sth = $dbh->prepare($query);
   $sth->setFetchMode(PDO::FETCH_ASSOC);
@@ -302,6 +302,30 @@ function fb_user_activated($fbid) {
     where activated and fbid = ?
   ", $fbid);
   return $qr['count'];
+}
+
+function reports() {
+  $qr = pdo_select("
+    select
+      r.reportid,
+      r.reportdttm,
+      a.shortdesc,
+      a.pointvalue
+    from
+      reports r
+      natural join activities a
+    where
+      !r.deleted and
+      r.userid = ? and
+      r.challengeid = ?
+  ", array($_SESSION['userid'], current_challengeid()));
+  
+  foreach($qr as &$row) {
+    // Convert dates to ISO 8601 format. Much easier in PHP than in MySQL.
+    $row['reportdttm'] = date('c', strtotime($row['reportdttm']));
+  }
+  
+  return $qr;
 }
 
 ?>

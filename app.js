@@ -236,7 +236,6 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
 
         $scope.projectname = $rootScope.initData.projectname;
         $scope.userEmail = $rootScope.initData.userEmail;
-        console.log("$scope.userEmail is " + $scope.userEmail);
 
         // This just makes the code shorter.
         var d = $rootScope.initData;
@@ -247,7 +246,10 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
             console.log("The user is on a team.");
             $scope.showDashboard = true;
             $http.get("api.php?q=activities").success(function(data) {
-              $scope.activities = data.activities;
+              if(processApiResponse($scope, $scope.$parent, data)) {
+                $scope.activities = data.activities;
+                $scope.reports = data.reports;
+              }
             });
           }
           else {
@@ -337,6 +339,18 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
     initData.valid = false;
     phpInit($rootScope, $scope, $http, $location);
   }
+
+  $scope.submitActivity = function(activityId) {
+    $http.post("api.php?q=submitactivity", {activityId:activityId})
+      .success(function(data) {
+      if(processApiResponse($scope, $scope.$parent, data)) {
+        $scope.reports = data.reports;
+      }
+    });
+  }
+  
+  // This is a function in config.js.
+  $scope.dateFormat = dateFormat;
 }
 
 function AdminCtrl($scope, $http, $location) {
