@@ -247,7 +247,7 @@ function user_for_email($email) {
 
 function user_current_team($userid) {
   $qr = select_one_record("
-    select teamid
+    select teamname
     from
       team_members tm
       natural join teams t
@@ -257,7 +257,7 @@ function user_current_team($userid) {
   ", array(current_challengeid(), $userid));
 
   // If no team is found, this will return null.
-  return $qr['teamid'];
+  return $qr['teamname'];
 }
 
 function current_challengeid() {

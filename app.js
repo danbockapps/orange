@@ -236,13 +236,14 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
 
         $scope.projectname = $rootScope.initData.projectname;
         $scope.userEmail = $rootScope.initData.userEmail;
+        $scope.teamName = $rootScope.initData.teamName;
 
         // This just makes the code shorter.
         var d = $rootScope.initData;
 
         if(d.chalCurrent) {
           console.log("There is a current challenge.");
-          if(d.team_id) {
+          if(d.teamName) {
             console.log("The user is on a team.");
             $scope.showDashboard = true;
             $http.get("api.php?q=activities").success(function(data) {
@@ -268,7 +269,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
           console.log("There is no current challenge.");
           if(d.regOpen) {
             console.log("Registration is open.");
-            if(d.team_id) {
+            if(d.teamName) {
               console.log("The user is on a team.");
               $scope.showWaitMsg = true;
             }
@@ -288,6 +289,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
       }
     }
   );
+  
 
   $scope.createButton = function() {
     $scope.showCreateForm = true;
@@ -370,11 +372,23 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
     });
   }
   
+  $scope.showTeamButton = function() {
+    //TODO make this its own partial
+    $scope.showDashboard = false;
+    $scope.showTeam = true;
+    $http.get("api.php?q=team").success(function(data) {
+      if(processApiResponse($scope, $scope.$parent, data)) {
+        $scope.team = data.team;
+      }
+    });
+  }
+  
   // This is a function in config.js.
   $scope.dateFormat = dateFormat;
 }
 
 function AdminCtrl($scope, $http, $location) {
+  //TODO show only those participants who are registered in the current challenge
   $scope.predicate = 'dateuseradded';
   $scope.reverse = true;
 

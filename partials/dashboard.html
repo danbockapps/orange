@@ -125,48 +125,67 @@
   Registration is closed for this year. Try again next year!
 </h3>
 
-<div class="row" ng-show="showDashboard">
-  <div class="col-md-6">
-    <h3 class="text-center">Click to log your activity</h3>
-    <div ng-repeat="a in activities" style="margin-top:1em">
+<div ng-show="showDashboard">
+  <div class="row">
+    <div class="col-xs-12">
       <button
-        type="button"
-        class="btn {{btnColor(a.pointvalue)}} btn-lg btn-block"
-        ng-click="submitActivity(a.activityid)"
+        type="button" 
+        class="btn btn-link btn-lg"
+        ng-click="showTeamButton()"
       >
-        {{a.shortdesc}}
+        <span class="glyphicon glyphicon-hand-left"></span> Your team: {{teamName}}
       </button>
-      <strong>
-        {{a.pointvalue}} point{{a.pointvalue == 1 ? "" : "s"}}.
-      </strong>
-      {{a.longdesc}}
-      <a ng-show="a.url" href="{{a.url}}" target="_blank">More info</a>
     </div>
   </div>
-  <div class="col-md-6" ng-show="reports.length">
-    <h3 class="text-center">Your activity log</h3>
-    <table class="table" style="margin-top:1em">
-      <tr>
-        <th>Date</th>
-        <th>Activity</th>
-        <th>Points</th>
-        <th><!-- delete buttons --></th>
-      </tr>
-      <tr ng-repeat="report in reports | orderBy:'-reportdttm'">
-        <td>{{dateFormat(report.reportdttm)}}</td>
-        <td>{{report.shortdesc}}</td>
-        <td>{{report.pointvalue}}</td>
-        <td>
-          <button
-            type="button"
-            class="btn btn-danger btn-xs"
-            ng-click="deleteReport(report.reportid)"
-          >
-            <span class="glyphicon glyphicon-remove"></span>
-            Delete
-          </button>
-        </td>
-      </tr>
-    </table>
-  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="text-center">Click to log your activity</h3>
+      <div ng-repeat="a in activities" style="margin-top:1em">
+        <button
+          type="button"
+          class="btn {{btnColor(a.pointvalue)}} btn-lg btn-block"
+          ng-click="submitActivity(a.activityid)"
+        >
+          {{a.shortdesc}}
+        </button>
+        <strong>
+          {{a.pointvalue}} point{{a.pointvalue == 1 ? "" : "s"}}.
+        </strong>
+        {{a.longdesc}}
+        <a ng-show="a.url" href="{{a.url}}" target="_blank">More info</a>
+      </div>
+    </div>
+    <div class="col-md-6" ng-show="reports.length">
+      <h3 class="text-center">Your activity log</h3>
+      <table class="table" style="margin-top:1em">
+        <tr>
+          <th>Date</th>
+          <th>Activity</th>
+          <th>Points</th>
+          <th><!-- delete buttons --></th>
+        </tr>
+        <tr ng-repeat="report in reports | orderBy:'-reportdttm'">
+          <td>{{dateFormat(report.reportdttm)}}</td>
+          <td>{{report.shortdesc}}</td>
+          <td>{{report.pointvalue}}</td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-danger btn-xs"
+              ng-click="deleteReport(report.reportid)"
+            >
+              <span class="glyphicon glyphicon-remove"></span>
+              Delete
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div><!-- col-md-6 -->
+  </div><!-- 2nd row -->
+</div><!-- ng-show showDashboard -->
+
+<div class="row" ng-show="showTeam">
+  <!-- TODO make this its own partial -->
+  team goes here
 </div>
+

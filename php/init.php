@@ -1,4 +1,6 @@
 <?php
+//TODO there are a lot of database queries here that could be consolidated.
+
 $ok_array["projectname"] = $ini['projectname'];
 $ok_array = array_merge($ok_array, $_SESSION);
 
@@ -31,7 +33,7 @@ $qr = select_one_record("
 $ok_array = array_merge($ok_array, $qr);
 
 if(isset($_SESSION['userid'])) {
-  $ok_array['team_id'] = user_current_team($_SESSION['userid']);
+  $ok_array['teamName'] = user_current_team($_SESSION['userid']);
   $ok_array['userEmail'] = email_for_user($_SESSION['userid']);
 }
 
