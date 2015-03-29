@@ -131,15 +131,19 @@
     <div ng-repeat="a in activities" style="margin-top:1em">
       <button
         type="button"
-        class="btn btn-primary btn-lg btn-block"
+        class="btn {{btnColor(a.pointvalue)}} btn-lg btn-block"
         ng-click="submitActivity(a.activityid)"
       >
         {{a.shortdesc}}
       </button>
+      <strong>
+        {{a.pointvalue}} point{{a.pointvalue == 1 ? "" : "s"}}.
+      </strong>
       {{a.longdesc}}
+      <a ng-show="a.url" href="{{a.url}}" target="_blank">More info</a>
     </div>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-6" ng-show="reports.length">
     <h3 class="text-center">Your activity log</h3>
     <table class="table" style="margin-top:1em">
       <tr>

@@ -339,6 +339,18 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
     initData.valid = false;
     phpInit($rootScope, $scope, $http, $location);
   }
+  
+  $scope.btnColor = function(pointValue) {
+    if(pointValue > 2)
+      // Orange buttons for five-point activities
+      return "btn-warning";
+    else if(pointValue >= 2)
+      // Blue buttons for two-point activities
+      return "btn-primary";
+    else
+      // Light blue buttons for one-point activities
+      return "btn-info";
+  }
 
   $scope.submitActivity = function(activityId) {
     $http.post("api.php?q=submitactivity", {activityId:activityId})
