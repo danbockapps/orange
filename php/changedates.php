@@ -1,5 +1,6 @@
 <?php
-require_admin();
+if(!am_i_admin())
+  exit_error(9);
 
 $regstart = strtotime($post['regstart']);
 $regend = strtotime($post['regend']);

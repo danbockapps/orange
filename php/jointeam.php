@@ -1,4 +1,9 @@
 <?php
+if(!isset($_SESSION['userid']))
+  exit_error(15);
+if(user_current_team($_SESSION['userid']) != null)
+  exit_error(13);
+
 $qr = select_one_record("
   select
     teamid,

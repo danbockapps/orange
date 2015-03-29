@@ -1,8 +1,9 @@
 <?php
+if(!isset($_SESSION['userid']))
+  exit_error(15);
 
-if(!isset($_SESSION['userid']) || !isset($post['activityId']))
-  //TODO change this error code
-  exit_error(4);
+if(!isset($post['activityId']))
+  exit_error(16);
 
 pdo_upsert("
   insert into reports (userid, challengeid, activityid, units)

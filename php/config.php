@@ -119,6 +119,8 @@ function exit_error($responsecode) {
   $returnable['responseString'] = "ERROR";
   $returnable['responseCode'] = $responsecode;
 
+  // None of these "explanations" are displayed to the user; they are here to
+  // make the code and JSON more human-readable.
   if($responsecode == 1)
     $returnable['explanation'] = "Password is too short";
   if($responsecode == 2)
@@ -143,6 +145,10 @@ function exit_error($responsecode) {
     $returnable['explanation'] = "User already on a team";
   if($responsecode == 14)
     $returnable['explanation'] = "Join Code not found";
+  if($responsecode == 15)
+    $returnable['explanation'] = "User not logged in";
+  if($responsecode == 16)
+    $returnable['explanation'] = "An unknown error occurred";
 
   exit(json_encode($returnable));
 }
@@ -155,11 +161,6 @@ function am_i_admin() {
   ", $_SESSION['userid']);
 
   return $qr['admin'];
-}
-
-function require_admin() {
-  if(!am_i_admin())
-    exit_error(9);
 }
 
 function sendmail($to, $subject, $body) {

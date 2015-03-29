@@ -1,4 +1,7 @@
 <?php
+if(!isset($_SESSION['userid']))
+  exit_error(15);
+
 pdo_upsert("
   update reports
   set deleted = true
