@@ -26,6 +26,10 @@ function appConfig($routeProvider) {
       templateUrl: 'partials/activate.html',
       controller: 'ActivateCtrl'
     }).
+    when('/team', {
+      templateUrl: 'partials/team.html',
+      controller: 'TeamCtrl'
+    }).
     when('/admin', {
       templateUrl: 'partials/admin.html',
       controller: 'AdminCtrl'
@@ -373,18 +377,20 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
   }
   
   $scope.showTeamButton = function() {
-    //TODO make this its own partial
-    $scope.showDashboard = false;
-    $scope.showTeam = true;
-    $http.get("api.php?q=team").success(function(data) {
-      if(processApiResponse($scope, $scope.$parent, data)) {
-        $scope.team = data.team;
-      }
-    });
+    $location.path("team");
   }
   
   // This is a function in config.js.
   $scope.dateFormat = dateFormat;
+}
+
+function TeamCtrl($rootScope, $scope, $http, $location) {
+  $scope.teamName = $rootScope.initData.teamName;
+  $http.get("api.php?q=team").success(function(data) {
+    if(processApiResponse($scope, $scope.$parent, data)) {
+      $scope.team = data.team;
+    }
+  });
 }
 
 function AdminCtrl($scope, $http, $location) {
@@ -444,6 +450,10 @@ app.controller(
 app.controller(
   "ActivateCtrl",
   ["$rootScope", "$scope", "$http", "$location", "$routeParams", ActivateCtrl]
+);
+app.controller(
+  "TeamCtrl",
+  ["$rootScope", "$scope", "$http", "$location", TeamCtrl]
 );
 app.controller(
   "AdminCtrl",
