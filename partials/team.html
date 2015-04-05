@@ -35,7 +35,7 @@
     <td>
       {{tm.fname}} {{tm.lname}}
     </td>
-    <td ng-repeat="pw in tm.pointWeeks | orderBy: '$index'">
+    <td ng-repeat="pw in tm.pointWeeks track by $index| orderBy: '$index'">
       {{pw}}
     </td>
     <td>
@@ -49,7 +49,7 @@
     <td>
       <strong>Totals</strong>
     </td>
-    <td ng-repeat="tpw in totals.pointWeeks | orderBy: '$index'">
+    <td ng-repeat="tpw in totals.pointWeeks track by $index| orderBy: '$index'">
       {{tpw}}
     </td>
     <td>
