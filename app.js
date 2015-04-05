@@ -253,13 +253,20 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
           console.log("There is a current challenge.");
           if(d.teamName) {
             console.log("The user is on a team.");
-            $scope.showDashboard = true;
-            $http.get("api.php?q=activities").success(function(data) {
-              if(processApiResponse($scope, $scope.$parent, data)) {
-                $scope.activities = data.activities;
-                $scope.reports = data.reports;
-              }
-            });
+            if(d.goal) {
+              console.log("The user has set a goal.");
+              $scope.showDashboard = true;
+              $http.get("api.php?q=activities").success(function(data) {
+                if(processApiResponse($scope, $scope.$parent, data)) {
+                  $scope.activities = data.activities;
+                  $scope.reports = data.reports;
+                }
+              });
+            }
+            else {
+              console.log("The user has not set a goal.");
+              $scope.showGoal = true;
+            }
           }
           else {
             console.log("The user is not on a team.");
@@ -386,6 +393,17 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
   
   // This is a function in config.js.
   $scope.dateFormat = dateFormat;
+  
+  $scope.submitGoalForm = function() {
+    $http.post("api.php?q=setgoal", {
+      goal:$scope.goalRadio,
+      initials:$scope.initials
+    }).success(function(data) {
+      if(processApiResponse($scope, $scope.$parent, data)) {
+        $scope.getStarted();
+      }
+    });
+  }
 }
 
 function TeamCtrl($rootScope, $scope, $http, $location, $routeParams) {

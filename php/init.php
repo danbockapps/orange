@@ -9,6 +9,17 @@ $ok_array["challengeStart"] = convertDatesToISO8601(pdo_select("
   where !deleted
 "), "startdttm")[0]['startdttm'];
 
+$ok_array["goal"] = select_one_record("
+  select distinct tm.goal
+  from
+    team_members tm
+    natural join teams t
+    natural join challenges c
+  where
+    !c.deleted
+    and tm.userid = ?
+", $_SESSION['userid'])['goal'];
+
 $ok_array = array_merge($ok_array, $_SESSION);
 
 // Is a challenge open for registration? Is one currently going on?

@@ -125,6 +125,60 @@
   Registration is closed for this year. Try again next year!
 </h3>
 
+<div class="row" ng-show="showGoal">
+  <div class="col-md-3"></div>
+  <div class="col-md-6">
+    <h1 class="text-center">Please set a goal</h1>
+    <form ng-submit="submitGoalForm()">
+      <div class="form-group">
+        <div>
+          <label style="font-weight: normal">
+            <input type="radio" ng-model="goalRadio" name="x" value="950" required />
+            <strong>PLATINUM</strong>:
+            950 Total Points, 95 points per week. This is equal to approximately 
+            <ul>
+              <li>30 minutes of exercise, five times a week;</li>
+              <li>eating five or more servings or fruits and vegetables five times a week, and</li>
+              <li>2-3 bonus points per day.</li>
+            </ul>
+          </label>
+        </div>
+        <div>
+          <label style="font-weight: normal">
+            <input type="radio" ng-model="goalRadio" name="x" value="650" required />
+            <strong>GOLD</strong>:
+            650 Total Points, 65 points per week. This is equal to approximately
+            <ul>
+              <li>30 minutes of exercise, three times a week;</li>
+              <li>eating five or more servings or fruits and vegetables three times a week, and</li> 
+              <li>2-3 bonus points per day.</li>
+            </ul>
+          </label>
+        </div>
+        <div>
+          <label style="font-weight: normal">
+            <input type="radio" ng-model="goalRadio" name="x" value="400" required />
+            <strong>SILVER</strong>:
+            400 Total Points, 40 points per week. This is equal to approximately
+            <ul>
+              <li>30 minutes of exercise, two times a week;</li> 
+              <li>eating five or more servings or fruits and vegetables two times a week, and</li>
+              <li>1-2 bonus points per day.</li>
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        Initial here to certify you are fit for physical activity:
+        <input type="text" ng-model="initials" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">
+        Submit
+      </button>
+    </form>
+  </div>
+  <div class="col-md-3"></div>
+</div>
+
 <div ng-show="showDashboard">
   <div class="row">
     <div class="col-xs-12">
