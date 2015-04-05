@@ -33,4 +33,18 @@
       {{tm.goal}}
     </td>
   </tr>
+  <tr>
+    <td>
+      <strong>Totals</strong>
+    </td>
+    <td ng-repeat="tpw in totals.pointWeeks | orderBy: '$index'">
+      {{tpw}}
+    </td>
+    <td>
+      {{totals.total}}
+    </td>
+    <td>
+      {{totals.goal}}
+    </td>
+  </tr>
 </table>

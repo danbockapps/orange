@@ -393,6 +393,13 @@ function TeamCtrl($rootScope, $scope, $http, $location) {
       var challengeStart = Date.parse($rootScope.initData.challengeStart) / 1000;
       $scope.numWeeks = numWeeksSince(challengeStart);
       
+      $scope.totals = {
+        pointWeeks:
+          Array.apply(null, Array($scope.numWeeks)).map(Number.prototype.valueOf, 0),
+        total: 0,
+        goal: 0
+      };
+      
       var indexedTeam = indexTeam(data.teamMembers);
       indexedTeam.forEach(function(teamMember) {
         // Initialize pointWeeks arrays with zeroes
@@ -401,12 +408,18 @@ function TeamCtrl($rootScope, $scope, $http, $location) {
           
         // Initialize total with zero too
         teamMember.total = 0;
+        
+        $scope.totals.goal += teamMember.goal;
       });
-      
+
       $scope.teamReports.forEach(function(report) {
-        indexedTeam[report.userid].pointWeeks[numWeeksSince(challengeStart,
-          Date.parse(report.reportdttm)/1000) - 1] += report.pointvalue;
+        var weekNum = numWeeksSince(challengeStart,
+          Date.parse(report.reportdttm)/1000) - 1
+        
+        indexedTeam[report.userid].pointWeeks[weekNum] += report.pointvalue;
         indexedTeam[report.userid].total += report.pointvalue;
+        $scope.totals.pointWeeks[weekNum] += report.pointvalue;
+        $scope.totals.total += report.pointvalue;
       });
       
       $scope.teamMembers = deindexTeam(indexedTeam);
