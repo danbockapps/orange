@@ -26,7 +26,11 @@ function appConfig($routeProvider) {
       templateUrl: 'partials/activate.html',
       controller: 'ActivateCtrl'
     }).
-    when('/team', {
+    when('/team/:id', {
+      templateUrl: 'partials/team.html',
+      controller: 'TeamCtrl'
+    }).
+    when('/team/', {
       templateUrl: 'partials/team.html',
       controller: 'TeamCtrl'
     }).
@@ -384,9 +388,10 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
   $scope.dateFormat = dateFormat;
 }
 
-function TeamCtrl($rootScope, $scope, $http, $location) {
+function TeamCtrl($rootScope, $scope, $http, $location, $routeParams) {
   $scope.teamName = $rootScope.initData.teamName;
-  $http.get("api.php?q=team").success(function(data) {
+  $http.get("api.php?q=team", {params:{teamId:$routeParams.id}})
+    .success(function(data) {
     if(processApiResponse($scope, $scope.$parent, data)) {
       $scope.teamReports = data.teamReports;
       
@@ -459,6 +464,10 @@ function TeamCtrl($rootScope, $scope, $http, $location) {
     var diffWeeks = diffSeconds / 604800;
     return Math.ceil(diffWeeks);
   }
+  
+  $scope.showDashboard = function() {
+    $location.path("");
+  }
 }
 
 function AdminCtrl($scope, $http, $location) {
@@ -476,7 +485,7 @@ function AdminCtrl($scope, $http, $location) {
     }
   });
 
-  var refreshChallenges = function() {
+  function refreshChallenges() {
     $http.get("api.php?q=challenge").success(function(data) {
       console.log(data);
 
@@ -520,7 +529,7 @@ app.controller(
 );
 app.controller(
   "TeamCtrl",
-  ["$rootScope", "$scope", "$http", "$location", TeamCtrl]
+  ["$rootScope", "$scope", "$http", "$location", "$routeParams", TeamCtrl]
 );
 app.controller(
   "AdminCtrl",

@@ -1,14 +1,20 @@
 <?php
-$tiqr = select_one_record("
-  select distinct tm.teamid
-  from
-    team_members tm
-    natural join teams t
-    natural join challenges c
-  where
-    !c.deleted
-    and tm.userid = ?
-", $_SESSION['userid']);
+if($_GET['teamId'] > 0) {
+  $team_id = $_GET['teamId'];
+}
+else {
+  $tiqr = select_one_record("
+    select distinct tm.teamid
+    from
+      team_members tm
+      natural join teams t
+      natural join challenges c
+    where
+      !c.deleted
+      and tm.userid = ?
+  ", $_SESSION['userid']);
+  $team_id = $tiqr['teamid'];
+}
 
 $ok_array['teamMembers'] = pdo_select("
   select distinct
@@ -22,9 +28,9 @@ $ok_array['teamMembers'] = pdo_select("
     natural join teams t
   where
     tm.teamid = ?
-", $tiqr['teamid']);
+", $team_id);
 
-$ok_array['teamReports'] = pdo_select("
+$team_reports = pdo_select("
   select distinct
     r.userid,
     r.reportdttm,
@@ -36,8 +42,8 @@ $ok_array['teamReports'] = pdo_select("
   where 
     !r.deleted
     and tm.teamid = ?
-", $tiqr['teamid']);
+", $team_id);
 
 $ok_array['teamReports'] = 
-    convertDatesToISO8601($ok_array['teamReports'], "reportdttm");
+    convertDatesToISO8601($team_reports, "reportdttm");
 ?>

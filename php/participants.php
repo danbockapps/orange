@@ -9,7 +9,8 @@ $ok_array['participants'] = pdo_select("
     u.lname,
     u.email,
     u.dateuseradded,
-    t.teamname
+    t.teamname,
+    t.teamid
   from
     users u
     natural left join team_members m
