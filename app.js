@@ -388,15 +388,24 @@ function TeamCtrl($rootScope, $scope, $http, $location) {
   $scope.teamName = $rootScope.initData.teamName;
   $http.get("api.php?q=team").success(function(data) {
     if(processApiResponse($scope, $scope.$parent, data)) {
-      $scope.team = data.team;
+      $scope.teamMembers = data.teamMembers;
+      $scope.teamReports = data.teamReports;
+      
+      var challengeStart = Date.parse($rootScope.initData.challengeStart) / 1000;
+      $scope.numWeeks = numWeeksSince(challengeStart);
     }
   });
+  
+  $scope.getNumber = function(num) {
+    return new Array(num);
+  }
 }
 
 function AdminCtrl($scope, $http, $location) {
   //TODO show only those participants who are registered in the current challenge
   $scope.predicate = 'dateuseradded';
   $scope.reverse = true;
+  refreshChallenges();
 
   $http.get("api.php?q=participants").success(function(data) {
     if(processApiResponse($scope, $scope.$parent, data)) {
@@ -415,8 +424,6 @@ function AdminCtrl($scope, $http, $location) {
       $scope.showNcForm = false;
     });
   }
-
-  refreshChallenges();
 
   $scope.submitNcForm = function() {
     var r = confirm("WARNING! This creates a new challenge and locks out " +

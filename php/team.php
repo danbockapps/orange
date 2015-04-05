@@ -1,11 +1,4 @@
 <?php
-/*
-for each team member:
-name
-list of activity (date and points)
-goal
-*/
-
 $tiqr = select_one_record("
   select distinct tm.teamid
   from
@@ -44,4 +37,7 @@ $ok_array['teamReports'] = pdo_select("
     !r.deleted
     and tm.teamid = ?
 ", $tiqr['teamid']);
+
+$ok_array['teamReports'] = 
+    convertDatesToISO8601($ok_array['teamReports'], "reportdttm");
 ?>

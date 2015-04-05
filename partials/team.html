@@ -4,4 +4,33 @@
   </div>
 </div>
 
-
+<table class="table">
+  <tr>
+    <th>
+      Name
+    </th>
+    <th ng-repeat="i in getNumber(numWeeks) track by $index">
+      wk{{$index + 1}}
+    </th>
+    <th>
+      Total
+    </th>
+    <th>
+      Goal
+    </th>
+  </tr>
+  <tr ng-repeat="tm in teamMembers">
+    <td>
+      {{tm.fname}} {{tm.lname}}
+    </td>
+    <td ng-repeat="i in getNumber(numWeeks) track by $index">
+    
+    </td>
+    <td>
+      {{tm.total}}
+    </td>
+    <td>
+      {{tm.goal}}
+    </td>
+  </tr>
+</table>

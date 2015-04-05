@@ -321,12 +321,30 @@ function reports() {
       r.challengeid = ?
   ", array($_SESSION['userid'], current_challengeid()));
   
-  foreach($qr as &$row) {
-    // Convert dates to ISO 8601 format. Much easier in PHP than in MySQL.
-    $row['reportdttm'] = date('c', strtotime($row['reportdttm']));
-  }
+  $qr = convertDatesToISO8601($qr, "reportdttm");
   
   return $qr;
+}
+
+function challenge() {
+  return select_one_record("
+    select
+      challengeid as id,
+      regstartdttm as regStart,
+      regenddttm as regEnd,
+      startdttm as start,
+      enddttm as end
+    from challenges
+    where !deleted
+  ");
+}
+
+function convertDatesToISO8601($arrayWithDates, $dateElemName) {
+  foreach($arrayWithDates as &$row) {
+    $row[$dateElemName] = date('c', strtotime($row[$dateElemName]));
+  }
+  
+  return $arrayWithDates;
 }
 
 ?>

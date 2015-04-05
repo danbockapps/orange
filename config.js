@@ -73,13 +73,6 @@ function processApiResponse($scope, modalScope, data) {
 }
 
 function dateFormat(date8601) {
-  /*
-  console.log(new Date().getTime());
-  console.log(Date.parse(date8601));
-  console.log();
-  return (new Date().getTime() - Date.parse(date8601)) + " milliseconds ago";
-  */
-  
   var reportDate = Date.parse(date8601);
   var seconds = (new Date().getTime() - reportDate) / 1000;
   
@@ -94,7 +87,15 @@ function dateFormat(date8601) {
     return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
   }
   else {
+    // Naming thigs is hard
     reportDateDate = new Date(reportDate);
     return reportDateDate.getMonth() + 1 + "/" + reportDateDate.getDate();
   }
+}
+
+function numWeeksSince(startSeconds) {
+  var nowSeconds = new Date().getTime() / 1000;
+  var diffSeconds = nowSeconds - startSeconds;
+  var diffWeeks = diffSeconds / 604800;
+  return Math.ceil(diffWeeks);
 }

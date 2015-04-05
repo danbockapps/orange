@@ -2,6 +2,13 @@
 //TODO there are a lot of database queries here that could be consolidated.
 
 $ok_array["projectname"] = $ini['projectname'];
+
+$ok_array["challengeStart"] = convertDatesToISO8601(pdo_select("
+  select startdttm
+  from challenges
+  where !deleted
+"), "startdttm")[0]['startdttm'];
+
 $ok_array = array_merge($ok_array, $_SESSION);
 
 // Is a challenge open for registration? Is one currently going on?
