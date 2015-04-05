@@ -388,16 +388,63 @@ function TeamCtrl($rootScope, $scope, $http, $location) {
   $scope.teamName = $rootScope.initData.teamName;
   $http.get("api.php?q=team").success(function(data) {
     if(processApiResponse($scope, $scope.$parent, data)) {
-      $scope.teamMembers = data.teamMembers;
       $scope.teamReports = data.teamReports;
       
       var challengeStart = Date.parse($rootScope.initData.challengeStart) / 1000;
       $scope.numWeeks = numWeeksSince(challengeStart);
+      
+      var indexedTeam = indexTeam(data.teamMembers);
+      indexedTeam.forEach(function(teamMember) {
+        // Initialize pointWeeks arrays with zeroes
+        teamMember.pointWeeks = 
+          Array.apply(null, Array($scope.numWeeks)).map(Number.prototype.valueOf, 0);
+          
+        // Initialize total with zero too
+        teamMember.total = 0;
+      });
+      
+      $scope.teamReports.forEach(function(report) {
+        indexedTeam[report.userid].pointWeeks[numWeeksSince(challengeStart,
+          Date.parse(report.reportdttm)/1000) - 1] += report.pointvalue;
+        indexedTeam[report.userid].total += report.pointvalue;
+      });
+      
+      $scope.teamMembers = deindexTeam(indexedTeam);
     }
   });
   
   $scope.getNumber = function(num) {
     return new Array(num);
+  }
+  
+  function indexTeam(teamMembers) {
+    var returnable = new Array();
+    
+    teamMembers.forEach(function(teamMember) {
+      returnable[teamMember.userid] = teamMember;
+    });
+    
+    return returnable;
+  }
+  
+  function deindexTeam(teamMembers) {
+    var returnable = new Array();
+    var index = 0;
+    
+    teamMembers.forEach(function(teamMember) {
+      returnable[index++] = teamMember;
+    });
+    
+    return returnable;
+  }
+  
+  function numWeeksSince(startSeconds, endSeconds) {
+    if(arguments.length == 1)
+      endSeconds = new Date().getTime() / 1000;
+    
+    var diffSeconds = endSeconds - startSeconds;
+    var diffWeeks = diffSeconds / 604800;
+    return Math.ceil(diffWeeks);
   }
 }
 

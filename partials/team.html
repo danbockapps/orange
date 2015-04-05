@@ -19,12 +19,12 @@
       Goal
     </th>
   </tr>
-  <tr ng-repeat="tm in teamMembers">
+  <tr ng-repeat="tm in teamMembers | orderBy: 'lname'">
     <td>
       {{tm.fname}} {{tm.lname}}
     </td>
-    <td ng-repeat="i in getNumber(numWeeks) track by $index">
-    
+    <td ng-repeat="pw in tm.pointWeeks | orderBy: '$index'">
+      {{pw}}
     </td>
     <td>
       {{tm.total}}

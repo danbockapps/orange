@@ -92,10 +92,3 @@ function dateFormat(date8601) {
     return reportDateDate.getMonth() + 1 + "/" + reportDateDate.getDate();
   }
 }
-
-function numWeeksSince(startSeconds) {
-  var nowSeconds = new Date().getTime() / 1000;
-  var diffSeconds = nowSeconds - startSeconds;
-  var diffWeeks = diffSeconds / 604800;
-  return Math.ceil(diffWeeks);
-}
