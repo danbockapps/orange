@@ -370,20 +370,24 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
   }
 
   $scope.submitActivity = function(activityId) {
+    $scope.disableAllButtons = true;
     $http.post("api.php?q=submitactivity", {activityId:activityId})
       .success(function(data) {
       if(processApiResponse($scope, $scope.$parent, data)) {
         $scope.reports = data.reports;
       }
+      $scope.disableAllButtons = false;
     });
   }
   
   $scope.deleteReport = function(reportId) {
+    $scope.disableAllButtons = true;
     $http.post("api.php?q=deletereport", {reportId:reportId})
       .success(function(data) {
       if(processApiResponse($scope, $scope.$parent, data)) {
         $scope.reports = data.reports;
       }
+      $scope.disableAllButtons = false;
     });
   }
   

@@ -160,6 +160,8 @@ function exit_error($responsecode) {
     $returnable['explanation'] = "User not logged in";
   if($responsecode == 16)
     $returnable['explanation'] = "An unknown error occurred";
+  if($responsecode == 17)
+    $returnable['explanation'] = "Too much of that activity (7)";
 
   exit(json_encode($returnable));
 }

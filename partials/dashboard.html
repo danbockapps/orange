@@ -168,8 +168,30 @@
         </div>
       </div>
       <div class="form-group">
-        Initial here to certify you are fit for physical activity:
-        <input type="text" ng-model="initials" required />
+        <p>Enter your initials below to accept our legal disclaimer.</p>
+        <p>
+          "As a participant in the Be Healthy Now program, I recognize and 
+          acknowledge that there are risks of physical injury which could occur 
+          from my participation in the program. I fully understand the nature 
+          and extent of these risks. For and in consideration of my being 
+          permitted to participate in this program, I agree to assume full risk 
+          of any injury, damage, or loss which I may sustain as a result of 
+          participation in this program and any activities in connection with 
+          the program. I hereby agree to waive and relinquish all claims, which 
+          I have, or may have, against Cone Health, its officers, agents, 
+          servants, program partners and employees as a result of my 
+          participation in this program. In case I am injured or become ill, I 
+          consent to emergency medical care being provided to me. I have 
+          carefully read this waiver and I fully understand all parts of it."
+        </p>
+        <p>
+          (In the case that a participant is under the age of 18, this waiver 
+          must be acknowledged by a legal guardian.)
+        </p>
+        <p>
+          <strong>Initial here: </strong>
+          <input type="text" ng-model="initials" required />
+        </p>
       </div>
       <button type="submit" class="btn btn-primary btn-block">
         Submit
@@ -192,48 +214,50 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6">
-      <h3 class="text-center">Click to log your activity</h3>
-      <div ng-repeat="a in activities" style="margin-top:1em">
-        <button
-          type="button"
-          class="btn {{btnColor(a.pointvalue)}} btn-lg btn-block"
-          ng-click="submitActivity(a.activityid)"
-        >
-          {{a.shortdesc}}
-        </button>
-        <strong>
-          {{a.pointvalue}} point{{a.pointvalue == 1 ? "" : "s"}}.
-        </strong>
-        {{a.longdesc}}
-        <a ng-show="a.url" href="{{a.url}}" target="_blank">More info</a>
+    <fieldset ng-disabled="disableAllButtons">
+      <div class="col-md-6">
+        <h3 class="text-center">Click to log your activity</h3>
+        <div ng-repeat="a in activities" style="margin-top:1em">
+          <button
+            type="button"
+            class="btn {{btnColor(a.pointvalue)}} btn-lg btn-block"
+            ng-click="submitActivity(a.activityid)"
+          >
+            {{a.shortdesc}}
+          </button>
+          <strong>
+            {{a.pointvalue}} point{{a.pointvalue == 1 ? "" : "s"}}.
+          </strong>
+          {{a.longdesc}}
+          <a ng-show="a.url" href="{{a.url}}" target="_blank">More info</a>
+        </div>
       </div>
-    </div>
-    <div class="col-md-6" ng-show="reports.length">
-      <h3 class="text-center">Your activity log</h3>
-      <table class="table" style="margin-top:1em">
-        <tr>
-          <th>Date</th>
-          <th>Activity</th>
-          <th>Points</th>
-          <th><!-- delete buttons --></th>
-        </tr>
-        <tr ng-repeat="report in reports | orderBy:'-reportdttm'">
-          <td>{{dateFormat(report.reportdttm)}}</td>
-          <td>{{report.shortdesc}}</td>
-          <td>{{report.pointvalue}}</td>
-          <td>
-            <button
-              type="button"
-              class="btn btn-danger btn-xs"
-              ng-click="deleteReport(report.reportid)"
-            >
-              <span class="glyphicon glyphicon-remove"></span>
-              Delete
-            </button>
-          </td>
-        </tr>
-      </table>
-    </div><!-- col-md-6 -->
+      <div class="col-md-6" ng-show="reports.length">
+        <h3 class="text-center">Your activity log</h3>
+        <table class="table" style="margin-top:1em">
+          <tr>
+            <th>Date</th>
+            <th>Activity</th>
+            <th>Points</th>
+            <th><!-- delete buttons --></th>
+          </tr>
+          <tr ng-repeat="report in reports | orderBy:'-reportdttm'">
+            <td>{{dateFormat(report.reportdttm)}}</td>
+            <td>{{report.shortdesc}}</td>
+            <td>{{report.pointvalue}}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-danger btn-xs"
+                ng-click="deleteReport(report.reportid)"
+              >
+                <span class="glyphicon glyphicon-remove"></span>
+                Delete
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div><!-- col-md-6 -->
+    </fieldset>
   </div><!-- 2nd row -->
 </div><!-- ng-show showDashboard -->
