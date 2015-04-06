@@ -115,6 +115,17 @@ function reset_akey($email) {
 }
 
 function exit_error($responsecode) {
+  global $start_time, $contents;
+  logtxt(
+    number_format(microtime(true) - $start_time, 4) . 
+    " " .
+    json_encode($_GET) .
+    " " .
+    $contents .
+    " ERROR" .
+    $responsecode
+  );
+
   $returnable['q'] = $_GET['q'];
   $returnable['responseString'] = "ERROR";
   $returnable['responseCode'] = $responsecode;

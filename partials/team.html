@@ -46,16 +46,19 @@
     </td>
   </tr>
   <tr>
-    <td>
+    <td style="border-top:2px solid #999">
       <strong>Totals</strong>
     </td>
-    <td ng-repeat="tpw in totals.pointWeeks track by $index| orderBy: '$index'">
+    <td
+      style="border-top:2px solid #999"
+      ng-repeat="tpw in totals.pointWeeks track by $index| orderBy: '$index'"
+    >
       {{tpw}}
     </td>
-    <td>
+    <td style="border-top:2px solid #999">
       {{totals.total}}
     </td>
-    <td>
+    <td style="border-top:2px solid #999">
       {{totals.goal}}
     </td>
   </tr>
