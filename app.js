@@ -415,6 +415,11 @@ function TeamCtrl($rootScope, $scope, $http, $location, $routeParams) {
   $http.get("api.php?q=team", {params:{teamId:$routeParams.id}})
     .success(function(data) {
     if(processApiResponse($scope, $scope.$parent, data)) {
+      if(!data.loggedIn) {
+        $rootScope.initData.valid = false;
+        phpInit($rootScope, $scope.$parent, $http, $location);
+      }
+      
       $scope.teamReports = data.teamReports;
       
       var challengeStart = Date.parse($rootScope.initData.challengeStart) / 1000;

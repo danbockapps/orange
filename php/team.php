@@ -1,4 +1,9 @@
 <?php
+if(isset($_SESSION['userid']))
+  $ok_array['loggedIn'] = true;
+else
+  $ok_array['loggedIn'] = false;
+
 if($_GET['teamId'] > 0) {
   $team_id = $_GET['teamId'];
 }
