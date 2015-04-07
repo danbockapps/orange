@@ -1,4 +1,6 @@
 <?php
+ini_set("session.cookie_lifetime", 60*60*24*30);
+ini_set("session.gc_maxlifetime", 60*60*24*30);
 session_start();
 require_once("php/config.php");
 $contents = file_get_contents("php://input");
