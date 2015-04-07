@@ -506,6 +506,9 @@ function AdminCtrl($scope, $http, $location) {
   $http.get("api.php?q=participants").success(function(data) {
     if(processApiResponse($scope, $scope.$parent, data)) {
       $scope.participants = data.participants;
+      for(i=0; i<$scope.participants.length; i++)
+        if($scope.participants[i].teamname == null)
+          $scope.participants[i].teamname = "";
     }
   });
 
