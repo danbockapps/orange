@@ -162,6 +162,8 @@ function exit_error($responsecode) {
     $returnable['explanation'] = "An unknown error occurred";
   if($responsecode == 17)
     $returnable['explanation'] = "Too much of that activity (7)";
+  if($responsecode == 18)
+    $returnable['explanation'] = "Already ten people on that team";
 
   exit(json_encode($returnable));
 }
