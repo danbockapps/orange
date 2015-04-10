@@ -5,8 +5,8 @@ use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
 use Facebook\GraphUser;
 
-session_start();
 require_once("php/config.php");
+session_start();
 
 try {
     $session = $helper->getSessionFromRedirect();

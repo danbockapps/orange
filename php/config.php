@@ -2,8 +2,13 @@
 CRYPT_BLOWFISH or die ('No Blowfish found.');
 define("BLOWFISH_PRE", "$2y$05$");
 define("BLOWFISH_SUF", "$");
+
 $ini = parse_ini_file("auth.ini");
 ini_set("include_path", $ini['add_to_ipath'] . ini_get("include_path") );
+ini_set("session.cookie_lifetime", 60*60*24*180);
+ini_set("session.gc_maxlifetime", 60*60*24*180);
+ini_set("session.save_path", $ini['save_path']);
+
 date_default_timezone_set("America/New_York");
 
 require __DIR__ . '/facebook-php-sdk-v4-4.0-dev/autoload.php';
