@@ -210,8 +210,8 @@
                 Login
               </button>
             </div>
-          </div>
-        </div>
+          </div><!-- row -->
+        </div><!-- rightCorner = buttons -->
         <div 
           class="col-md-4" 
           style="margin: 0.4em 0em;" 
@@ -267,7 +267,7 @@
               
             </div>
           </form>
-        </div>
+        </div> <!-- rightCorner = form -->
         
         <div 
           class="col-md-4" 
@@ -277,6 +277,21 @@
           <p class="text-right">
             Logged in as {{loggedInFname}} {{loggedInLname}}
             <small><a href="#" ng-click="logout()">logout</a></small>
+          </p>
+        </div>
+      </div>
+      
+      <div class="row" style="margin-top:1em">
+        <div class="col-xs-12">
+          <p
+            class="alert alert-info text-center"
+            style="background-color:#f5f5f5;border-color:#337ab7;color:black"
+          >
+            <span class="glyphicon glyphicon-book"></span>
+            See upcoming events, sponsorships and more at the
+            <a href="https://behealthynowalamance.com/blog">
+              Be&nbsp;Healthy&nbsp;Now&nbsp;Blog!
+            </a>
           </p>
         </div>
       </div>
