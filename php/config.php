@@ -84,6 +84,22 @@ function logtxt($string) {
   );
 }
 
+function remove_password($s) {
+  $passwordPos = strpos($s, "password");
+  if($passwordPos) {
+    $openingQuotePos = $passwordPos + 10;
+    $closingQuotePos = $openingQuotePos + 
+        strpos(substr($s, $openingQuotePos + 1), '"');
+    return
+      substr($s, 0, $openingQuotePos + 1) .
+      "xxxxxxxx" .
+      substr($s, $closingQuotePos + 1);
+  }
+  else {
+    return $s;
+  }
+}
+
 function email_already_in_db($email) {
   $email_search = pdo_select("
     select count(*) as count
@@ -126,7 +142,7 @@ function exit_error($responsecode) {
     " " .
     json_encode($_GET) .
     " " .
-    $contents .
+    remove_password($contents) .
     " ERROR" .
     $responsecode
   );

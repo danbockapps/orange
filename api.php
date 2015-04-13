@@ -20,7 +20,7 @@ logtxt(
   " " .
   json_encode($_GET) .
   " " .
-  $contents
+  remove_password($contents)
 );
 
 // If the required file didn't already exit:
