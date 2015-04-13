@@ -38,6 +38,10 @@ function appConfig($routeProvider) {
       templateUrl: 'partials/admin.html',
       controller: 'AdminCtrl'
     }).
+    when('/reports/:id', {
+      templateUrl: 'partials/reports.html',
+      controller: 'ReportsCtrl'
+    }).
     otherwise({
       redirectTo: '/'
     });
@@ -540,6 +544,17 @@ function AdminCtrl($scope, $http, $location) {
   }
 }
 
+function ReportsCtrl($scope, $http, $routeParams) {
+  $scope.reportId = $routeParams.id;
+  $http.get("api.php?q=report_" + $routeParams.id).success(function(data) {
+    if(processApiResponse($scope, $scope.$parent, data)) {
+      // This works for the current users report.
+      // It will change if there's ever a second report.
+      $scope.users = data.users;
+    }
+  });
+}
+
 // If you're not minifying, you can replace the array literal with just the
 // function name.
 app.config(["$routeProvider", appConfig]);
@@ -562,4 +577,8 @@ app.controller(
 app.controller(
   "AdminCtrl",
   ["$scope", "$http", "$location", AdminCtrl]
+);
+app.controller(
+  "ReportsCtrl",
+  ["$scope", "$http", "$routeParams", ReportsCtrl]
 );

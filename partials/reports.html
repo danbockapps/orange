@@ -1,0 +1,10 @@
+<div class="row" ng-show="reportId=='currentusers'">
+  <div class="col-xs-12">
+    <table class="table">
+      <tr><th>First name</th><th>Last name</th><th>Email</th></tr>
+      <tr ng-repeat="u in users">
+        <td>{{u.fname}}</td><td>{{u.lname}}</td><td>{{u.email}}</td>
+      </tr>
+    </table>
+  </div>
+</div>
