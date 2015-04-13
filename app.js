@@ -411,7 +411,6 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
 }
 
 function TeamCtrl($rootScope, $scope, $http, $location, $routeParams) {
-  $scope.teamName = $rootScope.initData.teamName;
   $http.get("api.php?q=team", {params:{teamId:$routeParams.id}})
     .success(function(data) {
     if(processApiResponse($scope, $scope.$parent, data)) {
@@ -420,6 +419,8 @@ function TeamCtrl($rootScope, $scope, $http, $location, $routeParams) {
         phpInit($rootScope, $scope.$parent, $http, $location);
       }
       
+      $scope.teamName = data.teamName;
+      $scope.joinCode = data.joinCode;
       $scope.teamReports = data.teamReports;
       
       var challengeStart = Date.parse($rootScope.initData.challengeStart) / 1000;

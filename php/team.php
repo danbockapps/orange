@@ -1,4 +1,5 @@
 <?php
+// app.js uses loggedIn to redirect to the home page if the user isn't logged in
 if(isset($_SESSION['userid']))
   $ok_array['loggedIn'] = true;
 else
@@ -20,6 +21,17 @@ else {
   ", $_SESSION['userid']);
   $team_id = $tiqr['teamid'];
 }
+
+$teamqr = select_one_record("
+  select
+    teamname,
+    joincode
+  from teams
+  where teamid = ?
+", $team_id);
+
+$ok_array['teamName'] = $teamqr['teamname'];
+$ok_array['joinCode'] = $teamqr['joincode'];
 
 $ok_array['teamMembers'] = pdo_select("
   select distinct
