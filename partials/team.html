@@ -12,7 +12,13 @@
 
 <div class="row">
   <div class="col-xs-12">
-    <h1 class="text-center">{{teamName}} <small>(Join Code: {{joinCode}})</h1>
+    <h1 class="text-center">
+      {{teamName}}
+      <small>
+        <!-- Add any leading zeros to joinCode. Should be six digits. -->
+        (Join Code: {{("000000" + joinCode).substr(joinCode.length - 6)}})
+      </small>
+    </h1>
   </div>
 </div>
 
