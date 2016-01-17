@@ -1,170 +1,149 @@
-<div class="row">  
-  <div class="col-md-4 col-md-push-8">
-    <div class="panel panel-default" style="margin-top: 20px;">
-      <div class="panel-heading">
-        <h3 class="panel-title text-center">Register Now</h3>
-      </div>
-      <div class="panel-body">
-        <div ng-hide="showRegisterForm">
-          <a
-            href="fb_init.php"
-            class="btn btn-primary btn-block btn-lg"
-            style="background-color:#3b5998"
-          >
-            <img 
-              src="img/fb.png" 
-              style="max-height:33px"
-            />
-            Register with Facebook
-          </a>
-          <p class="text-center" style="margin:14px 0px">or</p>
-          <button
-            type="button" 
-            class="btn btn-default btn-block btn-lg"
-            ng-click="showRegisterForm=true"
-          >
-            Register using email
-          </button>
-        </div>
-        <form 
-          role="form" 
-          ng-submit="submitRegisterForm()" 
-          ng-show="showRegisterForm"
-        >
-          <fieldset ng-disabled="disableRegForm">
-            <div class="form-group">
-              <label ng-hide="phSup" for="email">Email address:</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                placeholder="Enter email address"
-                ng-model="regEmail"
-                required
-              />
-            </div>
-            <div
-              id="drecaptcha" 
-              class="text-center" 
-              style="margin-bottom: 1em"
-            ></div>
-            <button
-              type="submit" 
-              class="btn btn-primary center-block"
-              ng-hide="disableRegForm"
-            >
-              Submit
-            </button>
-            <img
-              src="img/spinner.gif"
-              class="center-block"
-              ng-show="disableRegForm"
-              style="padding-top:7px; padding-bottom:7px"
-            />
-          </fieldset>
-        </form>
-      </div>
+<h3 class="text-center">
+  To earn points, you must be a registered user.
+</h3>
+
+<div class="row">
+  <div class="col-md-6">
+    <h2 class="text-center">Need to register?</h2>
+    <div ng-hide="showRegisterForm">
+      <a
+        href="fb_init.php"
+        class="btn btn-primary btn-block btn-lg"
+        style="background-color:#3b5998"
+      >
+        <img
+          src="img/fb.png"
+          style="max-height:33px"
+        />
+        Register with Facebook
+      </a>
+      <p class="text-center" style="margin:14px 0px">or</p>
+      <button
+        type="button"
+        class="btn btn-default btn-block btn-lg"
+        ng-click="showRegisterForm=true"
+      >
+        Register using email
+      </button>
     </div>
+    <form
+      role="form"
+      ng-submit="submitRegisterForm()"
+      ng-show="showRegisterForm"
+    >
+      <fieldset ng-disabled="disableRegForm">
+        <div class="form-group">
+          <label ng-hide="phSup" for="email">Email address:</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="Enter email address"
+            ng-model="regEmail"
+            required
+          />
+        </div>
+        <div
+          id="drecaptcha"
+          class="text-center"
+          style="margin-bottom: 1em"
+        ></div>
+        <button
+          type="submit"
+          class="btn btn-primary center-block"
+          ng-hide="disableRegForm"
+        >
+          Submit
+        </button>
+        <img
+          src="img/spinner.gif"
+          class="center-block"
+          ng-show="disableRegForm"
+          style="padding-top:7px; padding-bottom:7px"
+        />
+      </fieldset>
+    </form>
   </div>
-  
-  <div class="col-md-8 col-md-pull-4" id="welcome">
-    <h1 class="text-center">Welcome to <strong>Be Healthy Now</strong></h1>
 
-    <img
-      class="center-block img-responsive img-rounded" 
-      src="img/WINNERS.png" 
-    />
+  <div class="col-md-6">
+    <h2 class="text-center">Already registered?</h2>
+    <div ng-hide="showLoginForm">
+      <a
+        href="fb_init.php"
+        class="btn btn-primary btn-block btn-lg"
+        style="background-color:#3b5998"
+      >
+        <img
+          src="img/fb.png"
+          style="max-height:33px"
+        />
+        Login with Facebook
+      </a>
+      <p class="text-center" style="margin:14px 0px">or</p>
+      <button
+        type="button"
+        class="btn btn-default btn-block btn-lg"
+        ng-click="showLoginForm=true"
+      >
+        Login using email and password
+      </button>
+    </div>
 
-    <p>
-      <strong>Be Healthy Now</strong>, Alamance County's free 10-week fitness program, is making changes for the better so that YOU can also take steps to improve your health and wellness. Take a look at just a few of the exciting changes:
-    </p>
+    <form role="form" ng-submit="submitLoginForm()" ng-show="showLoginForm">
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          name="loginEmail"
+          ng-model="loginEmail"
+          placeholder="Email"
+          required
+        />
+      </div>
 
-    <ul>
-      <li>Improved and easier-to-use points system</li>
-      <li>Earn points for eating fruits and veggies</li>
-      <li>Yoga in the park one afternoon a week</li>
-      <li>Free passes to several participating gyms</li>
-      <li>Nutrition and cooking classes for the whole family</li>
-      <li>"Try Something New" Mondays (kayaking, karate, line dancing, etc.)</li>
-    </ul>
+      <div class="form-group">
+        <input
+          type="password"
+          class="form-control"
+          name="loginPassword"
+          ng-model="loginPassword"
+          placeholder="Password"
+          required
+        />
+      </div>
 
-    <h2 class="text-center">What is <strong>Be Healthy Now</strong>?</h2>
+      <div style="clear:both">
+        <button
+          type="submit"
+          class="btn btn-default"
+          style="float:left; margin-bottom: 0.4em"
+        >
+          Log In
+        </button>
 
-    <img
-      class="center-block img-responsive img-rounded" 
-      src="img/GROUP_WALKING.jpg" 
-    />
+        <a
+          href="javascript:"
+          ng-click="showPasswordRecover()"
+          class="text-center"
+          style="float:left; margin: 0.5em 1em"
+        >help</a>
 
-    <p>
-      A 10-week Wellness Challenge to encourage Alamance County residents of ALL ages to exercise, eat well and enjoy healthy lives. Every <strong>Be Healthy Now</strong> activity -- whether a relaxing group hike, an energizing fitness class, or a tasty cooking demonstration -- is <strong>completely free of charge</strong> to registered Challengers. Plus - our sponsors and partners offer discounts on healthy products and services to <strong>Be Healthy Now</strong> Challengers.
-    </p>
+        <a
+          href="fb_init.php"
+          class="btn btn-primary btn-sm"
+          style="background-color:#3b5998; float:right"
+        >
+          <img src="img/fb.png" style="max-height:15px" />
+          Login with Facebook
+        </a>
 
-    <p>
-      You can form your own <strong>Be Healthy Now</strong> team -- with as few as 2 and as many as 10 members -  from among your friends, family, co-workers,  faith groups, and classmates. <strong>Be Healthy Now</strong> team members support each other to achieve their goals.
-    </p>
-
-    <p>
-      The Challenge kicks-off April 11 from 9 - 11 am at the Burlington YMCA and continues through June 19th. Register your team no later than April 11th.
-    </p>
-
-    <p>
-      Challengers update their progress on-line as they work towards their individual and team goals. At the end of the competition, the teams that complete their goals will be entered into a drawing for four CASH prizes of $250 each!
-    </p>
-
-    <p>
-      <em>Have questions? Call the Alamance Regional Live Well Line at 336-586-4000 for more information.</em>
-    </p>
-
-    <p>
-      <a href="https://behealthynowalamance.com/blog/sponsorships-and-discounts/">SPONSORSHIPS AND DISCOUNTS</a>
-    </p>
-
-    <p>
-      <a href="https://behealthynowalamance.com/blog">BLOG</a>
-    </p>
-
-    <h2 class="text-center">Register yourself and your team</h2>
-
-    <img
-      class="center-block img-responsive img-rounded" 
-      src="img/GROUP_ETHNICITY1.jpg" 
-    />
-
-    <ol>
-      <li>
-        Gather your team -- as few as 2 and as many as 10 members per team. Choose a name for your team.  (Some of our favorites from 2014 were <em>#SkinnyJeans</em> and  <em>Mission ThinPossible</em>.)
-      </li>
-
-      <li>
-        Choose a team captain -- this person will register first.
-      </li>
-
-      <li>
-        The captain will be emailed a team code; then just forward the email to each of your team members. They'll click and register right from the email, whether on a PC, tablet, phone or other mobile device. You're Challengers now!
-      </li>
-    </ol>
-
-    <p>
-      <a href="http://www.facebook.com/groups/behealthynowalamance/">Join our group on Facebook</a> to earn extra points for your team and connect with other Challengers.
-    </p>
-
-    <p>
-      The last day to register is  Saturday, April 11, 2015.
-    </p>
-
-    <p>
-      <em>Have questions? Call the Alamance Regional LiveWell Line 336-586-4000 for more information.</em>
-    </p>
-
-    <p>
-      <strong>Registration begins February 23. The competition kicks-off April 11th from 9 - 11 am at the Burlington YMCA and continues through June 19th.</strong>
-    </p>
-
+      </div>
+    </form>
   </div>
 </div>
 <script
   src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
-  async 
+  async
   defer
 ></script>
 <script> // "
@@ -172,7 +151,7 @@
     grecaptcha.render('drecaptcha', {
       'sitekey' : '6Lcmbf8SAAAAAHuWfDgbj0jYTpVI-kqPt-9oPkh4'
     });
-    
+
     // This is such a terrible way to do this
     setInterval(function() {
       $("#drecaptcha > div > div").css("width", "");
