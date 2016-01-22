@@ -89,7 +89,11 @@
       </button>
     </div>
 
-    <form role="form" ng-submit="submitLoginForm()" ng-show="showLoginForm">
+    <form
+      role="form"
+      ng-submit="submitLoginForm(loginEmail, loginPassword)"
+      ng-show="showLoginForm"
+    >
       <div class="form-group">
         <input
           type="text"

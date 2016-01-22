@@ -51,8 +51,8 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route) {
   $scope.projectname = initData.projectname;
   phpInit($rootScope, $scope, $http);
 
-  $scope.submitLoginForm = function() {
-    phpObj = {email:$scope.loginEmail, password:$scope.loginPassword};
+  $scope.submitLoginForm = function(loginEmail, loginPassword) {
+    phpObj = {email:loginEmail, password:loginPassword};
     $http.post("api.php?q=login", phpObj).success(function(data) {
       if(processApiResponse($scope, $scope, data)) {
         // Login successful
@@ -230,9 +230,9 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
     }
   };
 
-  $scope.showPasswordRecover = function() {
-    $location.path("passwordrecover");
-  };
+  $scope.showWelcome = function() {
+    $location.path('welcome');
+  }
 }
 
 function dashboardSubCtrl($rootScope, $scope, $http, $location) {
