@@ -1,6 +1,7 @@
 create table if not exists users (
   userid int unsigned auto_increment primary key,
   fbid varchar(128),
+  testuser boolean default false,
   email varchar(100),
   password varchar(9999),
   akey varchar(32),
@@ -54,6 +55,7 @@ create table if not exists team_members (
   teamid int unsigned,
   userid int unsigned,
   captain boolean,
+  goal int unsigned,
   dateuserteamadded datetime,
   constraint primary key (teamid, userid),
   constraint foreign key (teamid) references teams (teamid),
@@ -61,14 +63,32 @@ create table if not exists team_members (
 ) engine=innodb;
 
 create table if not exists activities (
-  activityid int unsigned auto_increment primary key
+  activityid int unsigned primary key,
+  displayorder int unsigned,
+  shortdesc varchar(50),
+  longdesc text,
+  url text,
+  pointvalue smallint,
+  maxperweek tinyint unsigned default 7
 ) engine=innodb;
 
 create table if not exists reports (
   reportid int unsigned auto_increment primary key,
   userid int unsigned,
+  challengeid int unsigned,
   activityid int unsigned,
   units int,
+  deleted boolean default false,
+  reportdttm timestamp,
   constraint foreign key (userid) references users (userid),
+  constraint foreign key (challengeid) references challenges (challengeid),
   constraint foreign key (activityid) references activities (activityid)
 ) engine=innodb;
+
+create or replace view current_team_members as
+select distinct tm.*
+from
+  team_members tm
+  natural join teams t
+  natural join challenges c
+where !c.deleted;

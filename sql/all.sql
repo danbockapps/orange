@@ -7,3 +7,4 @@ drop table if exists challenges;
 drop table if exists users;
 
 source create_table.sql
+source insert_activities.sql
