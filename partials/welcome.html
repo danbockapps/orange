@@ -5,44 +5,73 @@
 <div class="row">
   <div class="col-md-6">
     <h2 class="text-center">Need to register?</h2>
-    <div ng-hide="showRegisterForm">
-      <a
-        href="fb_init.php"
+    <div ng-init="regBox = 'buttons'" ng-show="regBox === 'buttons'">
+      <button
+        type="button"
         class="btn btn-primary btn-block btn-lg"
         style="background-color:#3b5998"
+        ng-click="regBox = 'regForm'; regMethod = 'facebook';"
       >
         <img
           src="img/fb.png"
           style="max-height:33px"
         />
         Register with Facebook
-      </a>
+      </button>
       <p class="text-center" style="margin:14px 0px">or</p>
       <button
         type="button"
         class="btn btn-default btn-block btn-lg"
-        ng-click="showRegisterForm=true"
+        ng-click="regBox = 'regForm'; regMethod = 'email';"
       >
         Register using email
       </button>
     </div>
+
     <form
       role="form"
       ng-submit="submitRegisterForm()"
-      ng-show="showRegisterForm"
+      ng-show="regBox === 'regForm'"
     >
       <fieldset ng-disabled="disableRegForm">
         <div class="form-group">
           <label ng-hide="phSup" for="email">Email address:</label>
           <input
+            ng-if="regMethod === 'email'"
             type="email"
             class="form-control"
             id="email"
             placeholder="Enter email address"
-            ng-model="regEmail"
+            ng-model="$parent.regEmail"
             required
           />
         </div>
+
+        <p>Enter your initials below to accept our legal disclaimer.</p>
+        <p>
+          "As a participant in the Be Healthy Now program, I recognize and
+          acknowledge that there are risks of physical injury which could occur
+          from my participation in the program. I fully understand the nature
+          and extent of these risks. For and in consideration of my being
+          permitted to participate in this program, I agree to assume full risk
+          of any injury, damage, or loss which I may sustain as a result of
+          participation in this program and any activities in connection with
+          the program. I hereby agree to waive and relinquish all claims, which
+          I have, or may have, against Cone Health, its officers, agents,
+          servants, program partners and employees as a result of my
+          participation in this program. In case I am injured or become ill, I
+          consent to emergency medical care being provided to me. I have
+          carefully read this waiver and I fully understand all parts of it."
+        </p>
+        <p>
+          (In the case that a participant is under the age of 18, this waiver
+          must be acknowledged by a legal guardian.)
+        </p>
+        <p class="text-center">
+          <strong>Initial here: </strong>
+          <input type="text" ng-model="initials" required />
+        </p>
+
         <div
           id="drecaptcha"
           class="text-center"

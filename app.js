@@ -87,24 +87,29 @@ function SwitchboardCtrl($rootScope, $scope, $http, $location) {
 }
 
 function welcomeSubCtrl($scope, $http, $location) {
-  $scope.submitRegisterForm = function () {
-    // Send a register API request
+  $scope.submitRegisterForm = function() {
     $scope.disableRegForm = true;
 
-    phpObj = {
-      email:$scope.regEmail,
-      recaptchaResponse:grecaptcha.getResponse()
-    };
+    if($scope.regMethod === 'email') {
+      phpObj = {
+        email:$scope.regEmail,
+        initials:$scope.initials,
+        recaptchaResponse:grecaptcha.getResponse()
+      };
 
-    $http.post("api.php?q=register", phpObj).success(function(data) {
-      if(processApiResponse($scope, $scope.$parent, data)) {
-        $location.path('emailsent');
-      }
-      else {
-        // there was an error
-        $scope.disableRegForm = false;
-      }
-    });
+      $http.post("api.php?q=register", phpObj).success(function(data) {
+        if(processApiResponse($scope, $scope.$parent, data)) {
+          $location.path('emailsent');
+        }
+        else {
+          // there was an error
+          $scope.disableRegForm = false;
+        }
+      });
+    }
+    else if($scope.regMethod === 'facebook') {
+      //TODO
+    }
   };
 
   $scope.phSup = placeholderSupported;
