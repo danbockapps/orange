@@ -20,9 +20,25 @@
         return reportDateDate.getMonth() + 1 + "/" + reportDateDate.getDate();
       }
     }
-    
+
+    function processApiResponse($scope, modalScope, data) {
+      console.log(data);
+
+      if(data.responseString == "ERROR") {
+        modalScope.modalMsg = data.responseCode;
+        $("#ErrorModal").modal();
+
+        return false;
+      }
+
+      else {
+        return true;
+      }
+    }
+
     return {
-      dateFormat: dateFormat
+      dateFormat: dateFormat,
+      processApiResponse: processApiResponse
     };
   });
 })();

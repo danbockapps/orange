@@ -50,14 +50,14 @@ function appConfig($routeProvider) {
     });
 }
 
-function IndexCtrl($rootScope, $scope, $http, $location, $route) {
+function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
   $scope.projectname = initData.projectname;
   phpInit($rootScope, $scope, $http);
 
   $scope.submitLoginForm = function(loginEmail, loginPassword) {
     phpObj = {email:loginEmail, password:loginPassword};
     $http.post("api.php?q=login", phpObj).success(function(data) {
-      if(processApiResponse($scope, $scope, data)) {
+      if(config.processApiResponse($scope, $scope, data)) {
         // Login successful
         initData.valid = false;
         phpInit($rootScope, $scope, $http, $location);
@@ -76,7 +76,7 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route) {
 
   $scope.logout = function() {
     $http.post("api.php?q=logout").success(function(data) {
-      if(processApiResponse($scope, $scope, data)) {
+      if(config.processApiResponse($scope, $scope, data)) {
         initData.valid = false;
         phpInit($rootScope, $scope, $http, $location);
         $scope.loginEmail = "";
@@ -90,10 +90,10 @@ function SwitchboardCtrl($rootScope, $scope, $http, $location, config) {
   if(initData.userid)
     dashboardSubCtrl($rootScope, $scope, $http, $location, config);
   else
-    welcomeSubCtrl($scope, $http, $location);
+    welcomeSubCtrl($scope, $http, $location, config);
 }
 
-function welcomeSubCtrl($scope, $http, $location) {
+function welcomeSubCtrl($scope, $http, $location, config) {
   $scope.submitRegisterForm = function() {
     $scope.disableRegForm = true;
 
@@ -105,7 +105,7 @@ function welcomeSubCtrl($scope, $http, $location) {
       };
 
       $http.post("api.php?q=register", phpObj).success(function(data) {
-        if(processApiResponse($scope, $scope.$parent, data)) {
+        if(config.processApiResponse($scope, $scope.$parent, data)) {
           $location.path('emailsent');
         }
         else {
@@ -125,7 +125,7 @@ function welcomeSubCtrl($scope, $http, $location) {
   $scope.phSup = placeholderSupported;
 }
 
-function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
+function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams, config) {
   if($routeParams.key == null) {
     // User is looking for login help. Ask for email address.
     $scope.showParForm = true;
@@ -173,7 +173,7 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
     $http.post("api.php?q=passwordrecover", {
       email:$scope.parEmail
     }).success(function(data) {
-      if(processApiResponse($scope, $scope.$parent, data)) {
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
         $scope.showParForm = false;
         $scope.showCheckEmailMsg = true;
       }
@@ -272,7 +272,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
               console.log("The user has set a goal.");
               $scope.showDashboard = true;
               $http.get("api.php?q=activities").success(function(data) {
-                if(processApiResponse($scope, $scope.$parent, data)) {
+                if(config.processApiResponse($scope, $scope.$parent, data)) {
                   $scope.activities = data.activities;
                   $scope.reports = data.reports;
                 }
@@ -339,7 +339,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
 
     $http.post("api.php?q=newteam", {teamName: $scope.createTeamName})
     .success(function(data) {
-      if(processApiResponse($scope, $scope.$parent, data)) {
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
         $scope.showCreateSpinner = false;
         $scope.joinCode = data.joinCode;
         $scope.showTeamCreated = true;
@@ -356,7 +356,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
     $http.post("api.php?q=jointeam", {joinCode: $scope.joinJoinCode})
     .success(function(data) {
       $scope.showJoinSpinner = false;
-      if(processApiResponse($scope, $scope.$parent, data)) {
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
         $scope.teamName = data.teamName;
         $scope.showTeamJoined = true;
       }
@@ -388,7 +388,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
     $scope.disableAllButtons = true;
     $http.post("api.php?q=submitactivity", {activityId:activityId})
       .success(function(data) {
-      if(processApiResponse($scope, $scope.$parent, data)) {
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
         $scope.reports = data.reports;
       }
       $scope.disableAllButtons = false;
@@ -399,7 +399,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
     $scope.disableAllButtons = true;
     $http.post("api.php?q=deletereport", {reportId:reportId})
       .success(function(data) {
-      if(processApiResponse($scope, $scope.$parent, data)) {
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
         $scope.reports = data.reports;
       }
       $scope.disableAllButtons = false;
@@ -418,17 +418,17 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
       goal:$scope.goalRadio,
       initials:$scope.initials
     }).success(function(data) {
-      if(processApiResponse($scope, $scope.$parent, data)) {
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
         $scope.getStarted();
       }
     });
   }
 }
 
-function TeamCtrl($rootScope, $scope, $http, $location, $routeParams) {
+function TeamCtrl($rootScope, $scope, $http, $location, $routeParams, config) {
   $http.get("api.php?q=team", {params:{teamId:$routeParams.id}})
     .success(function(data) {
-    if(processApiResponse($scope, $scope.$parent, data)) {
+    if(config.processApiResponse($scope, $scope.$parent, data)) {
       if(!data.loggedIn) {
         $rootScope.initData.valid = false;
         phpInit($rootScope, $scope.$parent, $http, $location);
@@ -513,14 +513,14 @@ function TeamCtrl($rootScope, $scope, $http, $location, $routeParams) {
   }
 }
 
-function AdminCtrl($scope, $http, $location) {
+function AdminCtrl($scope, $http, $location, config) {
   //TODO show only those participants who are registered in the current challenge
   $scope.predicate = 'dateuseradded';
   $scope.reverse = true;
   refreshChallenges();
 
   $http.get("api.php?q=participants").success(function(data) {
-    if(processApiResponse($scope, $scope.$parent, data)) {
+    if(config.processApiResponse($scope, $scope.$parent, data)) {
       $scope.participants = data.participants;
       for(i=0; i<$scope.participants.length; i++)
         if($scope.participants[i].teamname == null)
@@ -547,7 +547,7 @@ function AdminCtrl($scope, $http, $location) {
         start:$scope.ncStart,
         end:$scope.ncEnd
       }).success(function(data) {
-        if(processApiResponse($scope, $scope.$parent, data)) {
+        if(config.processApiResponse($scope, $scope.$parent, data)) {
           refreshChallenges();
         }
       });
@@ -555,10 +555,10 @@ function AdminCtrl($scope, $http, $location) {
   }
 }
 
-function ReportsCtrl($scope, $http, $routeParams) {
+function ReportsCtrl($scope, $http, $routeParams, config) {
   $scope.reportId = $routeParams.id;
   $http.get("api.php?q=report_" + $routeParams.id).success(function(data) {
-    if(processApiResponse($scope, $scope.$parent, data)) {
+    if(config.processApiResponse($scope, $scope.$parent, data)) {
       // This works for the current users report.
       // It will change if there's ever a second report.
       $scope.users = data.users;
@@ -571,7 +571,7 @@ function ReportsCtrl($scope, $http, $routeParams) {
 app.config(["$routeProvider", appConfig]);
 app.controller(
   "IndexCtrl",
-  ["$rootScope", "$scope", "$http", "$location", "$route", IndexCtrl]
+  ["$rootScope", "$scope", "$http", "$location", "$route", 'config', IndexCtrl]
 );
 app.controller(
   "SwitchboardCtrl",
@@ -579,17 +579,17 @@ app.controller(
 );
 app.controller(
   "ActivateCtrl",
-  ["$rootScope", "$scope", "$http", "$location", "$routeParams", ActivateCtrl]
+  ["$rootScope", "$scope", "$http", "$location", "$routeParams", 'config', ActivateCtrl]
 );
 app.controller(
   "TeamCtrl",
-  ["$rootScope", "$scope", "$http", "$location", "$routeParams", TeamCtrl]
+  ["$rootScope", "$scope", "$http", "$location", "$routeParams", 'config', TeamCtrl]
 );
 app.controller(
   "AdminCtrl",
-  ["$scope", "$http", "$location", AdminCtrl]
+  ["$scope", "$http", "$location", 'config', AdminCtrl]
 );
 app.controller(
   "ReportsCtrl",
-  ["$scope", "$http", "$routeParams", ReportsCtrl]
+  ["$scope", "$http", "$routeParams", 'config', ReportsCtrl]
 );
