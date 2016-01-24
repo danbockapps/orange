@@ -52,7 +52,7 @@ function appConfig($routeProvider) {
 
 function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
   $scope.projectname = initData.projectname;
-  phpInit($rootScope, $scope, $http);
+  config.phpInit($rootScope, $scope, $http);
 
   $scope.submitLoginForm = function(loginEmail, loginPassword) {
     phpObj = {email:loginEmail, password:loginPassword};
@@ -60,7 +60,7 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
       if(config.processApiResponse($scope, $scope, data)) {
         // Login successful
         initData.valid = false;
-        phpInit($rootScope, $scope, $http, $location);
+        config.phpInit($rootScope, $scope, $http, $location);
       }
     });
   };
@@ -78,7 +78,7 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
     $http.post("api.php?q=logout").success(function(data) {
       if(config.processApiResponse($scope, $scope, data)) {
         initData.valid = false;
-        phpInit($rootScope, $scope, $http, $location);
+        config.phpInit($rootScope, $scope, $http, $location);
         $scope.loginEmail = "";
         $scope.loginPassword = "";
       }
@@ -369,7 +369,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
 
   $scope.getStarted = function() {
     initData.valid = false;
-    phpInit($rootScope, $scope, $http, $location);
+    config.phpInit($rootScope, $scope, $http, $location);
   }
 
   $scope.btnColor = function(pointValue) {
@@ -431,7 +431,7 @@ function TeamCtrl($rootScope, $scope, $http, $location, $routeParams, config) {
     if(config.processApiResponse($scope, $scope.$parent, data)) {
       if(!data.loggedIn) {
         $rootScope.initData.valid = false;
-        phpInit($rootScope, $scope.$parent, $http, $location);
+        config.phpInit($rootScope, $scope.$parent, $http, $location);
       }
 
       $scope.teamName = data.teamName;
