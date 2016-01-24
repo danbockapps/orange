@@ -11,6 +11,9 @@ function appConfig($routeProvider) {
       },
       controller: 'SwitchboardCtrl'
     }).
+    when('/fbunreg', {
+      templateUrl: 'partials/fbunreg.html'
+    }).
     when('/emailsent', {
       templateUrl: 'partials/emailsent.html'
     }).
@@ -60,11 +63,15 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route) {
         phpInit($rootScope, $scope, $http, $location);
       }
     });
-  }
+  };
 
   $scope.showPasswordRecover = function() {
     $location.path("passwordrecover");
     $("#ErrorModal").modal('hide');
+  };
+
+  $scope.showWelcome = function() {
+    $location.path('welcome');
   };
 
   $scope.logout = function() {
@@ -76,7 +83,7 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route) {
         $scope.loginPassword = "";
       }
     });
-  }
+  };
 }
 
 function SwitchboardCtrl($rootScope, $scope, $http, $location) {
@@ -108,7 +115,10 @@ function welcomeSubCtrl($scope, $http, $location) {
       });
     }
     else if($scope.regMethod === 'facebook') {
-      //TODO
+      $http.post('api.php?q=initials', {initials: $scope.initials})
+      .success(function(data) {
+        window.location.href = 'fb_init.php?registering=yes';
+      })
     }
   };
 
@@ -234,10 +244,6 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
       });
     }
   };
-
-  $scope.showWelcome = function() {
-    $location.path('welcome');
-  }
 }
 
 function dashboardSubCtrl($rootScope, $scope, $http, $location) {

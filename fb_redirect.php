@@ -37,7 +37,6 @@ if ($session) {
     // User's FB ID is not in DB
     if(email_already_in_db($graphObject->getEmail())) {
       // Add user's FB ID to DB and log in
-      // TODO don't log in if user has not activated
       set_fbid(
         $graphObject->getEmail(), 
         $info->getId(),
@@ -46,7 +45,10 @@ if ($session) {
       );
       loginOrActivate($info->getId(), $graphObject->getEmail());
     }
-    else {
+    else if($_SESSION['registering']) {
+      $_SESSION['registering'] = false;
+      logtxt('New Facebook user: ' . $graphObject->getEmail());
+
       // Register new user
       pdo_upsert("
         insert into users (email, password, fname, lname, fbid)
@@ -61,6 +63,10 @@ if ($session) {
       );
 
       gotoActivate($graphObject->getEmail());
+    }
+    else {
+      // Unregistered user is trying to log in. Tell them to register first.
+      header("Location: " . $ini['homeurl'] . "/#/fbunreg/");
     }
   }
 }
