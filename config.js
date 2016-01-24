@@ -10,7 +10,7 @@ function appInit() {
     initData = $.parseJSON(data);
     initData.valid = true;
     console.log(initData);
-    
+
     // Manually start Angular so it doesn't try to start before appInit
     angular.bootstrap(document, ['orange']);
     $("body").css("display", "");
@@ -41,9 +41,9 @@ function phpInit($rootScope, $scope, $http, $location) {
     $http.get("api.php?q=init").success(function(data) {
       console.log(data);
       initData = data;
-      
+
       setLoginVars(data, $rootScope, $scope);
-      
+
       // pass null as the last arg to this function and there'll be no redirect
       if($location != null) {
         // "?a=b" is to trick Angular into calling the function in
@@ -69,26 +69,5 @@ function processApiResponse($scope, modalScope, data) {
 
   else {
     return true;
-  }
-}
-
-function dateFormat(date8601) {
-  var reportDate = Date.parse(date8601);
-  var seconds = (new Date().getTime() - reportDate) / 1000;
-  
-  if(seconds < 60)
-    return "Just now";
-  else if(seconds < 3600) {
-    var minutes = Math.round(seconds / 60);
-    return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
-  }
-  else if(seconds < 3600 * 24) {
-    var hours = Math.round(seconds / 3600);
-    return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
-  }
-  else {
-    // Naming thigs is hard
-    reportDateDate = new Date(reportDate);
-    return reportDateDate.getMonth() + 1 + "/" + reportDateDate.getDate();
   }
 }

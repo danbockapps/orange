@@ -1,4 +1,4 @@
-var app = angular.module('orange', ['ngRoute']);
+var app = angular.module('orange');
 
 function appConfig($routeProvider) {
   $routeProvider.
@@ -86,9 +86,9 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route) {
   };
 }
 
-function SwitchboardCtrl($rootScope, $scope, $http, $location) {
+function SwitchboardCtrl($rootScope, $scope, $http, $location, config) {
   if(initData.userid)
-    dashboardSubCtrl($rootScope, $scope, $http, $location);
+    dashboardSubCtrl($rootScope, $scope, $http, $location, config);
   else
     welcomeSubCtrl($scope, $http, $location);
 }
@@ -246,7 +246,7 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams) {
   };
 }
 
-function dashboardSubCtrl($rootScope, $scope, $http, $location) {
+function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
   $scope.$watch(
     function() {
       return $rootScope.initData;
@@ -319,7 +319,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
       }
     }
   );
-  
+
 
   $scope.createButton = function() {
     $scope.showCreateForm = true;
@@ -371,7 +371,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
     initData.valid = false;
     phpInit($rootScope, $scope, $http, $location);
   }
-  
+
   $scope.btnColor = function(pointValue) {
     if(pointValue > 2)
       // Orange buttons for five-point activities
@@ -394,7 +394,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
       $scope.disableAllButtons = false;
     });
   }
-  
+
   $scope.deleteReport = function(reportId) {
     $scope.disableAllButtons = true;
     $http.post("api.php?q=deletereport", {reportId:reportId})
@@ -405,14 +405,14 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location) {
       $scope.disableAllButtons = false;
     });
   }
-  
+
   $scope.showTeamButton = function() {
     $location.path("team");
   }
-  
+
   // This is a function in config.js.
-  $scope.dateFormat = dateFormat;
-  
+  $scope.dateFormat = config.dateFormat;
+
   $scope.submitGoalForm = function() {
     $http.post("api.php?q=setgoal", {
       goal:$scope.goalRadio,
@@ -433,81 +433,81 @@ function TeamCtrl($rootScope, $scope, $http, $location, $routeParams) {
         $rootScope.initData.valid = false;
         phpInit($rootScope, $scope.$parent, $http, $location);
       }
-      
+
       $scope.teamName = data.teamName;
       $scope.joinCode = data.joinCode;
       $scope.teamReports = data.teamReports;
-      
+
       var challengeStart = Date.parse($rootScope.initData.challengeStart) / 1000;
       $scope.numWeeks = numWeeksSince(challengeStart);
-      
+
       $scope.totals = {
         pointWeeks:
           Array.apply(null, Array($scope.numWeeks)).map(Number.prototype.valueOf, 0),
         total: 0,
         goal: 0
       };
-      
+
       var indexedTeam = indexTeam(data.teamMembers);
       indexedTeam.forEach(function(teamMember) {
         // Initialize pointWeeks arrays with zeroes
-        teamMember.pointWeeks = 
+        teamMember.pointWeeks =
           Array.apply(null, Array($scope.numWeeks)).map(Number.prototype.valueOf, 0);
-          
+
         // Initialize total with zero too
         teamMember.total = 0;
-        
+
         $scope.totals.goal += teamMember.goal;
       });
 
       $scope.teamReports.forEach(function(report) {
         var weekNum = numWeeksSince(challengeStart,
           Date.parse(report.reportdttm)/1000) - 1
-        
+
         indexedTeam[report.userid].pointWeeks[weekNum] += report.pointvalue;
         indexedTeam[report.userid].total += report.pointvalue;
         $scope.totals.pointWeeks[weekNum] += report.pointvalue;
         $scope.totals.total += report.pointvalue;
       });
-      
+
       $scope.teamMembers = deindexTeam(indexedTeam);
     }
   });
-  
+
   $scope.getNumber = function(num) {
     return new Array(num);
   }
-  
+
   function indexTeam(teamMembers) {
     var returnable = new Array();
-    
+
     teamMembers.forEach(function(teamMember) {
       returnable[teamMember.userid] = teamMember;
     });
-    
+
     return returnable;
   }
-  
+
   function deindexTeam(teamMembers) {
     var returnable = new Array();
     var index = 0;
-    
+
     teamMembers.forEach(function(teamMember) {
       returnable[index++] = teamMember;
     });
-    
+
     return returnable;
   }
-  
+
   function numWeeksSince(startSeconds, endSeconds) {
     if(arguments.length == 1)
       endSeconds = new Date().getTime() / 1000;
-    
+
     var diffSeconds = endSeconds - startSeconds;
     var diffWeeks = diffSeconds / 604800;
     return Math.ceil(diffWeeks);
   }
-  
+
   $scope.showDashboard = function() {
     $location.path("");
   }
@@ -575,7 +575,7 @@ app.controller(
 );
 app.controller(
   "SwitchboardCtrl",
-  ["$rootScope", "$scope", "$http", "$location", SwitchboardCtrl]
+  ["$rootScope", "$scope", "$http", "$location", 'config', SwitchboardCtrl]
 );
 app.controller(
   "ActivateCtrl",
