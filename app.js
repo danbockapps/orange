@@ -122,7 +122,7 @@ function welcomeSubCtrl($scope, $http, $location, config) {
     }
   };
 
-  $scope.phSup = placeholderSupported;
+  $scope.phSup = config.placeholderSupported;
 }
 
 function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams, config) {

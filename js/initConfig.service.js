@@ -1,5 +1,8 @@
 (function() {
   angular.module('orange').factory('config', function() {
+    var placeholderSupported =
+      document.createElement("input").placeholder != undefined;
+
     function dateFormat(date8601) {
       var reportDate = Date.parse(date8601);
       var seconds = (new Date().getTime() - reportDate) / 1000;
@@ -77,6 +80,7 @@
     }
 
     return {
+      placeholderSupported: placeholderSupported,
       dateFormat: dateFormat,
       processApiResponse: processApiResponse,
       phpInit: phpInit
