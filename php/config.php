@@ -88,7 +88,7 @@ function remove_password($s) {
   $passwordPos = strpos($s, "password");
   if($passwordPos) {
     $openingQuotePos = $passwordPos + 10;
-    $closingQuotePos = $openingQuotePos + 
+    $closingQuotePos = $openingQuotePos +
         strpos(substr($s, $openingQuotePos + 1), '"');
     return
       substr($s, 0, $openingQuotePos + 1) .
@@ -138,7 +138,7 @@ function reset_akey($email) {
 function exit_error($responsecode) {
   global $start_time, $contents;
   logtxt(
-    number_format(microtime(true) - $start_time, 4) . 
+    number_format(microtime(true) - $start_time, 4) .
     " " .
     json_encode($_GET) .
     " " .
@@ -296,6 +296,18 @@ function user_current_team($userid) {
   return $qr['teamname'];
 }
 
+function survey_done($userid) {
+  $qr = select_one_record("
+    select count(*) as count
+    from surveys
+    where
+      userid = ?
+      and challengeid = ?
+  ", array($userid, current_challengeid()));
+  logtxt($qr['count']);
+  return $qr['count'];
+}
+
 function current_challengeid() {
   $qr = select_one_record("select challengeid from challenges where !deleted");
   return $qr['challengeid'];
@@ -356,9 +368,9 @@ function reports() {
       r.userid = ? and
       r.challengeid = ?
   ", array($_SESSION['userid'], current_challengeid()));
-  
+
   $qr = convertDatesToISO8601($qr, "reportdttm");
-  
+
   return $qr;
 }
 
@@ -379,7 +391,7 @@ function convertDatesToISO8601($arrayWithDates, $dateElemName) {
   foreach($arrayWithDates as &$row) {
     $row[$dateElemName] = date('c', strtotime($row[$dateElemName]));
   }
-  
+
   return $arrayWithDates;
 }
 

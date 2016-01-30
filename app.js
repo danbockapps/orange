@@ -95,6 +95,22 @@ function appConfig($routeProvider, config) {
   function userIsntLoggedIn() {
     return !initData.userid;
   }
+
+  function userIsntOnTeam() {
+    return !initData.teamName;
+  }
+
+  function registrationOpen() {
+    return initData.regOpen;
+  }
+
+  function challengeOpen() {
+    return initData.chalCurrent;
+  }
+
+  function userHasntCompletedSurvey() {
+    return !initData.surveyDone;
+  }
 }
 
 function SwitchboardCtrl2016($rootScope, $scope, $http, $location, config) {

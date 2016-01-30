@@ -53,6 +53,7 @@ $ok_array = array_merge($ok_array, $qr);
 if(isset($_SESSION['userid'])) {
   $ok_array['teamName'] = user_current_team($_SESSION['userid']);
   $ok_array['userEmail'] = email_for_user($_SESSION['userid']);
+  $ok_array['surveyDone'] = survey_done($_SESSION['userid']);
 }
 
 ?>
