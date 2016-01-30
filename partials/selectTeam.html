@@ -1,0 +1,79 @@
+<div class="row" style="margin-bottom:2em">
+  <div class="col-xs-6">
+    <div ng-hide="hideCreateButton">
+      <h2 class="text-center">Create a new team</h2>
+      <button class="btn btn-primary btn-lg center-block"
+              ng-click="show = 'create'">
+        <span class="glyphicon glyphicon-flash"></span>
+        Create
+      </button>
+    </div>
+  </div>
+  <div class="col-xs-6">
+    <div ng-hide="hideJoinButton">
+      <h2 class="text-center">Join an existing team</h2>
+      <button class="btn btn-primary btn-lg center-block"
+              ng-click="show = 'join'">
+        <span class="glyphicon glyphicon-search"></span>
+        Join
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div ng-show="show === 'create'">
+      <form ng-submit="submitCreateForm()">
+        <fieldset ng-disabled="disableCreateForm">
+
+          <div class="form-group">
+            <label for="teamName">Team name:</label>
+            <input
+              type="text"
+              id="teamName"
+              class="form-control"
+              ng-model="createTeamName"
+              maxlength="30"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary center-block"
+            ng-hide="hideCreateSubmit"
+          >
+            Submit
+          </button>
+
+          <img
+            class="center-block"
+            src="img/spinner.gif"
+            ng-show="showCreateSpinner"
+          />
+
+        </fieldset>
+      </form>
+
+      <div ng-show="showTeamCreated" class="alert alert-success">
+        <p style="padding-bottom:1em">
+          Success! Your team has been created. Tell your friends to go to
+          https://behealthynowalamance.com/points to register and join your
+          team. Good luck with the challenge!
+        </p>
+        <button class="btn btn-success btn-block" ng-click="getStarted()">
+          Get started
+          <span class="glyphicon glyphicon-arrow-right"></span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-md-6">
+    <div ng-show="show === 'join'">
+      join dropdown goes here
+    </div>
+  </div>
+
+</div>

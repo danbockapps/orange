@@ -120,6 +120,9 @@ function SwitchboardCtrl2016($rootScope, $scope, $http, $location, config) {
   if(route === 'welcome') {
     welcomeSubCtrl($scope, $http, $location, config);
   }
+  else if(route === 'selectTeam') {
+    selectTeamSubCtrl($rootScope, $scope, $http, $location, config);
+  }
 
 }
 
@@ -317,6 +320,28 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams, config
       });
     }
   };
+}
+
+function selectTeamSubCtrl($rootScope, $scope, $http, $location, config) {
+  $scope.submitCreateForm = function() {
+    $scope.hideJoinButton = true;
+    $scope.disableCreateForm = true;
+    $scope.hideCreateSubmit = true;
+    $scope.showCreateSpinner = true;
+
+    $http.post("api.php?q=newteam", {teamName: $scope.createTeamName})
+    .success(function(data) {
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
+        $scope.showCreateSpinner = false;
+        $scope.showTeamCreated = true;
+      }
+    });
+  }
+
+  $scope.getStarted = function() {
+    initData.valid = false;
+    config.phpInit($rootScope, $scope, $http, $location);
+  }
 }
 
 function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
