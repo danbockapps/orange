@@ -113,8 +113,8 @@ function appConfig($routeProvider, routeProvider) {
   }
 }
 
-function SwitchboardCtrl2016($rootScope, $scope, $http, $location, routeProvider) {
-  var route = routeProvider.getRoute();
+function SwitchboardCtrl2016($rootScope, $scope, $http, $location, route) {
+  var route = route.getRoute();
   console.log('route is ' + route);
 
   if(route === 'welcome') {
@@ -123,7 +123,6 @@ function SwitchboardCtrl2016($rootScope, $scope, $http, $location, routeProvider
   else if(route === 'selectTeam') {
     selectTeamSubCtrl($rootScope, $scope, $http, config);
   }
-
 }
 
 function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
@@ -666,6 +665,10 @@ function ReportsCtrl($scope, $http, $routeParams, config) {
 
 // If you're not minifying, you can replace the array literal with just the
 // function name.
+
+// Also, if any of these is a provider, you have to add 'Provider' to the end
+// of the dependency name.
+
 app.config(["$routeProvider", 'routeProvider', appConfig]);
 app.controller('SwitchboardCtrl2016', SwitchboardCtrl2016);
 app.controller(
