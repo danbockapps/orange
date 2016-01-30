@@ -5,41 +5,36 @@ if(!isset($_SESSION['userid']))
 if(user_current_team($_SESSION['userid']) != null)
   exit_error(13);
 
-if(tenMembersAlready($post['joinCode']))
+if(tenMembersAlready($post['teamToJoin']))
   exit_error(18);
 
 $qr = select_one_record("
-  select
-    teamid,
-    teamname
+  select count(*) as count
   from teams
-  where joincode = ?
-", $post['joinCode']);
+  where teamid = ?
+", $post['teamToJoin']);
 
-if($qr == null)
+if($qr['count'] == 0)
   exit_error(14);
 
 pdo_upsert("
   insert into team_members (
-    teamid, 
-    userid, 
+    teamid,
+    userid,
     captain,
     dateuserteamadded
   ) values (?, ?, false, now())
-", array($qr['teamid'], $_SESSION['userid']));
+", array($post['teamToJoin'], $_SESSION['userid']));
 
-$ok_array['teamName'] = $qr['teamname'];
-
-
-function tenMembersAlready($joinCode) {
+function tenMembersAlready($teamId) {
   $tmaqr = select_one_record("
     select count(*) as count
     from
       team_members
       natural join teams
-    where joincode = ?
-  ", $joinCode);
-  
+    where teamid = ?
+  ", $teamId);
+
   if($tmaqr['count'] >= 10)
     return true;
   else

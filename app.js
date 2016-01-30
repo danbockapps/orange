@@ -113,7 +113,7 @@ function appConfig($routeProvider, routeProvider) {
   }
 }
 
-function SwitchboardCtrl2016($rootScope, $scope, $http, $location, route) {
+function SwitchboardCtrl2016($rootScope, $scope, $http, $location, route, config) {
   var route = route.getRoute();
   console.log('route is ' + route);
 
@@ -322,6 +322,14 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams, config
 }
 
 function selectTeamSubCtrl($rootScope, $scope, $http, config) {
+  // Initialize this so the join button doesn't flash on screen
+  // when there are no teams.
+  $scope.teams = [];
+
+  $http.get('api.php?q=teams').success(function(data){
+    $scope.teams = data.teams;
+  });
+
   $scope.submitCreateForm = function() {
     $scope.hideJoinButton = true;
     $scope.disableCreateForm = true;
@@ -335,12 +343,33 @@ function selectTeamSubCtrl($rootScope, $scope, $http, config) {
         $scope.showTeamCreated = true;
       }
     });
-  }
+  };
+
+  $scope.submitJoinForm = function() {
+    $scope.hideCreateButton = true;
+    $scope.disableJoinForm = true;
+    $scope.hideJoinSubmit = true;
+    $scope.showJoinSpinner = true;
+
+    $http.post("api.php?q=jointeam", {teamToJoin: $scope.teamToJoin})
+    .success(function(data) {
+      $scope.showJoinSpinner = false;
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
+        $scope.showTeamJoined = true;
+      }
+      else {
+        $scope.hideCreateButton = false;
+        $scope.disableJoinForm = false;
+        $scope.hideJoinSubmit = false;
+      }
+    });
+  };
 
   $scope.getStarted = function() {
+    // Reload. Routing will take the user to logPoints.
     initData.valid = false;
     config.phpInit($rootScope, $scope, $http);
-  }
+  };
 }
 
 function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {

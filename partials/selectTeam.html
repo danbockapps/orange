@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="col-xs-6">
-    <div ng-hide="hideJoinButton">
+    <div ng-hide="hideJoinButton || teams.length === 0">
       <h2 class="text-center">Join an existing team</h2>
       <button class="btn btn-primary btn-lg center-block"
               ng-click="show = 'join'">
@@ -72,8 +72,43 @@
   </div>
   <div class="col-md-6">
     <div ng-show="show === 'join'">
-      join dropdown goes here
+      <form ng-submit="submitJoinForm()">
+        <fieldset ng-disabled="disableJoinForm">
+          <div class="form-group">
+            <label for="teamToJoin">Select a team:</label>
+            <select class="form-control" ng-model="teamToJoin" name="teamToJoin">
+              <option ng-repeat="t in teams" value="{{t.teamid}}">
+                {{t.teamname}} ({{t.fname}} {{t.linitial}}.)
+              </option>
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary center-block"
+            ng-hide="hideJoinSubmit"
+          >
+            Submit
+          </button>
+
+          <img
+            class="center-block"
+            src="img/spinner.gif"
+            ng-show="showJoinSpinner"
+          />
+
+        </fieldset>
+      </form>
+
+      <div ng-show="showTeamJoined" class="alert alert-success">
+        <p style="padding-bottom:1em">
+          Success! You have joined a team. Good luck with the challenge!
+        </p>
+        <button class="btn btn-success btn-block" ng-click="getStarted()">
+          Get started
+          <span class="glyphicon glyphicon-arrow-right"></span>
+        </button>
+      </div>
     </div>
   </div>
-
 </div>
