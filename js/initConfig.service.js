@@ -1,5 +1,5 @@
 (function() {
-  angular.module('orange').provider('config', function() {
+  angular.module('orange').factory('config', function() {
     var placeholderSupported =
       document.createElement("input").placeholder != undefined;
 
@@ -79,17 +79,11 @@
       }
     }
 
-    this.$get = function() {
-      var that = this;
-      return {
-        placeholderSupported: placeholderSupported,
-        dateFormat: dateFormat,
-        processApiResponse: processApiResponse,
-        phpInit: phpInit,
-        getRoute: function() {
-          return that.route;
-        }
-      };
-    }
+    return {
+      placeholderSupported: placeholderSupported,
+      dateFormat: dateFormat,
+      processApiResponse: processApiResponse,
+      phpInit: phpInit
+    };
   });
 })();

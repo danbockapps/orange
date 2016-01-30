@@ -1,6 +1,6 @@
 var app = angular.module('orange');
 
-function appConfig($routeProvider, config) {
+function appConfig($routeProvider, routeProvider) {
   $routeProvider.
     when('/', {
       templateUrl: function() {
@@ -88,7 +88,7 @@ function appConfig($routeProvider, config) {
   function routePath(file) {
     // Set the route for the Switchboard controller to use.
     // Otherwise it would have to do all the routing logic all over again!
-    config.route = file;
+    routeProvider.route = file;
     return 'partials/' + file + '.html';
   }
 
@@ -113,8 +113,8 @@ function appConfig($routeProvider, config) {
   }
 }
 
-function SwitchboardCtrl2016($rootScope, $scope, $http, $location, config) {
-  var route = config.getRoute();
+function SwitchboardCtrl2016($rootScope, $scope, $http, $location, routeProvider) {
+  var route = routeProvider.getRoute();
   console.log('route is ' + route);
 
   if(route === 'welcome') {
@@ -666,7 +666,7 @@ function ReportsCtrl($scope, $http, $routeParams, config) {
 
 // If you're not minifying, you can replace the array literal with just the
 // function name.
-app.config(["$routeProvider", 'configProvider', appConfig]);
+app.config(["$routeProvider", 'routeProvider', appConfig]);
 app.controller('SwitchboardCtrl2016', SwitchboardCtrl2016);
 app.controller(
   "IndexCtrl",
