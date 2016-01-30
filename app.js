@@ -57,7 +57,7 @@ function appConfig($routeProvider, routeProvider) {
             return routePath('selectTeam');
           }
           else {
-            return routePath('regClosed');
+            return routePath('challengeClosed');
           }
         }
 
@@ -74,7 +74,7 @@ function appConfig($routeProvider, routeProvider) {
 
 
         else {
-          return routePath('challengeOver');
+          return routePath('challengeClosed');
         }
 
 
