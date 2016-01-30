@@ -50,33 +50,31 @@ function appConfig($routeProvider, config) {
         if(userIsntLoggedIn()) {
           return routePath('welcome');
         }
-        else if(userHasntActivated()) {
-          return 'partials/activate2016.html';
-        }
 
 
         else if(userIsntOnTeam()) {
           if(registrationOpen()) {
-            return 'partials/selectTeam.html';
+            return routePath('selectTeam');
           }
           else {
-            return 'partials/regClosed.html';
+            return routePath('regClosed');
           }
         }
 
 
         else if(challengeOpen()) {
           if(userHasntCompletedSurvey()) {
-            return 'partials/survey.html';
+            return routePath('survey');
           }
           else {
-            return 'partials/logPoints.html';
+            return routePath('logPoints');
           }
 
         }
 
+
         else {
-          return 'partials/challengeOver.html';
+          return routePath('challengeOver');
         }
 
 
@@ -87,23 +85,26 @@ function appConfig($routeProvider, config) {
       redirectTo: '/'
     });
 
-    function routePath(file) {
-      config.route = file;
-      return 'partials/' + file + '.html';
-    }
+  function routePath(file) {
+    // Set the route for the Switchboard controller to use.
+    // Otherwise it would have to do all the routing logic all over again!
+    config.route = file;
+    return 'partials/' + file + '.html';
+  }
 
-    function userIsntLoggedIn() {
-      return !initData.userid;
-    }
+  function userIsntLoggedIn() {
+    return !initData.userid;
+  }
 }
 
 function SwitchboardCtrl2016($rootScope, $scope, $http, $location, config) {
   var route = config.getRoute();
-  console.log('route is ' + config.getRoute());
+  console.log('route is ' + route);
 
   if(route === 'welcome') {
     welcomeSubCtrl($scope, $http, $location, config);
   }
+
 }
 
 function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
