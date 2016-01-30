@@ -121,14 +121,14 @@ function SwitchboardCtrl2016($rootScope, $scope, $http, $location, routeProvider
     welcomeSubCtrl($scope, $http, $location, config);
   }
   else if(route === 'selectTeam') {
-    selectTeamSubCtrl($rootScope, $scope, $http, $location, config);
+    selectTeamSubCtrl($rootScope, $scope, $http, config);
   }
 
 }
 
 function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
   $scope.projectname = initData.projectname;
-  config.phpInit($rootScope, $scope, $http);
+  config.phpInit($rootScope, $scope, $http, true);
 
   $scope.submitLoginForm = function(loginEmail, loginPassword) {
     phpObj = {email:loginEmail, password:loginPassword};
@@ -136,7 +136,7 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
       if(config.processApiResponse($scope, $scope, data)) {
         // Login successful
         initData.valid = false;
-        config.phpInit($rootScope, $scope, $http, $location);
+        config.phpInit($rootScope, $scope, $http);
       }
     });
   };
@@ -154,7 +154,7 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
     $http.post("api.php?q=logout").success(function(data) {
       if(config.processApiResponse($scope, $scope, data)) {
         initData.valid = false;
-        config.phpInit($rootScope, $scope, $http, $location);
+        config.phpInit($rootScope, $scope, $http);
         $scope.loginEmail = "";
         $scope.loginPassword = "";
       }
@@ -322,7 +322,7 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams, config
   };
 }
 
-function selectTeamSubCtrl($rootScope, $scope, $http, $location, config) {
+function selectTeamSubCtrl($rootScope, $scope, $http, config) {
   $scope.submitCreateForm = function() {
     $scope.hideJoinButton = true;
     $scope.disableCreateForm = true;
@@ -340,7 +340,7 @@ function selectTeamSubCtrl($rootScope, $scope, $http, $location, config) {
 
   $scope.getStarted = function() {
     initData.valid = false;
-    config.phpInit($rootScope, $scope, $http, $location);
+    config.phpInit($rootScope, $scope, $http);
   }
 }
 
@@ -467,7 +467,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
 
   $scope.getStarted = function() {
     initData.valid = false;
-    config.phpInit($rootScope, $scope, $http, $location);
+    config.phpInit($rootScope, $scope, $http);
   }
 
   $scope.btnColor = function(pointValue) {
@@ -529,7 +529,7 @@ function TeamCtrl($rootScope, $scope, $http, $location, $routeParams, config) {
     if(config.processApiResponse($scope, $scope.$parent, data)) {
       if(!data.loggedIn) {
         $rootScope.initData.valid = false;
-        config.phpInit($rootScope, $scope.$parent, $http, $location);
+        config.phpInit($rootScope, $scope.$parent, $http);
       }
 
       $scope.teamName = data.teamName;

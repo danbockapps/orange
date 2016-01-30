@@ -1,5 +1,5 @@
 (function() {
-  angular.module('orange').factory('config', function() {
+  angular.module('orange').factory('config', function($location) {
     var placeholderSupported =
       document.createElement("input").placeholder != undefined;
 
@@ -55,7 +55,7 @@
       }
     }
 
-    function phpInit($rootScope, $scope, $http, $location) {
+    function phpInit($rootScope, $scope, $http, noRedirect) {
       // The conditional is so the API call doesn't happen twice when the app is
       // first loaded
       // Maybe the if should be one function and the else another?
@@ -67,7 +67,7 @@
           setLoginVars(data, $rootScope, $scope);
 
           // pass null as the last arg to this function and there'll be no redirect
-          if($location != null) {
+          if(!noRedirect) {
             // "?a=b" is to trick Angular into calling the function in
             // routeProvider/when/templateUrl.
             $location.path("?a=b");
