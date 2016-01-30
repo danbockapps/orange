@@ -123,6 +123,9 @@ function SwitchboardCtrl2016($rootScope, $scope, $http, $location, route, config
   else if(route === 'selectTeam') {
     selectTeamSubCtrl($rootScope, $scope, $http, config);
   }
+  else if(route === 'regClosed') {
+    // No subcontroller necessary
+  }
 }
 
 function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
