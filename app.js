@@ -1,6 +1,6 @@
 var app = angular.module('orange');
 
-function appConfig($routeProvider) {
+function appConfig($routeProvider, config) {
   $routeProvider.
     when('/', {
       templateUrl: function() {
@@ -45,9 +45,65 @@ function appConfig($routeProvider) {
       templateUrl: 'partials/reports.html',
       controller: 'ReportsCtrl'
     }).
+    when('/2016', {
+      templateUrl: function() {
+        if(userIsntLoggedIn()) {
+          return routePath('welcome');
+        }
+        else if(userHasntActivated()) {
+          return 'partials/activate2016.html';
+        }
+
+
+        else if(userIsntOnTeam()) {
+          if(registrationOpen()) {
+            return 'partials/selectTeam.html';
+          }
+          else {
+            return 'partials/regClosed.html';
+          }
+        }
+
+
+        else if(challengeOpen()) {
+          if(userHasntCompletedSurvey()) {
+            return 'partials/survey.html';
+          }
+          else {
+            return 'partials/logPoints.html';
+          }
+
+        }
+
+        else {
+          return 'partials/challengeOver.html';
+        }
+
+
+      },
+      controller: 'SwitchboardCtrl2016'
+    }).
     otherwise({
       redirectTo: '/'
     });
+
+    function routePath(file) {
+      config.route = file;
+      return 'partials/' + file + '.html';
+    }
+
+    function userIsntLoggedIn() {
+      return !initData.userid;
+    }
+}
+
+function SwitchboardCtrl2016($rootScope, $scope, $http, $location, config) {
+  var route = config.getRoute();
+  console.log('route is ' + config.getRoute());
+
+  if(route === 'welcome') {
+    welcomeSubCtrl($scope, $http, $location, config);
+  }
 }
 
 function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
@@ -568,7 +624,8 @@ function ReportsCtrl($scope, $http, $routeParams, config) {
 
 // If you're not minifying, you can replace the array literal with just the
 // function name.
-app.config(["$routeProvider", appConfig]);
+app.config(["$routeProvider", 'configProvider', appConfig]);
+app.controller('SwitchboardCtrl2016', SwitchboardCtrl2016);
 app.controller(
   "IndexCtrl",
   ["$rootScope", "$scope", "$http", "$location", "$route", 'config', IndexCtrl]
