@@ -63,7 +63,6 @@ function appConfig($routeProvider, routeProvider) {
           }
         }
 
-        // broken - survey comes up even when it's done.
 
         else if(challengeOpen()) {
           if(userHasntCompletedSurvey()) {
@@ -72,11 +71,10 @@ function appConfig($routeProvider, routeProvider) {
           else {
             return routePath('logPoints');
           }
-
         }
 
 
-        else if(registrationOpen()) {
+        else if(registrationOpen() && userHasntCompletedSurvey()) {
           return routePath('survey');
         }
         else {
