@@ -174,26 +174,36 @@
     <div class="container">
 
       <div class="row" style="background-color: #f5f5f5">
-        <div class="col-md-8">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
           <a
             href="#/"
             style="color: black; font-size: 2em;"
           >
             <img
               src="img/BeHealthyNow15-logoC.png"
-              class="img-responsive"
+              class="img-responsive center-block"
               style="padding: 10px;"
             />
           </a>
         </div>
 
         <div
-          class="col-md-4"
+          class="col-sm-2"
           ng-show="rightCorner == 'name'"
           style="margin: 0.4em 0em;"
         >
-          <p class="text-right">
-            Logged in as {{loggedInFname}} {{loggedInLname}}
+          <!-- For computers and tablets -->
+          <p class="text-right hidden-xs">
+            Logged in as<br />
+            {{loggedInFname}} {{loggedInLname}}<br />
+            <small><a href="#" ng-click="logout()">logout</a></small>
+          </p>
+
+          <!-- For phones -->
+          <p class="text-right visible-xs-block">
+            Logged in as
+            {{loggedInFname}} {{loggedInLname}}
             <small><a href="#" ng-click="logout()">logout</a></small>
           </p>
         </div>
