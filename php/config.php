@@ -318,7 +318,6 @@ function survey_done($userid) {
       userid = ?
       and challengeid = ?
   ", array($userid, current_challengeid()));
-  logtxt($qr['count']);
   return $qr['count'];
 }
 
