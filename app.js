@@ -47,6 +47,8 @@ function appConfig($routeProvider, routeProvider) {
     }).
     when('/2016', {
       templateUrl: function() {
+        // Is there a simpler way to write out this logic? I don't know.
+
         if(userIsntLoggedIn()) {
           return routePath('welcome');
         }
@@ -73,6 +75,9 @@ function appConfig($routeProvider, routeProvider) {
         }
 
 
+        else if(registrationOpen()) {
+          return routePath('survey');
+        }
         else {
           return routePath('challengeClosed');
         }
@@ -125,6 +130,9 @@ function SwitchboardCtrl2016($rootScope, $scope, $http, $location, route, config
   }
   else if(route === 'challengeClosed') {
     // No subcontroller necessary
+  }
+  else if(route === 'survey') {
+    surveySubCtrl($rootScope, $scope, $http, config);
   }
 }
 
@@ -369,9 +377,44 @@ function selectTeamSubCtrl($rootScope, $scope, $http, config) {
   };
 
   $scope.getStarted = function() {
-    // Reload. Routing will take the user to logPoints.
+    // Reload. Routing will take the user to survey.
     initData.valid = false;
     config.phpInit($rootScope, $scope, $http);
+  };
+}
+
+function surveySubCtrl($rootScope, $scope, $http, config) {
+  $scope.submitNepForm = function() {
+    $scope.disableNepForm = true;
+
+    var allFields = {};
+    var phpObj = {};
+
+    allFields.age = $scope.nepAge;
+    allFields.sex = $scope.nepSex;
+    allFields.heightinches = $scope.nepHeightinches;
+    allFields.weight = $scope.nepWeight;
+    allFields.zip = $scope.nepZip;
+    allFields.activityLevel = $scope.nepActivityLevel;
+    allFields.exerciseMins = $scope.nepExerciseMins;
+    allFields.exerciseTypes = $scope.nepExerciseTypes;
+    allFields.fruits = $scope.nepFruits;
+
+    for(var i in allFields) {
+      if(typeof(allFields[i]) !== "undefined") {
+        phpObj[i] = allFields[i];
+      }
+    }
+
+    console.dir(allFields);
+    console.dir(phpObj);
+
+    $http.post("api.php?q=submitSurvey", phpObj).success(function(data) {
+      console.log(data);
+      // Reload. Routing will take the user to logPoints.
+      initData.valid = false;
+      config.phpInit($rootScope, $scope, $http);
+    });
   };
 }
 
