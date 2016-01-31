@@ -296,6 +296,20 @@ function user_current_team($userid) {
   return $qr['teamname'];
 }
 
+function user_current_teamid($userid) {
+  $qr = select_one_record("
+    select teamid
+    from
+      team_members tm
+      natural join teams t
+    where
+      t.challengeid = ? and
+      tm.userid = ?
+  ", array(current_challengeid(), $userid));
+
+  return $qr['teamid'];
+}
+
 function survey_done($userid) {
   $qr = select_one_record("
     select count(*) as count

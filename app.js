@@ -63,6 +63,7 @@ function appConfig($routeProvider, routeProvider) {
           }
         }
 
+        // broken - survey comes up even when it's done.
 
         else if(challengeOpen()) {
           if(userHasntCompletedSurvey()) {
@@ -399,6 +400,7 @@ function surveySubCtrl($rootScope, $scope, $http, config) {
     allFields.exerciseMins = $scope.nepExerciseMins;
     allFields.exerciseTypes = $scope.nepExerciseTypes;
     allFields.fruits = $scope.nepFruits;
+    allFields.goal = $scope.goalRadio;
 
     for(var i in allFields) {
       if(typeof(allFields[i]) !== "undefined") {

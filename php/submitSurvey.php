@@ -9,7 +9,9 @@ if(
   isset($post['activityLevel']) &&
   isset($post['exerciseMins']) &&
   isset($post['exerciseTypes']) &&
-  isset($post['fruits'])
+  isset($post['fruits']) &&
+  isset($post['goal']) &&
+  isset($_SESSION['userid'])
 ) {
   pdo_upsert("
     update users
@@ -45,6 +47,18 @@ if(
     $post['exerciseMins'],
     $post['exerciseTypes'],
     $post['fruits']
+  ));
+
+  pdo_upsert("
+    update team_members
+    set goal = ?
+    where
+      userid = ?
+      and teamid = ?
+  ", array(
+    $post['goal'],
+    $_SESSION['userid'],
+    user_current_teamid($_SESSION['userid'])
   ));
 }
 
