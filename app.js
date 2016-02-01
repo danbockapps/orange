@@ -2,15 +2,6 @@ var app = angular.module('orange');
 
 function appConfig($routeProvider, routeProvider) {
   $routeProvider.
-    when('/', {
-      templateUrl: function() {
-        if(initData.userid)
-          return 'partials/dashboard.html';
-        else
-          return 'partials/welcome.html';
-      },
-      controller: 'SwitchboardCtrl'
-    }).
     when('/fbunreg', {
       templateUrl: 'partials/fbunreg.html'
     }).
@@ -45,7 +36,7 @@ function appConfig($routeProvider, routeProvider) {
       templateUrl: 'partials/reports.html',
       controller: 'ReportsCtrl'
     }).
-    when('/2016', {
+    when('/', {
       templateUrl: function() {
         // Is there a simpler way to write out this logic? I don't know.
 
@@ -83,7 +74,7 @@ function appConfig($routeProvider, routeProvider) {
 
 
       },
-      controller: 'SwitchboardCtrl2016'
+      controller: 'SwitchboardCtrl'
     }).
     otherwise({
       redirectTo: '/'
@@ -117,7 +108,7 @@ function appConfig($routeProvider, routeProvider) {
   }
 }
 
-function SwitchboardCtrl2016($rootScope, $scope, $http, $location, route, config) {
+function SwitchboardCtrl($rootScope, $scope, $http, $location, route, config) {
   var route = route.getRoute();
   console.log('route is ' + route);
 
@@ -153,18 +144,9 @@ function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
       if(config.processApiResponse($scope, $scope, data)) {
         initData.valid = false;
         config.phpInit($rootScope, $scope, $http);
-        $scope.loginEmail = "";
-        $scope.loginPassword = "";
       }
     });
   };
-}
-
-function SwitchboardCtrl($rootScope, $scope, $http, $location, config) {
-  if(initData.userid)
-    dashboardSubCtrl($rootScope, $scope, $http, $location, config);
-  else
-    welcomeSubCtrl($rootScope, $scope, $http, $location, config);
 }
 
 function welcomeSubCtrl($rootScope, $scope, $http, $location, config) {
@@ -200,7 +182,7 @@ function welcomeSubCtrl($rootScope, $scope, $http, $location, config) {
     $scope.disableLoginForm = true;
     phpObj = {email:loginEmail, password:loginPassword};
     $http.post("api.php?q=login", phpObj).success(function(data) {
-      if(config.processApiResponse($scope, $scope, data)) {
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
         // Login successful
         initData.valid = false;
         config.phpInit($rootScope, $scope, $http);
@@ -298,27 +280,11 @@ function ActivateCtrl($rootScope, $scope, $http, $location, $routeParams, config
       allFields.password = $scope.nepPassword1;
       allFields.fname = $scope.nepFname;
       allFields.lname = $scope.nepLname;
-      allFields.age = $scope.nepAge;
-      allFields.sex = $scope.nepSex;
-      allFields.heightinches = $scope.nepHeightinches;
-
-      // TODO move these changing metrics to a separate survey page
-      // for repeat participants
-      allFields.weight = $scope.nepWeight;
-      allFields.zip = $scope.nepZip;
-      allFields.activityLevel = $scope.nepActivityLevel;
-      allFields.exerciseMins = $scope.nepExerciseMins;
-      allFields.exerciseTypes = $scope.nepExerciseTypes;
-      allFields.fruits = $scope.nepFruits;
 
       for(var i in allFields) {
         if(typeof(allFields[i]) !== "undefined")
           phpObj[i] = allFields[i];
       }
-
-      console.dir(allFields);
-      console.dir(phpObj);
-
 
       $http.post("api.php?q=activate", phpObj).success(function(data) {
         console.log(data);
@@ -409,9 +375,6 @@ function surveySubCtrl($rootScope, $scope, $http, config) {
         phpObj[i] = allFields[i];
       }
     }
-
-    console.dir(allFields);
-    console.dir(phpObj);
 
     $http.post("api.php?q=submitSurvey", phpObj).success(function(data) {
       console.log(data);
@@ -749,14 +712,10 @@ function ReportsCtrl($scope, $http, $routeParams, config) {
 // of the dependency name.
 
 app.config(["$routeProvider", 'routeProvider', appConfig]);
-app.controller('SwitchboardCtrl2016', SwitchboardCtrl2016);
+app.controller('SwitchboardCtrl', SwitchboardCtrl);
 app.controller(
   "IndexCtrl",
   ["$rootScope", "$scope", "$http", "$location", "$route", 'config', IndexCtrl]
-);
-app.controller(
-  "SwitchboardCtrl",
-  ["$rootScope", "$scope", "$http", "$location", 'config', SwitchboardCtrl]
 );
 app.controller(
   "ActivateCtrl",

@@ -6,8 +6,6 @@ if($post['email'] != email_for_key($post['key'])['email']) {
 else {
   $success_password = true;
   $success_name = true;
-  $success_survey_u = true;
-  $success_survey_s = true;
 
 
   /**** UPDATE PASSWORD ****/
@@ -37,11 +35,7 @@ else {
   }
 
 
-  /**** UPDATE SURVEY AND OTHER INFO ****/
-
-
-
-  if($success_password && $success_name && $success_survey_u && $success_survey_s) {
+  if($success_password && $success_name) {
     reset_akey($post['email']);
   }
   else {
