@@ -578,7 +578,7 @@ function TeamCtrl($rootScope, $scope, $http, $location, $routeParams, config) {
       $scope.teamReports = data.teamReports;
 
       var challengeStart = Date.parse($rootScope.initData.challengeStart) / 1000;
-      $scope.numWeeks = numWeeksSince(challengeStart);
+      $scope.numWeeks = Math.max(0, numWeeksSince(challengeStart));
 
       $scope.totals = {
         pointWeeks:
