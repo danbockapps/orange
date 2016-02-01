@@ -51,16 +51,19 @@ if ($session) {
 
       // Register new user
       pdo_upsert("
-        insert into users (email, password, fname, lname, fbid)
-        values (?, ?, ?, ?, ?)",
+        insert into users (email, password, fname, lname, fbid, activated)
+        values (?, ?, ?, ?, ?, ?)",
         array(
           $graphObject->getEmail(),
           "Registered via Facebook",
           $graphObject->getFirstName(),
           $graphObject->getLastName(),
-          $info->getId()
+          $info->getId(),
+          1
         )
       );
+
+      reset_akey($graphObject->getEmail());
 
       fbLogin(user_for_fbid($info->getId()));
     }
