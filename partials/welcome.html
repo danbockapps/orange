@@ -124,54 +124,60 @@
       ng-submit="submitLoginForm(loginEmail, loginPassword)"
       ng-show="showLoginForm"
     >
-      <div class="form-group">
-        <input
-          type="text"
-          class="form-control"
-          name="loginEmail"
-          ng-model="loginEmail"
-          placeholder="Email"
-          required
-        />
-      </div>
+      <fieldset ng-disabled="disableLoginForm">
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            name="loginEmail"
+            ng-model="loginEmail"
+            placeholder="Email"
+            required
+          />
+        </div>
 
-      <div class="form-group">
-        <input
-          type="password"
-          class="form-control"
-          name="loginPassword"
-          ng-model="loginPassword"
-          placeholder="Password"
-          required
-        />
-      </div>
+        <div class="form-group">
+          <input
+            type="password"
+            class="form-control"
+            name="loginPassword"
+            ng-model="loginPassword"
+            placeholder="Password"
+            required
+          />
+        </div>
 
-      <div style="clear:both">
-        <button
-          type="submit"
-          class="btn btn-default"
-          style="float:left; margin-bottom: 0.4em"
-        >
-          Log In
-        </button>
+        <div style="clear:both">
+          <button
+            type="submit"
+            class="btn btn-default"
+            style="float:left; margin-bottom: 0.4em"
+            ng-hide="disableLoginForm"
+          >
+            Log In
+          </button>
 
-        <a
-          href="javascript:"
-          ng-click="showPasswordRecover()"
-          class="text-center"
-          style="float:left; margin: 0.5em 1em"
-        >help</a>
+          <img src="img/spinner.gif" ng-show="disableLoginForm" />
 
-        <a
-          href="fb_init.php"
-          class="btn btn-primary btn-sm"
-          style="background-color:#3b5998; float:right"
-        >
-          <img src="img/fb.png" style="max-height:15px" />
-          Login with Facebook
-        </a>
+          <a
+            href="javascript:"
+            ng-click="showPasswordRecover()"
+            class="text-center"
+            style="float:left; margin: 0.5em 1em"
+            ng-hide="disableLoginForm"
+          >help</a>
 
-      </div>
+          <a
+            href="fb_init.php"
+            class="btn btn-primary btn-sm"
+            style="background-color:#3b5998; float:right"
+          >
+            <img src="img/fb.png" style="max-height:15px" />
+            Login with Facebook
+          </a>
+
+        </div>
+      </fieldset>
     </form>
   </div>
 </div>

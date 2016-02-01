@@ -122,7 +122,7 @@ function SwitchboardCtrl2016($rootScope, $scope, $http, $location, route, config
   console.log('route is ' + route);
 
   if(route === 'welcome') {
-    welcomeSubCtrl($scope, $http, $location, config);
+    welcomeSubCtrl($rootScope, $scope, $http, $location, config);
   }
   else if(route === 'selectTeam') {
     selectTeamSubCtrl($rootScope, $scope, $http, config);
@@ -138,17 +138,6 @@ function SwitchboardCtrl2016($rootScope, $scope, $http, $location, route, config
 function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
   $scope.projectname = initData.projectname;
   config.phpInit($rootScope, $scope, $http, true);
-
-  $scope.submitLoginForm = function(loginEmail, loginPassword) {
-    phpObj = {email:loginEmail, password:loginPassword};
-    $http.post("api.php?q=login", phpObj).success(function(data) {
-      if(config.processApiResponse($scope, $scope, data)) {
-        // Login successful
-        initData.valid = false;
-        config.phpInit($rootScope, $scope, $http);
-      }
-    });
-  };
 
   $scope.showPasswordRecover = function() {
     $location.path("passwordrecover");
@@ -175,10 +164,10 @@ function SwitchboardCtrl($rootScope, $scope, $http, $location, config) {
   if(initData.userid)
     dashboardSubCtrl($rootScope, $scope, $http, $location, config);
   else
-    welcomeSubCtrl($scope, $http, $location, config);
+    welcomeSubCtrl($rootScope, $scope, $http, $location, config);
 }
 
-function welcomeSubCtrl($scope, $http, $location, config) {
+function welcomeSubCtrl($rootScope, $scope, $http, $location, config) {
   $scope.submitRegisterForm = function() {
     $scope.disableRegForm = true;
 
@@ -205,6 +194,21 @@ function welcomeSubCtrl($scope, $http, $location, config) {
         window.location.href = 'fb_init.php?registering=yes';
       })
     }
+  };
+
+  $scope.submitLoginForm = function(loginEmail, loginPassword) {
+    $scope.disableLoginForm = true;
+    phpObj = {email:loginEmail, password:loginPassword};
+    $http.post("api.php?q=login", phpObj).success(function(data) {
+      if(config.processApiResponse($scope, $scope, data)) {
+        // Login successful
+        initData.valid = false;
+        config.phpInit($rootScope, $scope, $http);
+      }
+      else {
+        $scope.disableLoginForm = false;
+      }
+    });
   };
 
   $scope.phSup = config.placeholderSupported;

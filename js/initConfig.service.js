@@ -42,16 +42,14 @@
     function setLoginVars(data, $rootScope, $scope) {
       $rootScope.initData = data;
       if(data.userid == null) {
-        $scope.rightCorner = 'buttons';
-        $scope.userid = null;
+        $scope.rightCorner = 'empty';
         $scope.loggedInFname = null;
         $scope.loggedInLname = null;
       }
       else {
-        $scope.rightCorner = 'name';
-        $scope.userid = data.userid;
-        $scope.loggedInFname = data.fname;
-        $scope.loggedInLname = data.lname;
+        $scope.$parent.rightCorner = 'name';
+        $scope.$parent.loggedInFname = data.fname;
+        $scope.$parent.loggedInLname = data.lname;
       }
     }
 
@@ -64,6 +62,7 @@
           console.log(data);
           initData = data;
 
+          // This doesn't do anything useful except on login and logout, but oh well
           setLoginVars(data, $rootScope, $scope);
 
           // pass null as the last arg to this function and there'll be no redirect
