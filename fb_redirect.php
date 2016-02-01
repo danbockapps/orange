@@ -29,21 +29,21 @@ if ($session) {
   $request = new FacebookRequest($session, 'GET', '/me');
   $response = $request->execute();
   $graphObject = $response->getGraphObject(GraphUser::className());
-  
+
   if(fb_user_in_db($info->getId())) {
-    loginOrActivate($info->getId(), $graphObject->getEmail());
+    fbLogin(user_for_fbid($info->getId()));
   }
   else {
     // User's FB ID is not in DB
     if(email_already_in_db($graphObject->getEmail())) {
       // Add user's FB ID to DB and log in
       set_fbid(
-        $graphObject->getEmail(), 
+        $graphObject->getEmail(),
         $info->getId(),
         $graphObject->getFirstName(),
         $graphObject->getLastName()
       );
-      loginOrActivate($info->getId(), $graphObject->getEmail());
+      fbLogin(user_for_fbid($info->getId()));
     }
     else if($_SESSION['registering']) {
       $_SESSION['registering'] = false;
@@ -62,7 +62,7 @@ if ($session) {
         )
       );
 
-      gotoActivate($graphObject->getEmail());
+      fbLogin(user_for_fbid($info->getId()));
     }
     else {
       // Unregistered user is trying to log in. Tell them to register first.
@@ -71,24 +71,7 @@ if ($session) {
   }
 }
 else {
-  echo("An error occurred. Please click your back button and try again."); 
-}
-
-function loginOrActivate($fbid, $email) {
-  if(fb_user_activated($fbid)) {
-    fbLogin(user_for_fbid($fbid));
-  }
-  else {
-    // User hasn't activated yet.
-    gotoActivate($email);
-  }
-}
-
-function gotoActivate($email) {
-  global $ini;
-  $headerarg = "Location: " . $ini['homeurl'] . "/#/activate/" . 
-          reset_akey($email);
-  header($headerarg);
+  echo("An error occurred. Please click your back button and try again.");
 }
 
 function fbLogin($qr) {
