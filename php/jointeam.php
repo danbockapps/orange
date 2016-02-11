@@ -26,18 +26,4 @@ pdo_upsert("
   ) values (?, ?, false, now())
 ", array($post['teamToJoin'], $_SESSION['userid']));
 
-function tenMembersAlready($teamId) {
-  $tmaqr = select_one_record("
-    select count(*) as count
-    from
-      team_members
-      natural join teams
-    where teamid = ?
-  ", $teamId);
-
-  if($tmaqr['count'] >= 10)
-    return true;
-  else
-    return false;
-}
 ?>

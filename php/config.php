@@ -408,4 +408,66 @@ function convertDatesToISO8601($arrayWithDates, $dateElemName) {
   return $arrayWithDates;
 }
 
+
+function tenMembersAlready($teamId) {
+  $tmaqr = select_one_record("
+    select count(*) as count
+    from
+      team_members
+      natural join teams
+    where teamid = ?
+  ", $teamId);
+
+  if($tmaqr['count'] >= 10)
+    return true;
+  else
+    return false;
+}
+
+function teams() {
+  if(am_i_admin()) {
+    $lnameField = "lname,";
+  }
+  else {
+    $lnameField = "";
+  }
+
+  return pdo_select("
+    select
+      t.teamname,
+      t.teamid,
+      u.fname,
+      " . $lnameField . "
+      substring(u.lname, 1, 1) as linitial
+    from
+      teams t
+      natural join team_members tm
+      natural join users u
+    where
+      t.challengeid = ?
+      and tm.captain
+  ", current_challengeid());
+}
+
+function participants() {
+  return pdo_select("
+    select
+      u.userid,
+      u.fbid,
+      u.fname,
+      u.lname,
+      u.email,
+      u.dateuseradded,
+      t.teamname,
+      t.teamid
+    from
+      users u
+      natural left join team_members m
+      natural left join teams t
+    where
+      u.activated
+      and !u.testuser
+  ");
+}
+
 ?>

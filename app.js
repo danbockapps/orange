@@ -656,7 +656,6 @@ function AdminCtrl($scope, $http, $location, config) {
   //TODO show only those participants who are registered in the current challenge
   $scope.predicate = 'dateuseradded';
   $scope.reverse = true;
-  refreshChallenges();
 
   $http.get("api.php?q=participants").success(function(data) {
     if(config.processApiResponse($scope, $scope.$parent, data)) {
@@ -667,14 +666,30 @@ function AdminCtrl($scope, $http, $location, config) {
     }
   });
 
-  function refreshChallenges() {
-    $http.get("api.php?q=challenge").success(function(data) {
-      console.log(data);
+  $http.get("api.php?q=teams").success(function(data) {
+    $scope.teams = data.teams;
+  });
 
-      $scope.challenge = data.challenge;
-      $scope.showNcForm = false;
-    });
-  }
+  $scope.noTeam = function(element) {
+    return !element.teamid;
+  };
+
+  $scope.addToTeam = function() {
+    $scope.disableAddForm = true;
+
+    var phpObj = {
+      userId: $scope.userToAdd,
+      teamId: $scope.teamToAddTo
+    }
+
+    $http.post('api.php?q=addToTeam', phpObj).success(function(data) {
+      $scope.disableAddForm = false;
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
+        $scope.participants = data.participants;
+        $scope.teams = data.teams;
+      }
+    })
+  };
 }
 
 function ReportsCtrl($scope, $http, $routeParams, config) {

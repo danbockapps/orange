@@ -1,8 +1,55 @@
 <div class="row">
   <div class="col-xs-12">
-    <h1>Site administration</h1>
+    <h1 class="text-center">Site administration</h1>
   </div>
 </div>
+
+<div class="row">
+  <div class="col-md-6">
+    <h2 class="text-center">
+      Add participant to team
+    </h2>
+    <form ng-submit="addToTeam()">
+      <fieldset ng-disabled="disableAddForm">
+        <div class="form-group">
+          <label for="userToAdd">Add</label>
+          <select class="form-control"
+                  ng-model="userToAdd"
+                  name="userToAdd">
+            <option ng-repeat="p in participants|filter:noTeam|orderBy:['lname','fname']"
+                    value="{{p.userid}}">
+              {{p.lname}}, {{p.fname}} ({{p.email}})
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="teamToAddTo">To</label>
+          <select class="form-control"
+                  ng-model="teamToAddTo"
+                  name="teamToAddTo">
+            <option ng-repeat="t in teams" value="{{t.teamid}}">
+              {{t.teamname}} ({{t.fname}} {{t.lname}})
+            </option>
+          </select>
+        </div>
+        <button type="submit"
+                class="btn btn-primary center-block"
+                ng-hide="disableAddForm">
+          Submit
+        </button>
+        <img class="center-block"
+             src="img/spinner.gif"
+             ng-show="disableAddForm" />
+      </fieldset>
+    </form>
+  </div>
+  <div class="col-md-6">
+    <h2 class="text-center">
+      Remove participant from team
+    </h2>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-xs-12">
     <h2>Participants ({{participants.length}})</h2>
