@@ -675,23 +675,6 @@ function AdminCtrl($scope, $http, $location, config) {
       $scope.showNcForm = false;
     });
   }
-
-  $scope.submitNcForm = function() {
-    var r = confirm("WARNING! This creates a new challenge and locks out " +
-        "participants from the old challenge.");
-    if(r) {
-      $http.post("api.php?q=changedates", {
-        regstart:$scope.ncRegStart,
-        regend:$scope.ncRegEnd,
-        start:$scope.ncStart,
-        end:$scope.ncEnd
-      }).success(function(data) {
-        if(config.processApiResponse($scope, $scope.$parent, data)) {
-          refreshChallenges();
-        }
-      });
-    }
-  }
 }
 
 function ReportsCtrl($scope, $http, $routeParams, config) {
