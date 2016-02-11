@@ -387,19 +387,6 @@ function reports() {
   return $qr;
 }
 
-function challenge() {
-  return select_one_record("
-    select
-      challengeid as id,
-      regstartdttm as regStart,
-      regenddttm as regEnd,
-      startdttm as start,
-      enddttm as end
-    from challenges
-    where !deleted
-  ");
-}
-
 function convertDatesToISO8601($arrayWithDates, $dateElemName) {
   foreach($arrayWithDates as &$row) {
     $row[$dateElemName] = date('c', strtotime($row[$dateElemName]));
@@ -407,7 +394,6 @@ function convertDatesToISO8601($arrayWithDates, $dateElemName) {
 
   return $arrayWithDates;
 }
-
 
 function tenMembersAlready($teamId) {
   $tmaqr = select_one_record("
