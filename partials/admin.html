@@ -15,7 +15,7 @@
           <label for="userToAdd">Add</label>
           <select class="form-control"
                   ng-model="userToAdd"
-                  name="userToAdd">
+                  id="userToAdd">
             <option ng-repeat="p in participants|filter:noTeam|orderBy:['lname','fname']"
                     value="{{p.userid}}">
               {{p.lname}}, {{p.fname}} ({{p.email}})
@@ -26,7 +26,7 @@
           <label for="teamToAddTo">To</label>
           <select class="form-control"
                   ng-model="teamToAddTo"
-                  name="teamToAddTo">
+                  id="teamToAddTo">
             <option ng-repeat="t in teams" value="{{t.teamid}}">
               {{t.teamname}} ({{t.fname}} {{t.lname}})
             </option>
@@ -47,6 +47,31 @@
     <h2 class="text-center">
       Remove participant from team
     </h2>
+    <form ng-submit="removeFromTeam()">
+      <fieldset ng-disabled="disableRemForm">
+        <div class="form-group">
+          <label for="userToRemove">Remove</label>
+          <select class="form-control"
+                  ng-model="userToRemove"
+                  id="userToRemove">
+            <option ng-repeat="p in participants|filter:yesTeam|orderBy:['lname','fname']"
+                    value="{{p.userid}}">
+              {{p.captain ? '**CAPTAIN**' : ''}}
+              {{p.lname}}, {{p.fname}}
+              ({{p.email}}) from {{p.teamname}}
+            </option>
+          </select>
+        </div>
+        <button type="submit"
+                class="btn btn-primary center-block"
+                ng-hide="disableRemForm">
+          Submit
+        </button>
+        <img class="center-block"
+             src="img/spinner.gif"
+             ng-show="disableRemForm" />
+      </fieldset>
+    </form>
   </div>
 </div>
 

@@ -27,6 +27,5 @@ pdo_upsert("
 ", array($post['teamId'], $post['userId']));
 
 
-$ok_array['teams'] = teams();
 $ok_array['participants'] = participants();
 ?>

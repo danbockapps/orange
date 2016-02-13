@@ -110,7 +110,6 @@ function appConfig($routeProvider, routeProvider) {
 
 function SwitchboardCtrl($rootScope, $scope, $http, $location, route, config) {
   var route = route.getRoute();
-  console.log('route is ' + route);
 
   if(route === 'welcome') {
     welcomeSubCtrl($rootScope, $scope, $http, $location, config);
@@ -667,12 +666,17 @@ function AdminCtrl($scope, $http, $location, config) {
   });
 
   $http.get("api.php?q=teams").success(function(data) {
+    console.log(data);
     $scope.teams = data.teams;
   });
 
   $scope.noTeam = function(element) {
     return !element.teamid;
   };
+
+  $scope.yesTeam = function(element) {
+    return element.teamid;
+  }
 
   $scope.addToTeam = function() {
     $scope.disableAddForm = true;
@@ -686,10 +690,33 @@ function AdminCtrl($scope, $http, $location, config) {
       $scope.disableAddForm = false;
       if(config.processApiResponse($scope, $scope.$parent, data)) {
         $scope.participants = data.participants;
-        $scope.teams = data.teams;
+        resetForms();
       }
     })
   };
+
+  $scope.removeFromTeam = function() {
+    $scope.disableRemForm = true;
+
+    var phpObj = {
+      userId: $scope.userToRemove
+    };
+
+    $http.post('api.php?q=removeFromTeam', phpObj).success(function(data) {
+      $scope.disableRemForm = false;
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
+        $scope.participants = data.participants;
+        $scope.teams = data.teams;
+        resetForms();
+      }
+    });
+  };
+
+  function resetForms() {
+    $scope.userToAdd = 0;
+    $scope.teamToAddTo = 0;
+    $scope.userToRemove = 0;
+  }
 }
 
 function ReportsCtrl($scope, $http, $routeParams, config) {

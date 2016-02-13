@@ -419,7 +419,7 @@ function teams() {
   }
 
   return pdo_select("
-    select
+    select distinct
       t.teamname,
       t.teamid,
       u.fname,
@@ -427,11 +427,14 @@ function teams() {
       substring(u.lname, 1, 1) as linitial
     from
       teams t
-      natural join team_members tm
-      natural join users u
+      natural left join (
+        select *
+        from team_members
+        where captain
+      ) tm
+      natural left join users u
     where
       t.challengeid = ?
-      and tm.captain
   ", current_challengeid());
 }
 
@@ -445,10 +448,11 @@ function participants() {
       u.email,
       u.dateuseradded,
       t.teamname,
-      t.teamid
+      t.teamid,
+      tm.captain
     from
       users u
-      natural left join team_members m
+      natural left join team_members tm
       natural left join teams t
     where
       u.activated
