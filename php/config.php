@@ -243,15 +243,6 @@ function email_for_key($key) {
   ", array($key));
 }
 
-function key_for_email($email) {
-  return select_one_record("
-    select
-      akey
-    from users
-    where email = ?
-  ", $email);
-}
-
 function email_for_user($userid) {
   $qr = select_one_record("
     select email
@@ -259,26 +250,6 @@ function email_for_user($userid) {
     where userid = ?
   ", $userid);
   return $qr['email'];
-}
-
-function userid_for_email($email) {
-  $qr = select_one_record("
-    select userid
-    from users
-    where email = ?
-  ", $email);
-  return $qr['userid'];
-}
-
-function user_for_email($email) {
-  return select_one_record("
-    select
-      userid,
-      fname,
-      lname
-    from users
-    where email = ?
-  ", $email);
 }
 
 function user_current_team($userid) {
@@ -355,15 +326,6 @@ function set_fbid($email, $fbid, $fname, $lname) {
       lname = ?
     where email = ?
   ", array($fbid, $fname, $lname, $email));
-}
-
-function fb_user_activated($fbid) {
-  $qr = select_one_record("
-    select count(*) as count
-    from users
-    where activated and fbid = ?
-  ", $fbid);
-  return $qr['count'];
 }
 
 function reports() {

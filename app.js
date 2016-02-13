@@ -1,3 +1,4 @@
+(function() {
 var app = angular.module('orange');
 
 function appConfig($routeProvider, routeProvider) {
@@ -442,146 +443,6 @@ function logPointsSubCtrl($scope, $http, $location, config) {
   $scope.dateFormat = config.dateFormat;
 }
 
-function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
-  $scope.$watch(
-    function() {
-      return $rootScope.initData;
-    },
-    function() {
-      // This function might get called before initData exists, so make sure it
-      // exists before calling stuff on it.
-      if($rootScope.initData) {
-        console.log("initData has now arrived from the server.");
-
-        $scope.projectname = $rootScope.initData.projectname;
-        $scope.userEmail = $rootScope.initData.userEmail;
-        $scope.teamName = $rootScope.initData.teamName;
-
-        // This just makes the code shorter.
-        var d = $rootScope.initData;
-
-        if(d.chalCurrent) {
-          console.log("There is a current challenge.");
-          if(d.teamName) {
-            console.log("The user is on a team.");
-            if(d.goal) {
-              console.log("The user has set a goal.");
-              $scope.showDashboard = true;
-              $http.get("api.php?q=activities").success(function(data) {
-                if(config.processApiResponse($scope, $scope.$parent, data)) {
-                  $scope.activities = data.activities;
-                  $scope.reports = data.reports;
-                }
-              });
-            }
-            else {
-              console.log("The user has not set a goal.");
-              $scope.showGoal = true;
-            }
-          }
-          else {
-            console.log("The user is not on a team.");
-            if(d.regOpen) {
-              console.log("Registration is open.");
-              $scope.showPickTeams = true;
-            }
-            else {
-              console.log("Registration is closed.");
-              $scope.showClosedMsg = true;
-            }
-          }
-        }
-        else {
-          console.log("There is no current challenge.");
-          if(d.regOpen) {
-            console.log("Registration is open.");
-            if(d.teamName) {
-              console.log("The user is on a team.");
-              $scope.showWaitMsg = true;
-            }
-            else {
-              console.log("The user is not on a team.");
-              $scope.showPickTeams = true;
-            }
-          }
-          else {
-            console.log("Registration is not open.");
-            $scope.showClosedMsg = true;
-          }
-        }
-      }
-      else {
-        console.log("initData has not arrived from the server yet.");
-      }
-    }
-  );
-
-
-  $scope.createButton = function() {
-    $scope.showCreateForm = true;
-    $scope.showJoinForm = false;
-  }
-
-  $scope.joinButton = function() {
-    $scope.showJoinForm = true;
-    $scope.showCreateForm = false;
-  }
-
-  $scope.submitCreateForm = function() {
-    $scope.hideJoinButton = true;
-    $scope.disableCreateForm = true;
-    $scope.hideCreateSubmit = true;
-    $scope.showCreateSpinner = true;
-
-    $http.post("api.php?q=newteam", {teamName: $scope.createTeamName})
-    .success(function(data) {
-      if(config.processApiResponse($scope, $scope.$parent, data)) {
-        $scope.showCreateSpinner = false;
-        $scope.joinCode = data.joinCode;
-        $scope.showTeamCreated = true;
-      }
-    });
-  }
-
-  $scope.submitJoinForm = function() {
-    $scope.hideCreateButton = true;
-    $scope.disableJoinForm = true;
-    $scope.hideJoinSubmit = true;
-    $scope.showJoinSpinner = true;
-
-    $http.post("api.php?q=jointeam", {joinCode: $scope.joinJoinCode})
-    .success(function(data) {
-      $scope.showJoinSpinner = false;
-      if(config.processApiResponse($scope, $scope.$parent, data)) {
-        $scope.teamName = data.teamName;
-        $scope.showTeamJoined = true;
-      }
-      else {
-        $scope.disableJoinForm = false;
-        $scope.hideJoinSubmit = false;
-      }
-    });
-  }
-
-  $scope.getStarted = function() {
-    initData.valid = false;
-    config.phpInit($rootScope, $scope, $http);
-  }
-
-
-
-  $scope.submitGoalForm = function() {
-    $http.post("api.php?q=setgoal", {
-      goal:$scope.goalRadio,
-      initials:$scope.initials
-    }).success(function(data) {
-      if(config.processApiResponse($scope, $scope.$parent, data)) {
-        $scope.getStarted();
-      }
-    });
-  }
-}
-
 function TeamCtrl($rootScope, $scope, $http, $location, $routeParams, config) {
   $http.get("api.php?q=team", {params:{teamId:$routeParams.id}})
     .success(function(data) {
@@ -777,3 +638,4 @@ app.controller(
   "ReportsCtrl",
   ["$scope", "$http", "$routeParams", 'config', ReportsCtrl]
 );
+})();
