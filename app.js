@@ -123,6 +123,9 @@ function SwitchboardCtrl($rootScope, $scope, $http, $location, route, config) {
   else if(route === 'survey') {
     surveySubCtrl($rootScope, $scope, $http, config);
   }
+  else if(route === 'logPoints') {
+    logPointsSubCtrl($scope, $http, $location, config);
+  }
 }
 
 function IndexCtrl($rootScope, $scope, $http, $location, $route, config) {
@@ -384,6 +387,61 @@ function surveySubCtrl($rootScope, $scope, $http, config) {
   };
 }
 
+function logPointsSubCtrl($scope, $http, $location, config) {
+  $scope.teamName = initData.teamName;
+
+  $http.get("api.php?q=activities").success(function(data) {
+    if(config.processApiResponse($scope, $scope.$parent, data)) {
+      $scope.activities = data.activities;
+      $scope.reports = data.reports;
+    }
+  });
+
+  $scope.showTeamButton = function() {
+    $location.path('team');
+  };
+
+  $scope.btnColor = function(pointValue) {
+    if(pointValue > 2)
+      // Blue buttons for five-point activities
+      return 'btn-primary';
+    else if(pointValue >= 0)
+      // Orange buttons for one-point activities
+      return 'btn-warning';
+    else
+      // Red buttons for negative-one-point activities
+      return 'btn-danger';
+  };
+
+  $scope.submitActivity = function(activityId) {
+    $scope.disableAllButtons = true;
+    $http.post("api.php?q=submitactivity", {activityId:activityId})
+      .success(function(data) {
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
+        $scope.reports = data.reports;
+      }
+      $scope.disableAllButtons = false;
+    });
+  };
+
+  $scope.deleteReport = function(reportId) {
+    $scope.disableAllButtons = true;
+    $http.post("api.php?q=deletereport", {reportId:reportId})
+      .success(function(data) {
+      if(config.processApiResponse($scope, $scope.$parent, data)) {
+        $scope.reports = data.reports;
+      }
+      $scope.disableAllButtons = false;
+    });
+  };
+
+  $scope.showTeamButton = function() {
+    $location.path("team");
+  };
+
+  $scope.dateFormat = config.dateFormat;
+}
+
 function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
   $scope.$watch(
     function() {
@@ -510,46 +568,7 @@ function dashboardSubCtrl($rootScope, $scope, $http, $location, config) {
     config.phpInit($rootScope, $scope, $http);
   }
 
-  $scope.btnColor = function(pointValue) {
-    if(pointValue > 2)
-      // Orange buttons for five-point activities
-      return "btn-warning";
-    else if(pointValue >= 2)
-      // Blue buttons for two-point activities
-      return "btn-primary";
-    else
-      // Light blue buttons for one-point activities
-      return "btn-info";
-  }
 
-  $scope.submitActivity = function(activityId) {
-    $scope.disableAllButtons = true;
-    $http.post("api.php?q=submitactivity", {activityId:activityId})
-      .success(function(data) {
-      if(config.processApiResponse($scope, $scope.$parent, data)) {
-        $scope.reports = data.reports;
-      }
-      $scope.disableAllButtons = false;
-    });
-  }
-
-  $scope.deleteReport = function(reportId) {
-    $scope.disableAllButtons = true;
-    $http.post("api.php?q=deletereport", {reportId:reportId})
-      .success(function(data) {
-      if(config.processApiResponse($scope, $scope.$parent, data)) {
-        $scope.reports = data.reports;
-      }
-      $scope.disableAllButtons = false;
-    });
-  }
-
-  $scope.showTeamButton = function() {
-    $location.path("team");
-  }
-
-  // This is a function in config.js.
-  $scope.dateFormat = config.dateFormat;
 
   $scope.submitGoalForm = function() {
     $http.post("api.php?q=setgoal", {
