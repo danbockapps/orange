@@ -19,13 +19,25 @@
           class="btn {{btnColor(a.pointvalue)}} btn-lg btn-block"
           ng-click="submitActivity(a.activityid)"
         >
+          <span ng-show="a.bootstrapicon"
+                class="glyphicon glyphicon-{{a.bootstrapicon}} pull-left"
+                style="padding-right: 0.3em">
+          </span>
+          <i ng-show="a.googleicon"
+             class="material-icons pull-left"
+             style="font-size:18px">
+            {{a.googleicon}}
+          </i>
           {{a.shortdesc}}
         </button>
         <strong>
           {{a.pointvalue}} point{{a.pointvalue == 1 ? "" : "s"}}.
         </strong>
         {{a.longdesc}}
-        <a ng-show="a.url" href="{{a.url}}" target="_blank">More info</a>
+        <a ng-show="a.url" href="{{a.url}}" target="_blank">
+          More info
+          <span class="glyphicon glyphicon-new-window"></span>
+        </a>
       </div>
     </div>
     <div class="col-sm-7" ng-show="reports.length">
