@@ -10,8 +10,8 @@ insert into activities (
   googleicon
 ) values
 
-(1, 1, 5, 7, "30 minutes of exercise",
-"Click once for each day you do 30 minutes of exercise.", null, null, "directions_run"),
+(1, 1, 5, 0, "30 minutes of exercise",
+"Click once for each time you do 30 minutes of exercise.", null, null, "directions_run"),
 
 (2, 2, 5, 7, "5 servings of fruit/veg",
 "Click once for each day you eat five servings of fruits and vegetables. One
